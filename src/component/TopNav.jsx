@@ -203,10 +203,10 @@ export default function TopBar() {
                                       justifyContent="center"
                                       alignItems="center"
                                       sx={{
-                                          width: "35vw",
+                                          width: {md:"50vw", lg:"35vw"},
                                           height:"100%",
                                           backgroundColor: "#85BEFF",
-                                          aspectRatio: "13/1",
+                                          aspectRatio: {lg:"10/1", xl:"13/1"},
                                           borderRadius: "30px",
                                           boxShadow: 3,
                                           zIndex:2,
@@ -335,7 +335,7 @@ export default function TopBar() {
                                             <Typography
                                                 sx={{color:"#000000", fontWeight:"700", cursor: 'default'}}
                                             >
-                                                인원수
+                                                인원
                                             </Typography>
                                         </Box>
                                     </Grid>

@@ -67,7 +67,7 @@ function Login(props) {
                              width:"100%", height:"2.5vw",
                              m:0, p:1,
                              border:0,
-                             background: "#3767A6"}}>
+                             background: "#6CB0FF"}}>
                         <p className={styles.font_body_btn}>
                             <div>아이디로 로그인</div>
                         </p>
@@ -105,7 +105,7 @@ function Login(props) {
                              width:"100%", height:"2.5vw",
                              m:0, p:1,
                              border:5,
-                             borderColor: "#3767A6"}}>
+                             borderColor: "#6CB0FF"}}>
                         <p className={styles.font_body_join}>
                             회원가입
                         </p>

@@ -38,7 +38,7 @@ function Main(props) {
             {/* TopBar 띄우기 위한 Box*/}
             <Box sx={{height: 64}}/>
             {/* 최상위 Grid **/}
-            <Grid container sx={{px:"20%", width:"100%"}}>
+            <Grid container sx={{px:"20%", width:"100%", pb:"10rem"}}>
                 {/* Banner **/}
                 <Grid item xs={12}>
                     <Slider {...settings}>
@@ -410,25 +410,93 @@ function Main(props) {
                     </Grid>
 
                     {/* items **/}
-                    <Grid item container xs={4} sx={{m:0}}>
-                        <Grid item container xs={12} sx={{borderRadius:"1vw", borderColor:"#8D8D8D", p:"1rem", border:1}}>
+                    <Grid item container xs={4} sx={{m:0, p:0, width:"100%"}}>
+                        <Grid item container xs={12} sx={{borderRadius:"1vw", borderColor:"#8D8D8D", p:"1rem", border:1, width:"100%"}}>
                             {/* image **/}
                             <Grid item xs={12}>
-                                <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden"}}>
-                                    <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cober"}}/>
+                                <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden", borderRadius:"1vw"}}>
+                                    <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                                 </Box>
+                            </Grid>
+                            {/* 투어제목 **/}
+                            <Grid item xs={12} sx={{mt:"0.5rem"}}>
+                                <Typography sx={{fontWeight:"900", fontSize:"1rem"}}>
+                                    [1박2일] 그린투어 + 소금호수 캠핑
+                                </Typography>
+                            </Grid>
+                            {/* 평점 **/}
+                            <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                  sx={{
+                                      direction: 'flex',
+                                      justifyContent: 'flex-start',
+                                      alignItems: "center",
+                                      pt:"0.5rem"
+                                  }}
+                            >
+                                <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
+                                <Typography sx={{fontWeight:"700", fontSize:"1rem", color:"#000000"}}>
+                                    4.9
+                                </Typography>
+                            </Grid>
+                            {/* 가격 **/}
+                            {/* 평점 **/}
+                            <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                  sx={{
+                                      direction: 'flex',
+                                      justifyContent: 'flex-start',
+                                      alignItems: "center",
+                                      pt:"0.5rem"
+                                  }}
+                            >
+                                <Typography sx={{fontWeight:"900", fontSize:"1rem", color:"#8D8D8D"}}>
+                                    450000원 / 3인
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Grid>
 
                     {/* items **/}
-                    <Grid item container xs={4} sx={{m:0}}>
-                        <Grid item container xs={12} sx={{borderRadius:"1vw", borderColor:"#8D8D8D", p:"1rem", border:1}}>
+                    <Grid item container xs={4} sx={{m:0, p:0, width:"100%"}}>
+                        <Grid item container xs={12} sx={{borderRadius:"1vw", borderColor:"#8D8D8D", p:"1rem", border:1, width:"100%"}}>
                             {/* image **/}
                             <Grid item xs={12}>
-                                <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden"}}>
-                                    <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cober"}}/>
+                                <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden", borderRadius:"1vw"}}>
+                                    <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                                 </Box>
+                            </Grid>
+                            {/* 투어제목 **/}
+                            <Grid item xs={12} sx={{mt:"0.5rem"}}>
+                                <Typography sx={{fontWeight:"900", fontSize:"1rem"}}>
+                                    [1박2일] 그린투어 + 소금호수 캠핑
+                                </Typography>
+                            </Grid>
+                            {/* 평점 **/}
+                            <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                  sx={{
+                                      direction: 'flex',
+                                      justifyContent: 'flex-start',
+                                      alignItems: "center",
+                                      pt:"0.5rem"
+                                  }}
+                            >
+                                <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
+                                <Typography sx={{fontWeight:"700", fontSize:"1rem", color:"#000000"}}>
+                                    4.9
+                                </Typography>
+                            </Grid>
+                            {/* 가격 **/}
+                            {/* 평점 **/}
+                            <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                  sx={{
+                                      direction: 'flex',
+                                      justifyContent: 'flex-start',
+                                      alignItems: "center",
+                                      pt:"0.5rem"
+                                  }}
+                            >
+                                <Typography sx={{fontWeight:"900", fontSize:"1rem", color:"#8D8D8D"}}>
+                                    450000원 / 3인
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -173,13 +173,18 @@ export default function TopBar() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position="static" sx={{px: '20%', py:"0.5rem" ,backgroundColor: "#FFFFFF"}}>
-                <Container maxWidth="xl">
+            <AppBar position="relative" sx={{px: {xs:"3%", md:"10%", lg:"20%"} ,backgroundColor: "#FFFFFF",
+                direction:"flex", justifyContent:"center", alignItems:"center", py:"0.3rem", zIndex:999
+            }}
+                display={"flex"} justifyContent={"center"} alignItmes={"center"}
+            >
+                <Container maxWidth="xl" sx={{padding:{xs:0, md:0}, height:"100%"}}>
                     <Toolbar disableGutters>
                         <span
                             noWrap
                             component="a"
                             href="/"
+                            style={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}
                         >
                             <b className={styles.font_logo}>SMALLTOUR</b>
                         </span>
@@ -195,7 +200,7 @@ export default function TopBar() {
                                  display: {xs: 'none', md: 'flex', alignItems: 'center'}
                              }}>
                             <Grid container item xs={12} justifyContent="center" alignItems="center" spacing={0}
-                                  sx={{flexGrow: 1, height: '100%'}}>
+                                  sx={{flexGrow: 1, height: '100%', px:"1rem"}}>
                                 {/* 검색바 **/}
                                 <Grid container
                                       item
@@ -203,8 +208,8 @@ export default function TopBar() {
                                       justifyContent="center"
                                       alignItems="center"
                                       sx={{
-                                          width: {md:"50vw", lg:"35vw"},
-                                          height:"100%",
+                                          width: "100%",
+
                                           backgroundColor: "#85BEFF",
                                           aspectRatio: {lg:"10/1", xl:"13/1"},
                                           borderRadius: "30px",

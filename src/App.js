@@ -5,6 +5,8 @@ import Login from "./unauth/Login";
 import Join from "./unauth/Join";
 import Main from "./unauth/Main";
 import Tour from "./unauth/Tour";
+import MyInfo from "./member/MyInfo";
+import MyPage from "./member/MyPage";
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
           <Route path="/join" element={<Join/>}/>
           {/* 메인 */}
           <Route path="/main" element={<Main/>}/>
-          {/* 메인 */}
+          {/* 투어 */}
           <Route path="/tour" element={<Tour/>}/>
+          {/* 내정보 */}
+          <Route path="/my/:value" element={<MyPage/>}/>
       </Routes>
   );
 }

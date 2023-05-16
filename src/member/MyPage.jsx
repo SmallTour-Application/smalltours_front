@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import testImg from "../images/test.png";
 import {
     Accordion,
@@ -12,16 +12,36 @@ import {
 } from "@mui/material";
 import TopBar from "../component/TopNav";
 import Typography from "@mui/material/Typography";
+import MyInfo from "./MyInfo";
+import {useNavigate, useParams} from "react-router-dom";
+import Plan from "./Plan";
+import PlanLog from "./PlanLog";
 
-const page=["개인정보", "예약일정", "여행기록", "리뷰 및 평가 확인", "관심 가이드"]
-
+const page=[
+    {url:"info", name:"개인정보"},
+    {url:"plan", name:"예약일정"},
+    {url:"log", name:"여행기록"},
+    {url:"review", name:"리뷰 및 평가 확인"},
+    {url:"favorite", name:"관심 가이드"}]
 function MyPage(props) {
+    const move = useNavigate();
+
+    const params = useParams();
+    const [keyword, setKeyword] = useState("");
 
     const theme = createTheme({ // Theme
         typography: {
             fontFamily: 'NanumSquareNeo',
         },
     });
+
+    useEffect(() => {
+        setKeyword(params.value);
+    }, [])
+
+    useEffect(() => {
+        setKeyword(params.value)
+    }, [params])
 
     return (
         <ThemeProvider theme={theme}>
@@ -39,8 +59,14 @@ function MyPage(props) {
                         {page.map((item) => (
                             <Grid item container xs={12} display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
                                 <Grid xs={12} item display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
-                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", my:"1rem"}}>
-                                        {item}
+                                    <Typography
+                                        onClick={() => move(`/my/${item.url}`)}
+                                        sx={{fontSize:"1rem",
+                                            fontWeight: keyword === item.url ? "900" : "700" ,
+                                        my:"1rem",
+                                        color : keyword === item.url && "#6CB0FF" ,
+                                    }}>
+                                        {item.name}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}><Divider/></Grid>
@@ -48,9 +74,15 @@ function MyPage(props) {
                         ))}
                     </Grid>
                 </Grid>
-                <Grid container item md={8}>
-                    {props.value === "info" && (
-                        <MyPage/>
+                <Grid container item md={8} xs={12}>
+                    {keyword === "info" && (
+                        <MyInfo/>
+                    )}
+                    {keyword === "plan" && (
+                        <Plan/>
+                    )}
+                    {keyword === "log" && (
+                        <PlanLog/>
                     )}
                 </Grid>
             </Grid>

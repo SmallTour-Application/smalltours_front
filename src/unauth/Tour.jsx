@@ -478,7 +478,7 @@ function Tour(props) {
                     </Grid>
                     <Grid xs={12} item sx={{mt:'1vw', mb:'7vw'}}>
                         <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
-                            <Typography sx={{color:"#000000"}}>수강평 더보기</Typography>
+                            <Typography sx={{color:"#000000"}}>리뷰 더보기</Typography>
                         </Button>
                     </Grid>
                 </Grid>

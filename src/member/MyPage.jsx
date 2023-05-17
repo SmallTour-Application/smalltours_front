@@ -16,12 +16,14 @@ import MyInfo from "./MyInfo";
 import {useNavigate, useParams} from "react-router-dom";
 import Plan from "./Plan";
 import PlanLog from "./PlanLog";
+import MyReview from "./MyReview";
 
 const page=[
     {url:"info", name:"개인정보"},
     {url:"plan", name:"예약일정"},
     {url:"log", name:"여행기록"},
-    {url:"review", name:"리뷰 및 평가 확인"},
+    {url:"review", name:"리뷰 확인"},
+    {url:"guide", name:"가이드 리뷰 확인"},
     {url:"favorite", name:"관심 가이드"}]
 function MyPage(props) {
     const move = useNavigate();
@@ -47,7 +49,11 @@ function MyPage(props) {
         <ThemeProvider theme={theme}>
             <TopBar/>
             {/* 최상위 Grid **/}
-            <Grid container sx={{width:"100%" ,mb:"10rem",py:"5rem", px:{xs:"3%", md:"10%", lg:"20%"}}} spacing={3}>
+            <Grid container sx={{width:"100%" ,mb:"10rem",py:"5rem", px:{xs:"3%", md:"10%", lg:"20%"}}} spacing={3}
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="flex-start"
+            >
                 {/* 페이지 선택용 Grid **/}
                 <Grid container item md={4} xs={12}>
                     <Grid item container xs={12} display={"flex"} justifyContent={"flex-start"} alignItmes={"center"} sx={{mb:"2rem"}}>
@@ -83,6 +89,9 @@ function MyPage(props) {
                     )}
                     {keyword === "log" && (
                         <PlanLog/>
+                    )}
+                    {keyword === "review" && (
+                        <MyReview/>
                     )}
                 </Grid>
             </Grid>

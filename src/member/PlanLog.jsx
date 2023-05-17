@@ -166,9 +166,12 @@ function PlanLog(props) {
                               console.log(tempArr);
                               // true,false 반대로 넣기
                               if(tempArr[idx].check === false) {
-                                  tempArr[idx].check = true
+                                  for(let i = 0 ; i < tempArr.length ; i++) {
+                                      tempArr[i].check = false;
+                                  }
+                                  tempArr[idx].check = true;
                               }else {
-                                  tempArr[idx].check = false
+                                  tempArr[idx].check = false;
                               }
                               setCollapseArr(tempArr);
                               console.log(collapseArr);
@@ -239,15 +242,56 @@ function PlanLog(props) {
                         </Grid>
 
                         {/* 리뷰작성 **/}
-                        <Grid xs={12} container item>
+                        <Grid xs={12} container item display={"flex"} justifyContent={"center"} alignItems={"center"}>
                             <Collapse in={collapseArr[idx] && collapseArr[idx].check} fullWidth>
-                                <Grid container item xs={12}>
-                                    <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                                        <Typography>
-                                            리뷰작성
-                                        </Typography>
+                                <Grid container item spacing={3} xs={12} sx={{pt:"2rem"}}>
+                                    <Grid container item xs={12} md={6}>
+                                        <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}
+                                              sx={{direction:"flex", justifyContent:"center", alignItems:"center"}}
+                                        >
+                                            <Typography sx={{fontSize:"1.3rem", fontWeight:"700"}}>
+                                                여행리뷰
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}
+                                              sx={{direction:"flex", justifyContent:"center", alignItems:"center", width:"100%"}}
+                                        >
+                                            <TextField
+                                                multiline
+                                                rows={4}
+                                                defaultValue="내용"
+                                                fullWidth
+                                                sx={{width:"100%"}}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container item xs={12} md={6} >
+                                        <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}
+                                              sx={{direction:"flex", justifyContent:"center", alignItems:"center"}}
+                                        >
+                                            <Typography sx={{fontSize:"1.3rem", fontWeight:"700"}}>
+                                                가이드리뷰
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}
+                                              sx={{direction:"flex", justifyContent:"center", alignItems:"center", width:"100%"}}
+                                        >
+                                            <TextField
+                                                multiline
+                                                rows={4}
+                                                defaultValue="내용"
+                                                fullWidth
+                                                sx={{width:"100%"}}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid xs={12} item sx={{pt:'1rem', pb:"2rem"}}>
+                                        <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
+                                            <Typography sx={{color:"#000000"}}>리뷰 등록</Typography>
+                                        </Button>
                                     </Grid>
                                 </Grid>
+
                             </Collapse>
                         </Grid>
 

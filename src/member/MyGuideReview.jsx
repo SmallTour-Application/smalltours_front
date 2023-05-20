@@ -26,7 +26,7 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지1"
+        packageName : "일지훈"
     },
     {
         memberId : 200,
@@ -34,7 +34,7 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지2"
+        packageName : "이지훈"
     },
     {
         memberId : 300,
@@ -42,11 +42,11 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지3"
+        packageName : "삼지훈"
     },
 ]
 
-function MyReview(props) {
+function MyGuideReview(props) {
 
     const theme = createTheme({ // Theme
         typography: {
@@ -58,7 +58,7 @@ function MyReview(props) {
         <Grid container item xs={12}>
             <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
                 <Typography sx={{fontSize: "2rem", fontWeight: "700"}}>
-                    내 여행리뷰
+                    내 가이드리뷰
                 </Typography>
             </Grid>
             <Grid container item
@@ -108,7 +108,7 @@ function MyReview(props) {
                                         sx={{pl:0}}
                                     >
                                         <Typography sx={{fontSize:"1rem", fontWeight:"700"}}>
-                                            {items.packageName}
+                                            가이드명 : {items.packageName}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -149,4 +149,4 @@ function MyReview(props) {
     );
 }
 
-export default MyReview;
+export default MyGuideReview;

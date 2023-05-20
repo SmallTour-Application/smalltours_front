@@ -1,13 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import testImg from "../images/test.png";
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box, Button, Checkbox,
-    createTheme, Divider, FormControlLabel,
-    Grid, Radio, RadioGroup,
-    TextField,
+    createTheme, Divider,
+    Grid,
     ThemeProvider
 } from "@mui/material";
 import TopBar from "../component/TopNav";
@@ -17,6 +11,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import Plan from "./Plan";
 import PlanLog from "./PlanLog";
 import MyReview from "./MyReview";
+import MyGuideReview from "./MyGuideReview";
+import MyFavoriteTour from "./MyFavoriteTour";
+import MyFavoriteGuide from "./MyFavoriteGuide";
 
 const page=[
     {url:"info", name:"개인정보"},
@@ -24,7 +21,8 @@ const page=[
     {url:"log", name:"여행기록"},
     {url:"review", name:"리뷰 확인"},
     {url:"guide", name:"가이드 리뷰 확인"},
-    {url:"favorite", name:"관심 가이드"}]
+    {url:"ftour", name:"관심 여행"},
+    {url:"fguide", name:"관심 가이드"}]
 function MyPage(props) {
     const move = useNavigate();
 
@@ -92,6 +90,15 @@ function MyPage(props) {
                     )}
                     {keyword === "review" && (
                         <MyReview/>
+                    )}
+                    {keyword === "guide" && (
+                        <MyGuideReview/>
+                    )}
+                    {keyword === "ftour" && (
+                        <MyFavoriteTour/>
+                    )}
+                    {keyword === "fguide" && (
+                        <MyFavoriteGuide/>
                     )}
                 </Grid>
             </Grid>

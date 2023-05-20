@@ -26,7 +26,8 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지1"
+        packageName : "패키지1",
+        guideName : "킹용식"
     },
     {
         memberId : 200,
@@ -34,7 +35,9 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지2"
+        packageName : "패키지2",
+        guideName : "킹용식"
+
     },
     {
         memberId : 300,
@@ -42,7 +45,9 @@ const reviews = [
         rating : 5,
         content : "내용입니다 내용내용",
         createdDay : "2020-03-28",
-        packageName : "패키지3"
+        packageName : "패키지3",
+        guideName : "킹용식"
+
     },
 ]
 
@@ -65,7 +70,7 @@ function MyReview(props) {
                   display={"flex"}
                   justifyContent={"center"}
                   alignItems={"center"}
-                  xs={12} sx={{border: 1, borderColor: "#8D8D8D", borderRadius: "1vw", p: "1rem", overflow: 'auto'}}>
+                  xs={12}>
                 {/* items **/}
                 {reviews && reviews.map((items) => {
                     return(
@@ -75,9 +80,9 @@ function MyReview(props) {
                             display="flex"
                             justifyContent="flex-start"
                             alignItems="center"
-                            sx={{px:"1rem"}}
+                            sx={{border:2,borderColor: "#DDDDDD", borderRadius: "1vw", p: "1rem", overflow: 'auto', mb:"2rem"}}
                         >
-                            <Grid container item xs={12} sx={{my:'1rem'}}>
+                            <Grid container item xs={9} sx={{pl:"2rem"}}>
                                 <Grid
                                     item
                                     container
@@ -91,13 +96,18 @@ function MyReview(props) {
                                         xs={12}
                                         display="flex"
                                         justifyContent="flex-start"
-                                        alignItems="flex-end"
+                                        alignItems="center"
+                                        sx={{pl:0}}
                                     >
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
+                                        <Typography sx={{fontSize:"1.3rem", fontWeight:"700", mr:"1rem"}}>
+                                            {items.packageName}
+                                        </Typography>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+
                                     </Grid>
                                     <Grid
                                         item
@@ -105,10 +115,10 @@ function MyReview(props) {
                                         display="flex"
                                         justifyContent="flex-start"
                                         alignItems="center"
-                                        sx={{pl:0}}
+                                        sx={{py:"1rem"}}
                                     >
-                                        <Typography sx={{fontSize:"1rem", fontWeight:"700"}}>
-                                            {items.packageName}
+                                        <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#8D8D8D"}}>
+                                            {items.guideName} 가이드
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -116,7 +126,7 @@ function MyReview(props) {
                                       display="flex"
                                       justifyContent="flex-start"
                                       alignItems="center"
-                                      xs={12} sx={{pt:"1rem"}}>
+                                      xs={12}>
                                     <Typography>
                                         {items.content}
                                     </Typography>
@@ -130,18 +140,26 @@ function MyReview(props) {
                                         2022-03-18 ♥2
                                     </Typography>
                                 </Grid>
-                                <Grid item
-                                      xs={12} sx={{mt:"1rem"}}>
-                                    <Divider fullWidth/>
+                            </Grid>
+                            {/* 버튼배치 **/}
+                            <Grid container item xs={3} sx={{px:"3rem"}} spacing={2}>
+                                <Grid xs={12} item>
+                                    <Button fullWidth variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                        <Typography sx={{color:"#000000"}}>리뷰삭제</Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid xs={12} item>
+                                    <Button fullWidth variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                        <Typography sx={{color:"#000000"}}>리뷰수정</Typography>
+                                    </Button>
                                 </Grid>
                             </Grid>
-
                         </Grid>
                     );
                 })}
             </Grid>
             <Grid xs={12} item sx={{mt:'1vw', mb:'7vw'}}>
-                <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
+                <Button variant="outlined" fullWidth sx={{borderColor:'#DDDDDD', borderRadius:'10px'}}>
                     <Typography sx={{color:"#000000"}}>리뷰 더보기</Typography>
                 </Button>
             </Grid>

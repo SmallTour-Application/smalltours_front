@@ -7,6 +7,7 @@ import Main from "./unauth/Main";
 import Tour from "./unauth/Tour";
 import MyInfo from "./member/MyInfo";
 import MyPage from "./member/MyPage";
+import SearchResult from "./unauth/SearchResult";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/tour" element={<Tour/>}/>
           {/* 내정보 */}
           <Route path="/my/:value" element={<MyPage/>}/>
+          {/* result */}
+          <Route path="/search" element={<SearchResult/>}/>
       </Routes>
   );
 }

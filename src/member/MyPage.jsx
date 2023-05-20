@@ -22,7 +22,8 @@ const page=[
     {url:"review", name:"리뷰 확인"},
     {url:"guide", name:"가이드 리뷰 확인"},
     {url:"ftour", name:"관심 여행"},
-    {url:"fguide", name:"관심 가이드"}]
+    {url:"fguide", name:"관심 가이드"},
+    {url:"pay", name:"결제기록"}]
 function MyPage(props) {
     const move = useNavigate();
 
@@ -53,13 +54,13 @@ function MyPage(props) {
                   alignItems="flex-start"
             >
                 {/* 페이지 선택용 Grid **/}
-                <Grid container item md={4} xs={12}>
+                <Grid container item md={3} xs={12}>
                     <Grid item container xs={12} display={"flex"} justifyContent={"flex-start"} alignItmes={"center"} sx={{mb:"2rem"}}>
                         <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>
                             마이페이지
                         </Typography>
                     </Grid>
-                    <Grid xs={12} container item sx={{borderRadius:"1vw", border:1, borderColor:"#8D8D8D", p:"1rem"}}>
+                    <Grid xs={12} container item sx={{borderRadius:"1vw", borderColor:"#8D8D8D"}}>
                         {page.map((item) => (
                             <Grid item container xs={12} display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
                                 <Grid xs={12} item display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
@@ -73,12 +74,11 @@ function MyPage(props) {
                                         {item.name}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}><Divider/></Grid>
                             </Grid>
                         ))}
                     </Grid>
                 </Grid>
-                <Grid container item md={8} xs={12}>
+                <Grid container item md={9} xs={12}>
                     {keyword === "info" && (
                         <MyInfo/>
                     )}
@@ -98,6 +98,9 @@ function MyPage(props) {
                         <MyFavoriteTour/>
                     )}
                     {keyword === "fguide" && (
+                        <MyFavoriteGuide/>
+                    )}
+                    {keyword === "pay" && (
                         <MyFavoriteGuide/>
                     )}
                 </Grid>

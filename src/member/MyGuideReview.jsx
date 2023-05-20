@@ -65,7 +65,7 @@ function MyGuideReview(props) {
                   display={"flex"}
                   justifyContent={"center"}
                   alignItems={"center"}
-                  xs={12} sx={{border: 1, borderColor: "#8D8D8D", borderRadius: "1vw", p: "1rem", overflow: 'auto'}}>
+                  xs={12}>
                 {/* items **/}
                 {reviews && reviews.map((items) => {
                     return(
@@ -75,9 +75,9 @@ function MyGuideReview(props) {
                             display="flex"
                             justifyContent="flex-start"
                             alignItems="center"
-                            sx={{px:"1rem"}}
+                            sx={{border:2,borderColor: "#DDDDDD", borderRadius: "1vw", p: "1rem", overflow: 'auto', mb:"2rem"}}
                         >
-                            <Grid container item xs={12} sx={{my:'1rem'}}>
+                            <Grid container item xs={9} sx={{pl:'2rem'}}>
                                 <Grid
                                     item
                                     container
@@ -93,11 +93,11 @@ function MyGuideReview(props) {
                                         justifyContent="flex-start"
                                         alignItems="flex-end"
                                     >
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                        <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
+                                        <StarIcon sx={{ color: '#6CB0FF', fontSize: '1.5rem' }}/>
                                     </Grid>
                                     <Grid
                                         item
@@ -130,12 +130,20 @@ function MyGuideReview(props) {
                                         2022-03-18 ♥2
                                     </Typography>
                                 </Grid>
-                                <Grid item
-                                      xs={12} sx={{mt:"1rem"}}>
-                                    <Divider fullWidth/>
+                            </Grid>
+                            {/* 버튼배치 **/}
+                            <Grid container item xs={3} sx={{px:"3rem"}} spacing={2}>
+                                <Grid xs={12} item>
+                                    <Button fullWidth variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                        <Typography sx={{color:"#000000"}}>리뷰삭제</Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid xs={12} item>
+                                    <Button fullWidth variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                        <Typography sx={{color:"#000000"}}>리뷰수정</Typography>
+                                    </Button>
                                 </Grid>
                             </Grid>
-
                         </Grid>
                     );
                 })}

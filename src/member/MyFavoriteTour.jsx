@@ -23,17 +23,20 @@ const reviews = [
     {
         tourId : 1,
         tourThumb : testImg,
-        tourName : "패키지1"
+        tourName : "패키지1",
+        sub : 33
     },
     {
         tourId : 2,
         tourThumb : testImg,
-        tourName : "패키지2"
+        tourName : "패키지2",
+        sub : 33
     },
     {
         tourId : 3,
         tourThumb : testImg,
-        tourName : "패키지3"
+        tourName : "패키지3",
+        sub : 33
     },
 ]
 
@@ -58,45 +61,76 @@ function MyGuideReview(props) {
             </Grid>
             <Grid container item
                   display={"flex"}
-                  justifyContent={"center"}
+                  justifyContent={"flex-start"}
                   alignItems={"center"}
-                  xs={12} sx={{border: 1, borderColor: "#8D8D8D", borderRadius: "1vw", p: "1rem", overflow: 'auto'}}>
+                  xs={12} sx={{ overflow: 'auto'}}
+                  spacing={2}
+            >
                 {/* items **/}
                 {reviews && reviews.map((items) => {
                     return(
                         <Grid
                             container
-                            item xs={12}
+                            item xs={3}
                             display="flex"
                             justifyContent="flex-start"
                             alignItems="center"
-                            sx={{px:"1rem", py:"1rem"}}
                         >
-                            <Grid lg={1} md={2} xs={5}
-                                  display="flex"
-                                  justifyContent="center"
-                                  alignItems="center"
+                            <Grid
+                                container
+                                item xs={12}
+                                display="flex"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                sx={{border:2, borderRadius:"1vw" ,borderColor: "#DDDDDD",pb:"3rem", overflow:"hidden"}}
                             >
-                                <Box sx={{width:"100%", aspectRatio:"1/1", borderRadius:"30vw", overflow:"hidden"}}>
-                                    <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
-                                </Box>
+                                <Grid xs={12}
+                                      display="flex"
+                                      justifyContent="center"
+                                      alignItems="center"
+                                >
+                                    <Box sx={{width:"100%", height:"100%", overflow:"hidden"}}>
+                                        <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                    </Box>
+                                </Grid>
+                                <Grid xs={12}
+                                      display="flex"
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      sx={{mt:"2rem"}}
+                                >
+                                    <Typography sx={{fontSize:"1rem", fontWeight:"700"}}>
+                                        {items.tourName}
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={12}
+                                      display="flex"
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      sx={{mt:"0.5rem"}}
+                                >
+                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>
+                                        구독자 {items.sub} 명
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={12}
+                                      display="flex"
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      sx={{mt:"2rem", px:"30%"}}
+                                >
+                                    <Button fullWidth sx={{border:2, borderColor:"#DDDDDD", borderRadius:"50vw"}}>
+                                        <Typography sx={{fontSize:"0.7rem", fontWeight:"700", color:"#000000"}}>구독취소</Typography>
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid lg={11} md={10} xs={7}
-                                  sx={{pl:"2rem"}}
-                                  display="flex"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                            >
-                                <Typography>
-                                    {items.tourName}
-                                </Typography>
-                            </Grid>
+
                         </Grid>
                     );
                 })}
             </Grid>
             <Grid xs={12} item sx={{mt:'1vw', mb:'7vw'}}>
-                <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
+                <Button variant="outlined" fullWidth sx={{borderColor:'#DDDDDD', borderRadius:'10px'}}>
                     <Typography sx={{color:"#000000"}}>투어 더보기</Typography>
                 </Button>
             </Grid>

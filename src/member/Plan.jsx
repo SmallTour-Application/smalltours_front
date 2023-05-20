@@ -1,20 +1,13 @@
 import React, {useState} from 'react';
 import testImg from "../images/test.png";
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box, Button, Checkbox, Collapse,
-    createTheme, Divider, FormControlLabel,
-    Grid, Radio, RadioGroup,
-    TextField,
-    ThemeProvider
+    Box,
+
+    Button,
+    createTheme,
+    Grid,
 } from "@mui/material";
-import TopBar from "../component/TopNav";
 import Typography from "@mui/material/Typography";
-import EditIcon from '@mui/icons-material/Edit';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
 function Plan(props) {
 
@@ -26,238 +19,139 @@ function Plan(props) {
 
     return (
         <Grid content item xs={12}>
-            <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
+            <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
                 <Typography sx={{fontSize: "2rem", fontWeight: "700"}}>
-                    예약일정
+                    여행일정
+                </Typography>
+            </Grid>
+            <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
+                <Typography sx={{fontSize: "1rem", fontWeight: "700", color:"#888888"}}>
+                    2건의 여행 일정이 있어요
                 </Typography>
             </Grid>
             <Grid container item
                   display={"flex"}
                   justifyContent={"center"}
                   alignItems={"center"}
-                  xs={12} sx={{border: 1, borderColor: "#8D8D8D", borderRadius: "1vw", p: "1rem", overflow: 'auto'}}>
-                <Grid xs={12} container item
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                        spacing={0}
-                      sx={{px:"2rem", pb:"1rem"}}
-                >
-                    <Grid xs={1} item
+                  xs={12}
+            >
+
+                {/* item 1 **/}
+                <Grid container item
+                      display={"flex"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      xs={12} sx={{border: 1,borderRadius:"1vw", borderColor: "#DDDDDD", overflow: 'hidden', p:0, mb:"2rem"}}>
+                    <Grid xs={3} item
                           display={"flex"}
                           justifyContent={"center"}
                           alignItems={"center"}
+                          sx={{height:"100%"}}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            예약일
-                        </Typography>
+                        <Box sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0}}>
+                            <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center"}}/>
+                        </Box>
                     </Grid>
-                    <Grid xs={1} item
+                    <Grid xs={6} item container
                           display={"flex"}
-                          justifyContent={"center"}
+                          justifyContent={"flex-start"}
                           alignItems={"center"}
+                          sx={{pl:"1rem"}}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            예약코드
-                        </Typography>
+                        <Grid xs={12} item sx={{mb:"1rem"}}>
+                            <span style={{fontFamily: 'NanumSquareNeo', fontWeight:"700", fontSize:"1.3rem", marginRight:"1rem"}}>예약완료</span>
+                            <span style={{fontFamily: 'NanumSquareNeo',color:"#888888", fontSize:"1rem"}}>5월 13일 ~ 5월 17일</span>
+                        </Grid>
+                        <Grid xs={12} item>
+                            <Typography sx={{fontSize:"1.3rem", fontWeight:"700"}}>싱가포르 5,6일 #1일 자유 #슈퍼트리쇼 #루지 체험</Typography>
+                        </Grid>
+                        <Grid xs={12} item>
+                            <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>김용식 가이드</Typography>
+                        </Grid>
+                        <Grid xs={12} item sx={{mt:"1rem"}}>
+                            <Typography sx={{fontWeight:"700"}}>799,000원</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid xs={1} item
+                    <Grid xs={3} item container
                           display={"flex"}
-                          justifyContent={"center"}
+                          justifyContent={"flex-end"}
                           alignItems={"center"}
+                          spacing={2}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            상품이름
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            결제금액
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            출발날짜
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            여행인원
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"700", fontSize:"1rem" }}>
-                            현재상태
-                        </Typography>
+                        <Grid item xs={12} sx={{ px:"3rem"}}>
+                            <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                <Typography sx={{color:"#000000"}}>여행 상세보기</Typography>
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sx={{ px:"3rem"}}>
+                            <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                <Typography sx={{color:"#000000"}}>예약 취소</Typography>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
 
-                {/* line1 **/}
-                <Grid xs={12} container item
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={0}
-                      sx={{px:"2rem", pt:"1rem"}}
-                >
-                    <Grid xs={1} item
+                {/* item 2 **/}
+                <Grid container item
+                      display={"flex"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      xs={12} sx={{border: 1,borderRadius:"1vw", borderColor: "#DDDDDD", overflow: 'hidden', p:0}}>
+                    <Grid xs={3} item
                           display={"flex"}
                           justifyContent={"center"}
                           alignItems={"center"}
+                          sx={{height:"100%"}}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            20230301
-                        </Typography>
+                        <Box sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0}}>
+                            <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center"}}/>
+                        </Box>
                     </Grid>
-                    <Grid xs={1} item
+                    <Grid xs={6} item container
                           display={"flex"}
-                          justifyContent={"center"}
+                          justifyContent={"flex-start"}
                           alignItems={"center"}
+                          sx={{pl:"1rem"}}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            000000
-                        </Typography>
+                        <Grid xs={12} item sx={{mb:"1rem"}}>
+                            <span style={{fontFamily: 'NanumSquareNeo', fontWeight:"700", fontSize:"1.3rem", marginRight:"1rem"}}>예약완료</span>
+                            <span style={{fontFamily: 'NanumSquareNeo',color:"#888888", fontSize:"1rem"}}>5월 13일 ~ 5월 17일</span>
+                        </Grid>
+                        <Grid xs={12} item>
+                            <Typography sx={{fontSize:"1.3rem", fontWeight:"700"}}>싱가포르 5,6일 #1일 자유 #슈퍼트리쇼 #루지 체험</Typography>
+                        </Grid>
+                        <Grid xs={12} item>
+                            <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>김용식 가이드</Typography>
+                        </Grid>
+                        <Grid xs={12} item sx={{mt:"1rem"}}>
+                            <Typography sx={{fontWeight:"700"}}>799,000원</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid xs={1} item
+                    <Grid xs={3} item container
                           display={"flex"}
-                          justifyContent={"center"}
+                          justifyContent={"flex-end"}
                           alignItems={"center"}
+                          spacing={2}
                     >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            여행가고싶다
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            300000
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            20230328
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            4
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            예약
-                        </Typography>
-                    </Grid>
-                </Grid>
-
-                {/* line2 **/}
-                <Grid xs={12} container item
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={0}
-                      sx={{px:"2rem", pt:"1rem"}}
-                >
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            20230301
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            000000
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            여행가고싶다
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            300000
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            20230328
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            4
-                        </Typography>
-                    </Grid>
-                    <Grid xs={1} item
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                    >
-                        <Typography style={{ whiteSpace: 'nowrap', fontWeight:"500", fontSize:"1rem" }}>
-                            예약
-                        </Typography>
+                        <Grid item xs={12} sx={{ px:"3rem"}}>
+                            <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                <Typography sx={{color:"#000000"}}>여행 상세보기</Typography>
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sx={{ px:"3rem"}}>
+                            <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                <Typography sx={{color:"#000000"}}>예약 취소</Typography>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
 
             </Grid>
 
-            <Grid xs={12} item sx={{pt:'1vw'}}>
-                <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
+
+
+            <Grid xs={12} item sx={{pt:'1vw',}}>
+                <Button variant="outlined" fullWidth sx={{borderColor:'#DDDDDD', borderRadius:'10px'}}>
                     <Typography sx={{color:"#000000"}}>예약일정 더보기</Typography>
                 </Button>
             </Grid>

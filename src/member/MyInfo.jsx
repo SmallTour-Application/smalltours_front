@@ -46,14 +46,18 @@ function MyInfo(props) {
                     개인정보
                 </Typography>
             </Grid>
-            <Grid container item xs={12} sx={{border: 1, borderColor: "#8D8D8D", borderRadius: "1vw", p: "1rem", pt:"2rem", px:"2rem"}}>
+            <Grid container item xs={12} sx={{ border:2,borderColor: "#DDDDDD", borderRadius: "1vw" , overflow:"hidden"}}>
                 {/* 이름 **/}
-                <Grid xs={12} item container sx={{pb: "1rem"}}>
-                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "700", fontSize: "1.3rem"}}>이름</Typography>
+                <Grid xs={12} item container>
+                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                        sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>이름</Typography>
                     </Grid>
-                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "500", fontSize: "1.3rem"}}
+                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                        sx={{py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
                                     display={"flex"} justifyContent="flex-start" alignItems={"center"}
                         >
                             이지훈<EditIcon/>
@@ -62,12 +66,16 @@ function MyInfo(props) {
                 </Grid>
 
                 {/* 아이디 **/}
-                <Grid xs={12} item container sx={{pb: "1rem"}}>
-                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "700", fontSize: "1.3rem"}}>아이디</Typography>
+                <Grid xs={12} item container>
+                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>아이디</Typography>
                     </Grid>
-                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "500", fontSize: "1.3rem"}}
+                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
                                     display={"flex"} justifyContent="flex-start" alignItems={"center"}
                         >
                             dlwl2023@kyungmin.ac.kr<EditIcon/>
@@ -76,12 +84,16 @@ function MyInfo(props) {
                 </Grid>
 
                 {/* 비밀번호 **/}
-                <Grid xs={12} item container sx={{pb: "1rem"}}>
-                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "700", fontSize: "1.3rem"}}>비밀번호</Typography>
+                <Grid xs={12} item container>
+                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>비밀번호</Typography>
                     </Grid>
-                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "500", fontSize: "1.3rem"}}
+                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
                                     display={"flex"} justifyContent="flex-start" alignItems={"center"}
                         >
                             {pwEdit === false && "**********"}
@@ -99,14 +111,18 @@ function MyInfo(props) {
                 {/* 비밀번호 확인 - 비밀번호 옆 편집 버튼 눌렀을 시에만 활성화**/}
                 <Grid xs={12} container item>
                     <Collapse in={pwEdit} sx={{width:"100%"}}>
-                        <Grid xs={12} item container sx={{pb: "1rem", }}>
+                        <Grid xs={12} item container>
                             <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start"
-                                  alignItems={"center"}>
-                                <Typography sx={{fontWeight: "700", fontSize: "1.3rem"}}>비밀번호확인</Typography>
+                                  alignItems={"center"}
+                                  sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
+                            >
+                                <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>비밀번호확인</Typography>
                             </Grid>
                             <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start"
-                                  alignItems={"center"}>
-                                <Typography sx={{fontWeight: "500", fontSize: "1.3rem"}}
+                                  alignItems={"center"}
+                                  sx={{py:"1rem", pl:"2rem"}}
+                            >
+                                <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
                                             display={"flex"} justifyContent="flex-start" alignItems={"center"}
                                 >
                                     <TextField variant="standard" sx={{mr: "1rem"}} type={"password"}/>
@@ -122,12 +138,16 @@ function MyInfo(props) {
 
 
                 {/* 전화번호 **/}
-                <Grid xs={12} item container sx={{pb: "1rem"}}>
-                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "700", fontSize: "1.3rem"}}>전화번호</Typography>
+                <Grid xs={12} item container>
+                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>전화번호</Typography>
                     </Grid>
-                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
-                        <Typography sx={{fontWeight: "500", fontSize: "1.3rem"}}
+                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}
+                          sx={{py:"1rem", pl:"2rem"}}
+                    >
+                        <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
                                     display={"flex"} justifyContent="flex-start" alignItems={"center"}
                         >
                             {telEdit === false && tel}

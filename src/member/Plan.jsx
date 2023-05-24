@@ -58,7 +58,7 @@ function Plan(props) {
                           alignItems={"center"}
                           sx={{pl:"1rem"}}
                     >
-                        <Grid xs={12} item sx={{mb:"1rem"}}>
+                        <Grid xs={12} item sx={{mb:"1rem"}} >
                             <span style={{fontFamily: 'NanumSquareNeo', fontWeight:"700", fontSize:"1.3rem", marginRight:"1rem"}}>예약완료</span>
                             <span style={{fontFamily: 'NanumSquareNeo',color:"#888888", fontSize:"1rem"}}>5월 13일 ~ 5월 17일</span>
                         </Grid>

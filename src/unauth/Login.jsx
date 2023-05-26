@@ -5,6 +5,10 @@ import styles from "./css/Login.module.css"
 import kakao from "../images/kakao.svg"
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import axios from "axios";
+import {setAccessToken} from "../redux/actions";
+import Cookies from "js-cookie"
+
 // 로그인 페이지
 function Login(props) {
 
@@ -30,7 +34,6 @@ function Login(props) {
         // 이미 로그인 상태인 경우 메인 페이지로 이동
         if (accessToken) {
             navigate("/main")
-            return null;
         }
     },[accessToken])
 
@@ -38,19 +41,45 @@ function Login(props) {
         // 이미 로그인 상태인 경우 메인 페이지로 이동
         if (accessToken) {
             navigate("/main")
-            return null;
         }
     },[])
+
+
+    // 로그인
+    const handleSubmit = async () => {
+        const req = {
+            email : email,
+            password : pw,
+        };
+        const response = await axios.post(
+            `http://localhost:8099/unauth/member/signin`, req
+        ).catch((err) => {
+            console.log(req)
+            console.log(err)
+            alert("이메일 또는 비밀번호가 다릅니다.")
+            window.location.replace("/login")
+        }).then((res) => {
+            console.log(res);
+            // 쿠키에 저장(임시)
+            Cookies.set('accessToken', res.data.token)
+            dispatch(setAccessToken(res.data.token))
+            // role이 0인 경우 (일반 회원인 경우)
+            if(res.data.role === 0){
+                // 메인페이지로 이동
+                navigate("/main")
+            }
+        })
+    }
 
     return (
         <ThemeProvider theme={theme}>
             <TopBar/>
 
             <Grid container sx={{px:{xs:"3%", md:"20%", lg:"30%"}}}>
-                <Grid item xs={12} sx={{pt:2}}>
+                <Grid item xs={12} sx={{pt:"4rem"}}>
                     <p className={styles.font_body_login}>로그인</p>
                 </Grid>
-                <Grid item xs={12} sx={{pt:2}}>
+                <Grid item xs={12} sx={{pt:"3rem"}}>
                     <p className={styles.font_body_menu}>이메일</p>
                     <TextField
                         required
@@ -59,6 +88,7 @@ function Login(props) {
                         name="email"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => setEmail(e.target.value)}
                     >
                     </TextField>
                 </Grid>
@@ -72,6 +102,7 @@ function Login(props) {
                         type="password"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => setPw(e.target.value)}
                     >
                     </TextField>
                 </Grid>
@@ -91,6 +122,7 @@ function Login(props) {
                     <Box display="flex"
                          justifyContent="center"
                          alignItems="center"
+                         onClick={() => handleSubmit()}
                          sx={{ borderRadius: '10vw',
                              width:"100%", height:"2.5vw",
                              m:0, p:1,

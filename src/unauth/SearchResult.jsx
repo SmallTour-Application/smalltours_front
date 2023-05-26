@@ -5,6 +5,7 @@ import {useLocation} from "react-router-dom";
 import testImg from "../images/test.png"
 import Typography from "@mui/material/Typography";
 import StarIcon from "@mui/icons-material/Star";
+import axios from "axios";
 
 // 더미데이터
 const temp = {
@@ -101,6 +102,8 @@ function SearchResult(props) {
 
     const [sort, setSort] = useState("인기순");
 
+    const [result, setResult] = useState(null) // 검색결과
+
     // 주소에서 값 가져오기
     const keyword = queryParams.get('keyword'); // 키워드
     const people = queryParams.get("people"); // 최소인원
@@ -115,6 +118,26 @@ function SearchResult(props) {
             fontFamily: 'NanumSquareNeo',
         },
     });
+
+    // 검색 api 호출
+    const search = async () => {
+        const response = await axios.get(
+            `http://localhost:8099/unauth/search/package`,
+            {
+                start : start,
+                end : end,
+                location : loc,
+                people : people,
+                sort : 0,
+                type : 0,
+                keyword : keyword
+            }
+        ).then((res) => {
+            setResult(res.data);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
     return (
         <ThemeProvider theme={theme}>

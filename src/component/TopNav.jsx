@@ -25,6 +25,10 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import dayjs from "dayjs";
 import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {clearAccessToken} from "../redux/actions";
+import axios from "axios";
 
 
 const pages = ["강의", "테마별 강의", "소개", "검색"];
@@ -36,8 +40,13 @@ const overseasList = ["동아시아", "유럽", "북미", "남미", "동남아",
 
 
 export default function TopBar() {
+    const accessToken = useSelector((state) => state.accessToken);
+
+    const navigate = useNavigate();
 
     const [sort, setSort] = useState("기본값");
+
+    const [keyword, setKeyword] = useState("");
 
     const [clickLocation, setClickLocation] = useState(false); // 지역 설정 버튼을 클릭했을때 값 변경
     const [clickPeople, setClickPeople] = useState(false); // 지역 설정 버튼을 클릭했을때 값 변경
@@ -171,6 +180,17 @@ export default function TopBar() {
     }, [startDate, endDate])
 
 
+
+
+
+    // 검색버튼 눌렀을 때 이동
+    const handleSearch = () => {
+        navigate(`/search?keyword=${keyword}&people=${adult}&start=${startDate.format('YYYY-MM-DD').toString()}&
+        end=${endDate.format('YYYY-MM-DD').toString()}&loc=region&sort=0&type=0`)
+    }
+    
+
+
     return (
         <ThemeProvider theme={theme}>
             <AppBar position="relative" sx={{px: {xs:"3%", md:"10%", lg:"20%"} ,backgroundColor: "#FFFFFF",
@@ -182,9 +202,8 @@ export default function TopBar() {
                     <Toolbar disableGutters>
                         <span
                             noWrap
-                            component="a"
-                            href="/"
                             style={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}
+                            onClick={() => console.log(accessToken)}
                         >
                             <b className={styles.font_logo}>SMALLTOUR</b>
                         </span>
@@ -273,6 +292,7 @@ export default function TopBar() {
                                               borderRight: 1, borderColor:"#D3D3D3", height: '50%'
                                           }}>
                                         <TextField
+                                            onChange={(e) => setKeyword(e.target.value)}
                                             sx={{
                                                 '& fieldset': {
                                                     border: 'none',
@@ -816,7 +836,7 @@ export default function TopBar() {
                             <Box display="flex"
                                  justifyContent="center"
                                  alignItems="center"
-                                 onClick={() => console.log(endDate)}
+                                 onClick={() => accessToken ? clearAccessToken() : navigate("/login")}
                                  sx={{
                                      borderRadius: '15vw',
                                      border: 1,
@@ -825,7 +845,7 @@ export default function TopBar() {
                                      m: 0,
                                      width:"100%"
                                  }}>
-                                <b className={styles.font_menu}>로그인</b>
+                                <b className={styles.font_menu}>{accessToken?"로그아웃":"로그인"}</b>
                             </Box>
                         </Box>
                     </Toolbar>

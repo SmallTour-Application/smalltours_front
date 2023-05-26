@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {Route, Routes} from "react-router-dom";
 import Login from "./unauth/Login";
@@ -8,8 +8,20 @@ import Tour from "./unauth/Tour";
 import MyInfo from "./member/MyInfo";
 import MyPage from "./member/MyPage";
 import SearchResult from "./unauth/SearchResult";
+import {useDispatch} from "react-redux";
+import {setAccessToken} from "./redux/actions";
+import Cookies from "js-cookie"
+
 
 function App() {
+    const dispatch = useDispatch();
+
+    // token을 리덕스로 가져옴. 이후에 refresh token 적용 시 쿠키에는 refresh token, redux에는 access token 적용하는 식으로 진행.
+    useEffect(() => {
+        if(Cookies.get('accessToken'))
+        dispatch(setAccessToken(Cookies.get('accessToken')));
+    },[])
+
   return (
       <Routes>
           {/* 로그인 **/}

@@ -77,7 +77,8 @@ function Join(props) {
 
     // 비밀번호 규칙 체크
     const pwRuleCheck = () => {
-        // 비밀번호 규칙 검사
+        return true;
+        /*// 비밀번호 규칙 검사
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/; // 영문, 숫자는 각각 1자 이상이고 총 8자 이상
         if (!passwordRegex.test(pw)) {
             // 비밀번호 규칙에 맞지 않는 경우
@@ -85,45 +86,48 @@ function Join(props) {
             return false;
         }
         // 비밀번호 규칙에 부합하는 경우
-        return true;
+        return true;*/
     }
 
     // 회원가입 버튼 클릭 시
     const handleSubmit = async () => {
         // 1. 비밀번호 규칙 검사 수행
         if(!pwRuleCheck()){
+            console.log("비밀번호 체크 오류");
             return;
         }
         // 2. formData에 합체
-        const signup = async () => {
-            const fd = new FormData();
-            Object.values(file).forEach((file) => {
-                fd.append('profileImgRequest', file);
-            }); // 파일 임포트
-            fd.append('email', email); // 이메일
-            fd.append('password', pw); // 비밀번호
-            fd.append('birthDay', birth) // 생일
-            fd.append('gender', gender) // 성별
-            fd.append('nickname', nickname) // 닉네임
-            fd.append('tel', tel) // 전화번호
-            // 회원가입 api 호출
-            const response = await axios.post(
-                `http://localhost:8099/unauth/member/signup`,
-                fd,
-                {
-                    headers:{
-                        'Content-Type':`multipart/form-data`,
-                    },
-                }
-            ).then((res) => {
-                    console.log("회원가입 성공")
-                    alert("회원가입이 완료되었습니다. 이메일 인증 후 서비스를 이용하실 수 있습니다.");
-                    navigate("/login");
-            }).catch((res) => {
-                console.log("회원가입 실패");
-                alert("회원가입 실패")
-            })
-        }
+        console.log("회원가입 api 연결")
+        const fd = new FormData();
+        Object.values(file).forEach((file) => {
+            fd.append('profileImgRequest', file);
+        }); // 파일 임포트
+        fd.append('email', email); // 이메일
+        fd.append('password', pw); // 비밀번호
+        fd.append('birthDay', `${birth.format('YYYY-MM-DD').toString()}`) // 생일
+        fd.append('gender', gender) // 성별
+        fd.append('nickname', nickname) // 닉네임
+        fd.append('tel', tel) // 전화번호
+        fd.append('name', name); // 이름
+        fd.append('role', 0) // 역할
+        // 회원가입 api 호출
+        const response = await axios.post(
+            `http://localhost:8099/unauth/member/signup`,
+            fd,
+            {
+                headers:{
+                    'Content-Type':`multipart/form-data`,
+                },
+            }
+        ).then((res) => {
+                console.log("회원가입 성공")
+                alert("회원가입이 완료되었습니다. 이메일 인증 후 서비스를 이용하실 수 있습니다.");
+                navigate("/login");
+        }).catch((res) => {
+            console.log("회원가입 실패");
+            alert("회원가입 실패")
+        })
+
 
     }
 
@@ -324,6 +328,7 @@ function Join(props) {
                             backgroundColor: '#6CB0FF',
                         }
                         }}
+                        onClick={() => handleSubmit()}
                     >
                         <Typography
                             display="flex"

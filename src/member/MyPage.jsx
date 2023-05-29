@@ -17,8 +17,7 @@ import MyFavoriteGuide from "./MyFavoriteGuide";
 
 const page=[
     {url:"info", name:"개인정보"},
-    {url:"plan", name:"예약일정"},
-    {url:"log", name:"여행기록"},
+    {url:"plan", name:"내 여행"},
     {url:"review", name:"리뷰 확인"},
     {url:"guide", name:"가이드 리뷰 확인"},
     {url:"ftour", name:"관심 여행"},
@@ -84,9 +83,6 @@ function MyPage(props) {
                     )}
                     {keyword === "plan" && (
                         <Plan/>
-                    )}
-                    {keyword === "log" && (
-                        <PlanLog/>
                     )}
                     {keyword === "review" && (
                         <MyReview/>

@@ -25,11 +25,17 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import dayjs from "dayjs";
 import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {clearAccessToken} from "../redux/actions";
-import axios from "axios";
-
+import {
+    clearAccessToken,
+    setSearchEnd,
+    setSearchKeyword, setSearchLocation,
+    setSearchPeople, setSearchStart,
+    setSearchTrigger,
+    setSearchType
+} from "../redux/actions";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const pages = ["강의", "테마별 강의", "소개", "검색"];
 
@@ -44,9 +50,11 @@ export default function TopBar() {
 
     const navigate = useNavigate();
 
-    const [sort, setSort] = useState("기본값");
+    const dispatch = useDispatch();// redux dispatch
 
-    const [keyword, setKeyword] = useState("");
+    const keyword = useSelector((state) => state.searchKeyword); // 검색어(리덕스)
+
+    const type = useSelector((state) => state.searchType) // 검색타입(리덕스)
 
     const [clickLocation, setClickLocation] = useState(false); // 지역 설정 버튼을 클릭했을때 값 변경
     const [clickPeople, setClickPeople] = useState(false); // 지역 설정 버튼을 클릭했을때 값 변경
@@ -55,12 +63,12 @@ export default function TopBar() {
     const [domestic, setDomestic] = useState(0); // 국내여행
     const [overseas, setOverseas] = useState(0); // 해외여행
 
-    const [region, setRegion] = useState("") // 지역
-    const [adult, setAdult] = useState(0); // 성인 인원수
-    const [child, setChild] = useState(0); // 어린이
-    const [infant, setInfant] = useState(0); // 유아
-    const [startDate, setStartDate] = useState(dayjs())
-    const [endDate, setEndDate] = useState(dayjs())
+    const location = useSelector((state) => state.location) // 지역(리덕스)
+    const people = useSelector((state) => state.searchPeople) // 성인 인원수(리덕스)
+
+    const startDate = useSelector((state) => state.searchStart) // 출발일
+    const endDate = useSelector((state) => state.searchEnd) // 종료일
+    const [minDate, setMinDate] = useState(0);
 
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -81,37 +89,44 @@ export default function TopBar() {
     };
 
     const handleChange = (event) => {
-        setSort(event.target.value);
+        dispatch(setSearchType(event.target.value));
     };
 
     // 지역 선택 클릭했을 때
     const handleChangeLocation = () => {
+        const temp = clickLocation;
+        setClickDate(false);
+        setClickPeople(false);
+        setClickLocation(false);
+        setTimeout(() => {
+            setClickLocation(!temp)
+        }, 500)
         console.log("지역클릭");
-        if(clickLocation === false){
-            setClickLocation(true);
-        }else{
-            setClickLocation(false);
-        }
     };
 
     // 인원수 클릭했을 때
     const handleChangePeople = () => {
+        const temp = clickPeople;
+        setClickDate(false);
+        setClickLocation(false);
+        setClickPeople(false);
+        setTimeout(() => {
+            setClickPeople(!temp)
+        }, 500)
         console.log("인원수클릭");
-        if(clickPeople === false){
-            setClickPeople(true);
-        }else{
-            setClickPeople(false);
-        }
     };
 
     // 날짜 클릭했을 때
     const handleChangeDate = () => {
-        console.log("날짜 클릭");
-        if(clickDate === false){
-            setClickDate(true);
-        }else{
-            setClickDate(false);
-        }
+        const temp = clickDate;
+        setClickPeople(false);
+        setClickLocation(false);
+        setClickDate(false);
+        setTimeout(() => {
+            setClickDate(!temp)
+
+        }, 500)
+        console.log("인원수클릭");
     };
 
     // 국내여행
@@ -138,7 +153,7 @@ export default function TopBar() {
 
     const handleRegion = (param) => {
         console.log(param);
-        setRegion(param);
+        dispatch(setSearchLocation(param))
     }
 
     // 날짜체크
@@ -174,21 +189,30 @@ export default function TopBar() {
 
     // 날짜 바뀔때 체크
     useEffect(() => {
-        if(!dateCheck(null, endDate)){
-            setEndDate(startDate);
-        }
+        console.log(`변화 : ${startDate}, ${endDate}`);
     }, [startDate, endDate])
-
-
 
 
 
     // 검색버튼 눌렀을 때 이동
     const handleSearch = () => {
-        navigate(`/search?keyword=${keyword}&people=${adult}&start=${startDate.format('YYYY-MM-DD').toString()}&
-        end=${endDate.format('YYYY-MM-DD').toString()}&loc=region&sort=0&type=0`)
+        //window.location.replace(`/search?keyword=${keyword}&people=${adult}&start=${startDate.format('YYYY-MM-DD').toString()}&end=${endDate.format('YYYY-MM-DD').toString()}&loc=${region}&sort=0&type=0&page=1`)
+        dispatch(setSearchTrigger(true)); // 검색 트리거를 true로 변경해 검색 컴포넌트에서 api 호출을 수행하도록 함
+        navigate(`/search`)
     }
-    
+
+    // 디버깅용
+    useEffect(() => {
+        console.log(`type value : ${type}`);
+    },[])
+
+    // 리덕스 초기화(직렬화된 값으로 초기화)
+    useEffect(() => {
+        if(startDate === null || endDate === null){
+            dispatch(setSearchStart(dayjs().toISOString()))
+            dispatch(setSearchEnd(dayjs().toISOString()))
+        }
+    }, [])
 
 
     return (
@@ -226,17 +250,18 @@ export default function TopBar() {
                                       direction="flex"
                                       justifyContent="center"
                                       alignItems="center"
+                                      xs={12}
                                       sx={{
                                           width: "100%",
 
                                           backgroundColor: "#85BEFF",
                                           aspectRatio: {lg:"10/1", xl:"13/1"},
-                                          borderRadius: "30px",
+                                          borderRadius: "50vw",
                                           boxShadow: 3,
                                           zIndex:2,
                                           px:"0.5rem"
                                       }}>
-                                    {/* sort **/}
+                                    {/* type **/}
                                     <Grid item
                                           direction="flex"
                                           justifyContent="center"
@@ -258,9 +283,10 @@ export default function TopBar() {
                                         >
                                             <Select
                                                 onChange={handleChange}
-                                                label="정렬"
+                                                label="type"
                                                 fullWidth
-                                                defaultValue={sort}
+                                                value={type}
+                                                defaultValue={type}
 
                                                 sx={{
                                                     '& fieldset': {
@@ -276,9 +302,8 @@ export default function TopBar() {
                                                     },
                                                 }}
                                             >
-                                                <MenuItem value="기본값">기본값</MenuItem>
-                                                <MenuItem value="최신순">최신순</MenuItem>
-                                                <MenuItem value="평점순">평점순</MenuItem>
+                                                <MenuItem value={0}>패키지</MenuItem>
+                                                <MenuItem value={1}>가이드</MenuItem>
                                             </Select>
                                         </Box>
                                     </Grid>
@@ -289,10 +314,11 @@ export default function TopBar() {
                                           alignItems="center"
                                           xs={4}
                                           sx={{display: "flex", alignItems: "center", justifyContent: "center",
-                                              borderRight: 1, borderColor:"#D3D3D3", height: '50%'
+                                              borderRight: type === 0 ? 1 : 0, borderColor:"#D3D3D3", height: '50%'
                                           }}>
                                         <TextField
-                                            onChange={(e) => setKeyword(e.target.value)}
+                                            onChange={(e) => dispatch(setSearchKeyword(e.target.value))}
+                                            value={keyword}
                                             sx={{
                                                 '& fieldset': {
                                                     border: 'none',
@@ -308,6 +334,7 @@ export default function TopBar() {
                                             }}
                                             id="outlined-basic" variant="outlined" />
                                     </Grid>
+
                                     {/* 지역 **/}
                                     <Grid item
                                           direction="flex"
@@ -315,55 +342,62 @@ export default function TopBar() {
                                           alignItems="center"
                                           xs={1}
                                           sx={{display: "flex", alignItems: "center", justifyContent: "center",
-                                              borderRight: 1, borderColor:"#D3D3D3", height: '50%'
+                                              borderRight: type === 0 ? 1 : 0, borderColor:"#D3D3D3", height: '50%'
                                           }}>
-                                        <Box
-                                            direction="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            sx={{backgroundColor:clickLocation === false ? '' : 'white',
-                                                borderRadius:'20px',
-                                                width:"80%",
-                                                height:"100%",
-                                                display: "flex", alignItems: "center", justifyContent: "center"
-                                            }}
-                                            onClick={() => handleChangeLocation()}
-                                        >
-                                            <Typography
-                                                sx={{color:"#000000", fontWeight:"700",cursor: 'default'}}
+                                        {type === 0 && (
+                                            <Box
+                                                direction="flex"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                sx={{backgroundColor:clickLocation === false ? '' : 'white',
+                                                    borderRadius:'20px',
+                                                    width:"80%",
+                                                    height:"100%",
+                                                    display: "flex", alignItems: "center", justifyContent: "center"
+                                                }}
+                                                onClick={() => handleChangeLocation()}
                                             >
-                                                지역
-                                            </Typography>
-                                        </Box>
+                                                <Typography
+                                                    sx={{color:"#000000", fontWeight:"700",cursor: 'default'}}
+                                                >
+                                                    지역
+                                                </Typography>
+                                            </Box>
+                                        )}
                                     </Grid>
-                                    {/* 지역 **/}
+
+                                    {/* 인원 **/}
                                     <Grid item
                                           direction="flex"
                                           justifyContent="center"
                                           alignItems="center"
                                           xs={1}
                                           sx={{display: "flex", alignItems: "center", justifyContent: "center",
-                                              borderRight: 1, borderColor:"#D3D3D3", height: '50%',
+                                              borderRight: type === 0 ? 1 : 0, borderColor:"#D3D3D3", height: '50%',
                                           }}>
-                                        <Box
-                                            direction="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            sx={{backgroundColor:clickPeople === false ? '' : 'white',
-                                                borderRadius:'20px',
-                                                width:"80%",
-                                                height:"100%",
-                                                display: "flex", alignItems: "center", justifyContent: "center"
-                                            }}
-                                            onClick={() => handleChangePeople()}
-                                        >
-                                            <Typography
-                                                sx={{color:"#000000", fontWeight:"700", cursor: 'default'}}
+                                        {type === 0 && (
+                                            <Box
+                                                direction="flex"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                sx={{backgroundColor:clickPeople === false ? '' : 'white',
+                                                    borderRadius:'20px',
+                                                    width:"80%",
+                                                    height:"100%",
+                                                    display: "flex", alignItems: "center", justifyContent: "center"
+                                                }}
+                                                onClick={() => handleChangePeople()}
                                             >
-                                                인원
-                                            </Typography>
-                                        </Box>
+                                                <Typography
+                                                    sx={{color:"#000000", fontWeight:"700", cursor: 'default'}}
+                                                >
+                                                    인원
+                                                </Typography>
+                                            </Box>
+                                        )}
+
                                     </Grid>
+
                                     {/* 날짜 **/}
                                     <Grid item
                                           direction="flex"
@@ -373,24 +407,27 @@ export default function TopBar() {
                                           sx={{display: "flex", alignItems: "center", justifyContent: "center",
                                               height: '50%',
                                           }}>
-                                        <Box
-                                            direction="flex"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                            sx={{backgroundColor:clickDate === false ? '' : 'white',
-                                                borderRadius:'20px',
-                                                width:"80%",
-                                                height:"100%",
-                                                display: "flex", alignItems: "center", justifyContent: "center"
-                                            }}
-                                            onClick={() => handleChangeDate()}
-                                        >
-                                            <Typography
-                                                sx={{color:"#000000", fontWeight:"700", cursor: 'default'}}
+                                        {type === 0 && (
+                                            <Box
+                                                direction="flex"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                sx={{backgroundColor:clickDate === false ? '' : 'white',
+                                                    borderRadius:'20px',
+                                                    width:"80%",
+                                                    height:"100%",
+                                                    display: "flex", alignItems: "center", justifyContent: "center"
+                                                }}
+                                                onClick={() => handleChangeDate()}
                                             >
-                                                날짜
-                                            </Typography>
-                                        </Box>
+                                                <Typography
+                                                    sx={{color:"#000000", fontWeight:"700", cursor: 'default'}}
+                                                >
+                                                    날짜
+                                                </Typography>
+                                            </Box>
+                                        )}
+
                                     </Grid>
                                     {/* 검색버튼 **/}
                                     <Grid item
@@ -407,16 +444,14 @@ export default function TopBar() {
                                             sx={{
                                                 width:"100%",
                                                 height:"100%",
-                                                borderRadius: '30px',
+                                                borderRadius: '30vw',
                                                 backgroundColor: '#3972B3',
                                                 display: "flex", alignItems: "center", justifyContent: "center",
                                             }}
                                         >
                                             <Button
-                                                onChange={handleChange}
-                                                label="정렬"
+                                                onClick={() => handleSearch()}
                                                 fullWidth
-                                                defaultValue={sort}
 
                                                 sx={{
                                                     '& fieldset': {
@@ -460,7 +495,7 @@ export default function TopBar() {
                                               height:"100%",
                                               backgroundColor: "#85BEFF",
                                               aspectRatio: "10/1",
-                                              borderRadius: "40px",
+                                              borderRadius: "5vw",
                                               px:"0.5rem"
                                           }}>
                                         {/* 국내해외 **/}
@@ -548,7 +583,7 @@ export default function TopBar() {
                                                         direction="flex"
                                                         justifyContent="center"
                                                         alignItems="center"
-                                                        sx={{backgroundColor:region === item ? 'white' : '',
+                                                        sx={{backgroundColor:location === item ? 'white' : '',
                                                             borderRadius:'10px',
                                                             height:"80%",
                                                             display: "flex", alignItems: "center", justifyContent: "center"
@@ -556,7 +591,7 @@ export default function TopBar() {
                                                         onClick={() => handleRegion(item)}
                                                     >
                                                         <Typography
-                                                            sx={{color: region === item ? 'black' : 'white',
+                                                            sx={{color: location === item ? 'black' : 'white',
                                                                 fontWeight: "700", cursor: 'default', mx:"0.3rem"}}
                                                         >
                                                             {item}
@@ -584,7 +619,7 @@ export default function TopBar() {
                                                         direction="flex"
                                                         justifyContent="center"
                                                         alignItems="center"
-                                                        sx={{backgroundColor:region === item ? 'white' : '',
+                                                        sx={{backgroundColor:location === item ? 'white' : '',
                                                             borderRadius:'10px',
                                                             height:"80%",
                                                             display: "flex", alignItems: "center", justifyContent: "center"
@@ -592,7 +627,7 @@ export default function TopBar() {
                                                         onClick={() => handleRegion(item)}
                                                     >
                                                         <Typography
-                                                            sx={{color: region === item ? 'black' : 'white',
+                                                            sx={{color: location === item ? 'black' : 'white',
                                                                 fontWeight: "700", cursor: 'default', mx:"0.3rem"}}
                                                         >
                                                             {item}
@@ -617,18 +652,18 @@ export default function TopBar() {
                                           justifyContent="center"
                                           alignItems="center"
                                           sx={{
-                                              width: "30vw",
+                                              width: "80%",
                                               height:"100%",
                                               backgroundColor: "#85BEFF",
                                               aspectRatio: "3/1",
-                                              borderRadius: "40px",
+                                              borderRadius: "10px",
                                               px:"3rem",
                                               py:"1rem"
                                           }}>
                                         {/* 성인 **/}
                                         <Grid item xs={6}>
                                             <Typography sx={{color:"#000000", fontWeight:"900", fontSize:"1rem"}}>
-                                                성인(만 13세 이상)
+                                                인원
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
@@ -648,103 +683,21 @@ export default function TopBar() {
                                                     disableUnderline: true,
                                                     startAdornment: (
                                                         <InputAdornment position="start">
-                                                            <IconButton onClick={(e) => setAdult(adult - 1)}>
+                                                            <IconButton onClick={(e) => dispatch(setSearchPeople(people - 1))}>
                                                                 <RemoveIcon />
                                                             </IconButton>
                                                         </InputAdornment>
                                                     ),
                                                     endAdornment: (
                                                         <InputAdornment position="end">
-                                                            <IconButton onClick={(e) => setAdult(adult + 1)}>
+                                                            <IconButton onClick={(e) => dispatch(setSearchPeople(people + 1))}>
                                                                 <AddIcon />
                                                             </IconButton>
                                                         </InputAdornment>
                                                     ),
                                                 }}
-                                                value={adult}
-                                                onChange={(e) => setAdult(e.target.value)}
-                                            />
-                                        </Grid>
-
-                                        {/* 어린이 **/}
-                                        <Grid item xs={6}>
-                                            <Typography sx={{color:"#000000", fontWeight:"900", fontSize:"1rem"}}>
-                                                어린이(만 2~12세)
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                disabled
-                                                fullWidth
-                                                variant="outlined"
-                                                sx={{
-                                                    "& .MuiInputBase-input.Mui-disabled": {
-                                                        WebkitTextFillColor: "#000000",
-                                                    },
-                                                }}
-                                                InputProps={{
-                                                    inputProps: {
-                                                        style: { textAlign: "center" },
-                                                    },
-                                                    disableUnderline: true,
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <IconButton onClick={(e) => setChild(child - 1)}>
-                                                                <RemoveIcon />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={(e) => setChild(child + 1)}>
-                                                                <AddIcon />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                                value={adult}
-                                                onChange={(e) => setChild(e.target.value)}
-                                            />
-                                        </Grid>
-
-                                        {/* 유아 **/}
-                                        <Grid item xs={6}>
-                                            <Typography sx={{color:"#000000", fontWeight:"900", fontSize:"1rem"}}>
-                                                유아(만 2세 미만)
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                disabled
-                                                fullWidth
-                                                variant="outlined"
-                                                sx={{
-                                                    "& .MuiInputBase-input.Mui-disabled": {
-                                                        WebkitTextFillColor: "#000000",
-                                                    },
-                                                }}
-                                                InputProps={{
-                                                    inputProps: {
-                                                        style: { textAlign: "center" },
-                                                    },
-                                                    disableUnderline: true,
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <IconButton onClick={(e) => setInfant(infant - 1)}>
-                                                                <RemoveIcon />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={(e) => setInfant(infant + 1)}>
-                                                                <AddIcon />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                                value={adult}
-                                                onChange={(e) => setInfant(e.target.value)}
+                                                value={people}
+                                                onChange={(e) => dispatch(setSearchPeople(e.target.value))}
                                             />
                                         </Grid>
                                     </Grid>
@@ -752,7 +705,7 @@ export default function TopBar() {
                             </Collapse>
 
 
-                            {/* 인원수 클릭하면 나오는 바 **/}
+                            {/* 날짜선택 **/}
 
                             <Collapse in={clickDate}>
                                 <Grid container item xs={12} justifyContent="center" alignItems="center" spacing={0}
@@ -763,11 +716,11 @@ export default function TopBar() {
                                           justifyContent="center"
                                           alignItems="center"
                                           sx={{
-                                              width: "30vw",
+                                              width: "80%",
                                               height:"100%",
                                               backgroundColor: "#85BEFF",
                                               aspectRatio: "3/1",
-                                              borderRadius: "40px",
+                                              borderRadius: "10px",
                                               px:"3rem",
                                               py:"1rem"
                                           }}>
@@ -781,14 +734,19 @@ export default function TopBar() {
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DesktopDatePicker
                                                     label="출발일"
-                                                    inputFormat="MM-DD-YYYY"
-                                                    value={startDate}
+                                                    inputFormat="MM/DD/YYYY"
+                                                    value={dayjs(startDate)}
                                                     onChange={(e) => {
-                                                        if (dateCheck(e, endDate)) {
-                                                            setStartDate(e);
-                                                        }else {
-                                                            setStartDate(e);
-                                                            setEndDate(e);
+                                                        const tempDate = dayjs(e)
+                                                        if (e && tempDate < endDate) {
+                                                            // 입력된 날짜가 종료일보다 이전이면
+                                                            dispatch(setSearchStart(tempDate.toISOString()))
+                                                            setMinDate(minDate + 1)
+                                                        } else if(e) {
+                                                            // 입력된 날짜가 종료일과 같거나 이후이면
+                                                            dispatch(setSearchStart(tempDate.toISOString()))
+                                                            setMinDate(minDate + 1)
+                                                            dispatch(setSearchEnd(tempDate.toISOString()))  // endDate도 들어온 날짜로 변경
                                                         }
                                                     }}
                                                     renderInput={(params) => <TextField {...params} />}
@@ -801,21 +759,23 @@ export default function TopBar() {
                                                 종료일
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={6} key={startDate}>
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DesktopDatePicker
+                                                    key={minDate}
                                                     label="종료일"
                                                     inputFormat="MM/DD/YYYY"
-                                                    value={endDate}
-                                                    minDate={startDate} // 출발일 이후의 날짜만 선택 가능하도록 설정
-                                                    disablePast // 출발일 이전의 날짜는 선택할 수 없도록 설정
+                                                    value={dayjs(endDate)}
+                                                    minDate={dayjs(startDate)}
+                                                    disablePast
                                                     onChange={(e) => {
-                                                        console.log(e);
-                                                        if (startDate <= e) {
-                                                            console.log("여기걸림")
-                                                            setEndDate(e);
-                                                        }else {
-                                                            setEndDate(startDate);
+                                                        const tempDate = dayjs(e)
+                                                        if (e && startDate > tempDate) {
+                                                            // 입력된 날짜가 시작일보다 이전이면
+                                                            dispatch(setSearchEnd(tempDate.toISOString()))
+                                                        }else if(e) {
+                                                            // 입력된 날짜가 시작일보다 이후이면
+                                                            dispatch(setSearchEnd(tempDate.toISOString()))
                                                         }
                                                     }}
                                                     renderInput={(params) => <TextField {...params} />}
@@ -828,25 +788,25 @@ export default function TopBar() {
 
 
                         </Grid>
-                        <Box
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                            sx={{width:"10%", aspectRatio: "3/1"}}>
-                            <Box display="flex"
-                                 justifyContent="center"
-                                 alignItems="center"
-                                 onClick={() => accessToken ? clearAccessToken() : navigate("/login")}
-                                 sx={{
-                                     borderRadius: '15vw',
-                                     border: 1,
-                                     borderColor: "#000000",
-                                     height: "100%",
-                                     m: 0,
-                                     width:"100%"
-                                 }}>
-                                <b className={styles.font_menu}>{accessToken?"로그아웃":"로그인"}</b>
-                            </Box>
+
+                        <IconButton onClick={() => navigate("/my/info")}>
+                            <AccountCircleIcon sx={{fontSize:"3rem"}} />
+                        </IconButton>
+
+                        <Box display="flex"
+                             justifyContent="center"
+                             alignItems="center"
+                             onClick={() => accessToken ? dispatch(clearAccessToken()) : navigate("/login")}
+                             sx={{
+                                 borderRadius: '15vw',
+                                 border: 1,
+                                 borderColor: "#A2A2A2",
+                                 height: "100%",
+                                 m: 0,
+                                 px:"1rem",
+                                 py:"0.5rem"
+                             }}>
+                            <Typography sx={{whiteSpace:"nowrap", color:"#000000"}}>{accessToken?"로그아웃":"로그인"}</Typography>
                         </Box>
                     </Toolbar>
                 </Container>

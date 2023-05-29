@@ -31,7 +31,7 @@ function App() {
           {/* 메인 */}
           <Route path="/main" element={<Main/>}/>
           {/* 투어 */}
-          <Route path="/tour" element={<Tour/>}/>
+          <Route path="/tour/:value" element={<Tour/>}/>
           {/* 내정보 */}
           <Route path="/my/:value" element={<MyPage/>}/>
           {/* result */}

@@ -26,11 +26,13 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import FaceIcon from '@mui/icons-material/Face6';
+import {useParams} from "react-router-dom";
 
 
 
 
 function Tour(props) {
+    const params = useParams();
 
     const theme = createTheme({ // Theme
         typography: {

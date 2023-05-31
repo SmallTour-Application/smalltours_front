@@ -218,7 +218,7 @@ function SearchResult(props) {
         <ThemeProvider theme={theme}>
             <TopBar/>
             {/* 최상위 Grid **/}
-            <Grid container sx={{width:"100%", pt:"4rem", px:"20%"}}>
+            <Grid container sx={{width:"100%", pt:"4rem", px:"20%", mt:"3rem"}}>
                 {/* page title **/}
                 <Grid item container xs={6} display={"flex"} justifyContent="flex-start" alignItems="center">
                     <Typography sx={{fontSize:"2rem", fontWeight:"700"}} fullWidth>검색결과</Typography>

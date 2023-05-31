@@ -11,6 +11,8 @@ import SearchResult from "./unauth/SearchResult";
 import {useDispatch} from "react-redux";
 import {setAccessToken} from "./redux/actions";
 import Cookies from "js-cookie"
+import JoinDoor from "./unauth/JoinDoor";
+import GuideJoin from "./unauth/GuideJoin";
 
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
           <Route path="/my/:value" element={<MyPage/>}/>
           {/* result */}
           <Route path="/search" element={<SearchResult/>}/>
+          {/* 가이드 회원가입 **/}
+          <Route path="/guideJoin" element={<GuideJoin/>}/>
       </Routes>
   );
 }

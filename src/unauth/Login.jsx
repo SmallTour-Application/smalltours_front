@@ -172,6 +172,25 @@ function Login(props) {
                         </p>
                     </Box>
                 </Grid>
+                <Grid item
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      xs={12} sx={{pt:2}}>
+                    <Box display="flex"
+                         justifyContent="center"
+                         alignItems="center"
+                         onClick={()=>navigate("/guideJoin")}
+                         sx={{ borderRadius: '10vw',
+                             width:"100%", height:"2.5vw",
+                             m:0, p:1,
+                             border:5,
+                             borderColor: "#6CB0FF"}}>
+                        <p className={styles.font_body_join}>
+                            가이드 회원가입
+                        </p>
+                    </Box>
+                </Grid>
 
                 <Grid container
                       display="flex"

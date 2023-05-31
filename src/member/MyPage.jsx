@@ -21,8 +21,7 @@ const page=[
     {url:"review", name:"리뷰 확인"},
     {url:"guide", name:"가이드 리뷰 확인"},
     {url:"ftour", name:"관심 여행"},
-    {url:"fguide", name:"관심 가이드"},
-    {url:"pay", name:"결제기록"}]
+    {url:"fguide", name:"관심 가이드"},]
 function MyPage(props) {
     const move = useNavigate();
 
@@ -47,7 +46,7 @@ function MyPage(props) {
         <ThemeProvider theme={theme}>
             <TopBar/>
             {/* 최상위 Grid **/}
-            <Grid container sx={{width:"100%" ,mb:"10rem",py:"5rem", px:{xs:"3%", md:"10%", lg:"20%"}}} spacing={3}
+            <Grid container sx={{width:"100%" ,mb:"10rem",py:"5rem", px:{xs:"3%", md:"10%", lg:"20%"}, mt:"3rem"}} spacing={3}
                   direction="row"
                   justifyContent="center"
                   alignItems="flex-start"
@@ -94,9 +93,6 @@ function MyPage(props) {
                         <MyFavoriteTour/>
                     )}
                     {keyword === "fguide" && (
-                        <MyFavoriteGuide/>
-                    )}
-                    {keyword === "pay" && (
                         <MyFavoriteGuide/>
                     )}
                 </Grid>

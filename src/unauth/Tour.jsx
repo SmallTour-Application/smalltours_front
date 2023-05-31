@@ -81,7 +81,7 @@ function Tour(props) {
             <TopBar/>
             {/* TopBar 띄우기 위한 Box*/}
             {/* 최상위 Grid **/}
-            <Grid container sx={{width:"100%" ,mb:"10rem"}}>
+            <Grid container sx={{width:"100%" ,mb:"10rem", mt:"3rem"}}>
                 {/* 여행 요약(Title, img, subTitle 등) **/}
                 <Grid xs={12} container item display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{m:0, p:0}}>
                     <Grid  item container xs={12} sx={{backgroundColor:"#6CB0FF", px:{xs:"3%", md:"10%", lg:"20%", }, py:"3rem"}} spacing={3}>

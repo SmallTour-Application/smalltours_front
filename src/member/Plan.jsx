@@ -74,9 +74,15 @@ function Plan(props) {
         ).catch((err) => {
             console.log(err)
         }).then((res) => {
-                console.log(res);
-                setResult(res.data)
-            })
+            console.log(res);
+            // 페이징
+            if(!result || newPage === 1){
+                res.data && setResult(res.data)
+            }else if(result){
+                res.data && setResult({count:result.count, review: result.reviews.push(res.data.review)})
+            }
+            }
+            )
         setLoad(false);
     }
 
@@ -100,6 +106,27 @@ function Plan(props) {
             console.log(res);
             setResult(res.data);
         })
+        setLoad(false);
+    }
+
+    // 예약취소
+    const cancelPayment = async (id) => {
+        setLoad(true);
+        const response = await axios.post(
+            `http://localhost:8099/payment/cancel?paymentId=${id}`,
+            null,
+            {headers:{'Authorization': `${accessToken}`,}}
+        )
+        if(type === 0){
+            // 전체검색인 경우
+            for(let i = 1; i <= page; i++){
+                await getPayment(i)
+            }
+        }else{
+            for(let i = 1; i <= page; i++){
+                await getPaymentSearch(i)
+            }
+        }
         setLoad(false);
     }
 
@@ -327,16 +354,18 @@ function Plan(props) {
                                         </Button>
                                     </Grid>
                                 )}
-                                <Grid item xs={12} sx={{ px:"3rem"}}>
-                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
-                                            onClick={() => {
-                                                setReviewType(false);
-                                                handleOpen();
-                                            }}
-                                    >
-                                        <Typography sx={{color:"#000000"}}>여행 리뷰</Typography>
-                                    </Button>
-                                </Grid>
+                                {item.canReview && (
+                                    <Grid item xs={12} sx={{ px:"3rem"}}>
+                                        <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
+                                                onClick={() => {
+                                                    setReviewType(false);
+                                                    handleOpen();
+                                                }}
+                                        >
+                                            <Typography sx={{color:"#000000"}}>여행 리뷰</Typography>
+                                        </Button>
+                                    </Grid>
+                                )}
                                 <Grid item xs={12} sx={{ px:"3rem"}}>
                                     <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
                                             onClick={() => {

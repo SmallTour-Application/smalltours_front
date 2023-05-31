@@ -23,7 +23,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 
 
-function Join(props) {
+function GuideJoin(props) {
     const navigate = useNavigate();// 페이지 이동
 
     const dispatch = useDispatch();// redux dispatch
@@ -109,7 +109,7 @@ function Join(props) {
         fd.append('nickname', nickname) // 닉네임
         fd.append('tel', tel) // 전화번호
         fd.append('name', name); // 이름
-        fd.append('role', 0) // 역할
+        fd.append('role', 1) // 역할
         // 회원가입 api 호출
         const response = await axios.post(
             `http://localhost:8099/unauth/member/signup`,
@@ -120,9 +120,9 @@ function Join(props) {
                 },
             }
         ).then((res) => {
-                console.log("회원가입 성공")
-                alert("회원가입이 완료되었습니다. 이메일 인증 후 서비스를 이용하실 수 있습니다.");
-                navigate("/login");
+            console.log("회원가입 성공")
+            alert("회원가입이 완료되었습니다. 이메일 인증 후 서비스를 이용하실 수 있습니다.");
+            navigate("/login");
         }).catch((res) => {
             console.log("회원가입 실패");
             alert("회원가입 실패")
@@ -134,10 +134,9 @@ function Join(props) {
     return (
         <ThemeProvider theme={theme}>
             <TopBar/>
-
-            <Grid container sx={{px:"30vw", mt:"5rem"}}>
+            <Grid container sx={{px:"30vw", mt:"7rem"}}>
                 <Grid item xs={12} sx={{pt:2}}>
-                    <p className={styles.font_body_login}>회원가입</p>
+                    <p className={styles.font_body_login}>가이드 회원가입</p>
                 </Grid>
                 <Grid item xs={12} sx={{pt:2}}>
                     <p className={styles.font_body_menu}>이메일</p>
@@ -323,8 +322,8 @@ function Join(props) {
                         sx={{height: '120%', borderRadius:"1vw", backgroundColor: '#6CB0FF',
                             color: 'white',
                             '&:hover': {
-                            backgroundColor: '#6CB0FF',
-                        }
+                                backgroundColor: '#6CB0FF',
+                            }
                         }}
                         onClick={() => handleSubmit()}
                     >
@@ -339,7 +338,7 @@ function Join(props) {
                 </Grid>
             </Grid>
         </ThemeProvider>
-        );
+    );
 }
 
-export default Join;
+export default GuideJoin;

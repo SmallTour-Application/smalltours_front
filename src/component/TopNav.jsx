@@ -36,6 +36,8 @@ import {
     setSearchType
 } from "../redux/actions";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Cookies from "js-cookie"
+
 
 const pages = ["강의", "테마별 강의", "소개", "검색"];
 
@@ -63,7 +65,7 @@ export default function TopBar() {
     const [domestic, setDomestic] = useState(0); // 국내여행
     const [overseas, setOverseas] = useState(0); // 해외여행
 
-    const location = useSelector((state) => state.location) // 지역(리덕스)
+    const location = useSelector((state) => state.searchLocation) // 지역(리덕스)
     const people = useSelector((state) => state.searchPeople) // 성인 인원수(리덕스)
 
     const startDate = useSelector((state) => state.searchStart) // 출발일
@@ -201,6 +203,12 @@ export default function TopBar() {
         navigate(`/search`)
     }
 
+    // 로그아웃
+    const logout = () => {
+        dispatch(clearAccessToken()); // 리덕스에서 토큰 제거
+        Cookies.remove('accessToken'); // 쿠키에 들어있던 accessToken 제거
+    }
+
     // 디버깅용
     useEffect(() => {
         console.log(`type value : ${type}`);
@@ -217,7 +225,7 @@ export default function TopBar() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position="relative" sx={{px: {xs:"3%", md:"10%", lg:"20%"} ,backgroundColor: "#FFFFFF",
+            <AppBar position="fixed" sx={{px: {xs:"3%", md:"10%", lg:"20%"} ,backgroundColor: "#FFFFFF",
                 direction:"flex", justifyContent:"center", alignItems:"center", py:"0.3rem", zIndex:999
             }}
                 display={"flex"} justifyContent={"center"} alignItmes={"center"}
@@ -796,7 +804,7 @@ export default function TopBar() {
                         <Box display="flex"
                              justifyContent="center"
                              alignItems="center"
-                             onClick={() => accessToken ? dispatch(clearAccessToken()) : navigate("/login")}
+                             onClick={() => accessToken ? logout() : navigate("/login")}
                              sx={{
                                  borderRadius: '15vw',
                                  border: 1,

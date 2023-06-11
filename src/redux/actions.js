@@ -9,6 +9,9 @@ export const SET_SEARCH_START = 'SET_SEARCH_START'
 export const SET_SEARCH_END = 'SET_SEARCH_END'
 export const SET_SEARCH_LOCATION = 'SET_SEARCH_LOCATION'
 export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE'
+export const SET_ROLE = 'SET_ROLE'
+export const SET_MEMBER_ID = 'SET_MEMBER_ID'
+
 
 
 
@@ -58,4 +61,12 @@ export const setSearchLocation = (searchLocation) => ({
 export const setSearchPage = (searchPage) => ({
     type: SET_SEARCH_PAGE,
     payload: searchPage,
+})
+export const setRole = (role) => ({
+    type: SET_ROLE,
+    payload: role,
+})
+export const setMemberId = (memberId) => ({
+    type: SET_MEMBER_ID,
+    payload: memberId,
 })

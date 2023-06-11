@@ -19,7 +19,7 @@ import axios from "axios";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 
-function MyInfo(props) {
+function GuideMyInfo(props) {
 
     const accessToken = useSelector((state) => state.accessToken); // 저장되어있는 accessToken
 
@@ -43,6 +43,9 @@ function MyInfo(props) {
     const [nickEdit, setNickEdit] = useState(false);
     const [pwEdit, setPwEdit] = useState(false); // 비밀번호 편집 시 true
     const [telEdit, setTelEdit] = useState(false); // 전화번호 편집 시 true
+    const [img, setImg] = useState("");
+
+    const [file, setFile] = useState(null);
 
     // 전화번호 변경 시 숫자만 들어가게
     const handleTelChange = (e) => {
@@ -70,10 +73,15 @@ function MyInfo(props) {
                 setNickname(res.data.nickname)
                 setEmail(res.data.email)
                 setTel(res.data.tel)
+                if(res.data.profile){
+                    const temp = res.data.profile.split("\\");
+                    console.log(temp)
+                    setImg("http://localhost:8099/eumCodingImgs/member/" + (temp[temp.length-1]))
+                }
             }
         })
     }
-    
+
     // 닉네임 변경
     const updateNickname = async () => {
         const response = await axios.post(
@@ -85,7 +93,7 @@ function MyInfo(props) {
                 getInfo();
                 // 닉네임 변경 관련 state 초기화
                 setNickEdit(false);
-        }
+            }
         )
     }
 
@@ -107,7 +115,7 @@ function MyInfo(props) {
                 setPwEdit(false);
                 setChgPw2(false);
                 setChgPw1(false);
-        }
+            }
         ).catch((err) => {
             alert("비밀번호를 확인해주세요.")
         })
@@ -124,10 +132,38 @@ function MyInfo(props) {
                 getInfo();
                 // 닉네임 변경 관련 state 초기화
                 setTelEdit(false);
-        }
+            }
         ).catch((err) => {
             alert("이미 같은 전화번호가 있어요.")
         })
+    }
+
+    // 이미지 변경 api 호출
+    const updateImg = async () => {
+        const fd = new FormData();
+        Object.values(file).forEach((file) => {
+            fd.append('profileImgRequest', file);
+        }); // 파일 임포트
+        Object.values(file).forEach((file) => {
+            fd.append('updateProfile', JSON.stringify(file));
+        }); // 파일 임포트
+
+        const response = await axios.post(
+            `http://localhost:8099/member/updateProfileImg`,
+            fd,
+            {
+                headers:{
+                    'Authorization': `${accessToken}`,
+                    'Content-Type':`multipart/form-data`,
+                },
+            }
+        ).catch((err) => {
+            alert("이미지 업로드 실패")
+        })
+        // 회원정보 재요청
+        getInfo();
+        // 이미지 변경 관련 state 초기화
+        setFile(null);
     }
 
 
@@ -135,12 +171,19 @@ function MyInfo(props) {
     useEffect(() => {
         // 로그인되어있지 않으면 login 페이지로 이동
         if(!accessToken){
-            navigate(`/login`);
         }else{
             // 로그인 되어있는 경우 api 호출
             getInfo();
         }
-    }, [])
+    }, [, accessToken])
+
+    // 이미지 변경이 확인되면 이미지 변경 api 호출
+    useEffect(() => {
+        // file에 내용이 있을때만 호출
+        if(file){
+            updateImg();
+        }
+    }, [file])
 
     return (
         <Grid content item xs={12}>
@@ -149,24 +192,26 @@ function MyInfo(props) {
                     개인정보
                 </Typography>
             </Grid>
-            <Grid container item xs={12} sx={{ border:2,borderColor: "#DDDDDD", borderRadius: "1vw" , overflow:"hidden"}}>
-                {/* 이름 **/}
-                <Grid xs={12} item container>
-                    <Grid item xs={6} md={4} lg={3} display={"flex"} justifyContent="flex-start" alignItems={"center"}
-                        sx={{backgroundColor:"#F5F5F5", py:"1rem", pl:"2rem"}}
-                    >
-                        <Typography sx={{fontWeight: "700", fontSize: "1rem"}}>이름</Typography>
-                    </Grid>
-                    <Grid item xs={6} md={8} lg={9} display={"flex"} justifyContent="flex-start" alignItems={"center"}
-                        sx={{py:"1rem", pl:"2rem"}}
-                    >
-                        <Typography sx={{fontWeight: "500", fontSize: "1rem"}}
-                                    display={"flex"} justifyContent="flex-start" alignItems={"center"}
-                        >
-                            {name}
-                        </Typography>
-                    </Grid>
+            <Grid container item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}} spacing={2}>
+                <Grid item xs={1}  display={"flex"} justifyContent="center" alignItems={"center"}>
+                    <Box sx={{width:"100%", aspectRatio:"1/1", overflow:"hidden", borderRadius:"100px"}}>
+                        <label>
+                            <input
+                                type="file"
+                                hidden
+                                onChange={(e) => setFile(e.target.files)}
+                            />
+                            <img src={img ? img : testImg} style={{ width:"100%", height:"100%", objectFit:"cover", cursor:"pointer" }} />
+                        </label>
+                    </Box>
                 </Grid>
+                <Grid item xs={11} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
+                    <Typography sx={{fontSize: "1.5rem", fontWeight: "700"}}>
+                        {name} 가이드
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid container item xs={12} sx={{ border:2,borderColor: "#DDDDDD", borderRadius: "1vw" , overflow:"hidden"}}>
 
                 {/* 닉네임 **/}
                 <Grid xs={12} item container>
@@ -308,7 +353,7 @@ function MyInfo(props) {
                             {telEdit === false && tel}
                             {telEdit === true && (
                                 <TextField variant="standard" sx={{mr: "1rem"}}
-                                    value={tel} onChange={handleTelChange}
+                                           value={tel} onChange={handleTelChange}
                                 />
                             )}
                             {/* 편집 버튼 눌렀을 시에는 TextField로 변환 **/}
@@ -329,4 +374,4 @@ function MyInfo(props) {
     );
 }
 
-export default MyInfo;
+export default GuideMyInfo;

@@ -157,9 +157,11 @@ function MyReview(props) {
     }
 
     useState(() => {
-        getReviewList(1);
-        setPage(1);
-    },[])
+        if(accessToken){
+            getReviewList(1);
+            setPage(1);
+        }
+    },[,accessToken])
 
     return (
         <Grid container item xs={12} >
@@ -202,7 +204,13 @@ function MyReview(props) {
                         </Grid>
                         <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{mt:"2rem"}}>
                             <Button fullWidth sx={{backgroundColor:"#6CB0FF", border:0, borderRadius:"2vw", height:"200%"}}
-                                    onClick={() => updateReview()}
+                                    onClick={() => {
+                                        updateReview()
+                                        handleClose()
+                                        setContent("")
+                                        setStar(5)
+                                    }
+                            }
                             >
                                 <Typography sx={{color:"#FFFFFF"}}>
                                     작성완료

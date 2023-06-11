@@ -10,6 +10,8 @@ const initialState = {
     searchEnd:null,
     searchLocation:"",
     searchPage:1,
+    role:999,
+    memberId:0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -63,6 +65,16 @@ const reducer = (state = initialState, action) => {
             return{
                 ...state,
                 searchPage: action.payload,
+            };
+        case 'SET_ROLE':
+            return{
+                ...state,
+                role: action.payload,
+            };
+        case 'SET_MEMBER_ID':
+            return{
+                ...state,
+                memberId: action.payload,
             };
         default:
             return state;

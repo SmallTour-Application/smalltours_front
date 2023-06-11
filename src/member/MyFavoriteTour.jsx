@@ -55,8 +55,11 @@ function MyGuideReview(props) {
 
     const [lastPage, setLastPage] = useState(false); // 마지막 페이지에 도달했는지 체크
 
+    const [load, setLoad] = useState(false);
+
     // 내가 좋아요 누른 가이드 가져오기 api
     const getGuideList = async (newPage) => {
+        setLoad(true);
         const response = await axios.get(
             `http://localhost:8099/member/member/favoriteTour?page=${newPage}`,
             {headers:{'Authorization': `${accessToken}`,}}
@@ -74,15 +77,29 @@ function MyGuideReview(props) {
                 }
             }
         )
+        setLoad(false);
+    }
+
+    // 좋아요 취소 - api 만들어지면 수정
+    const cancelFavorite = async (id) => {
+        setLoad(true)
+        const response = await axios.post(
+            `http://localhost:8099/member/member/favoriteguide?`,
+            null,
+            {headers:{'Authorization': `${accessToken}`,}}
+        )
+        for(let i = 1; i <= page; i++){
+            await getGuideList(i)
+        }
+        setLoad(false);
     }
 
     useEffect(() => {
         if(!accessToken){
-            navigate("/login")
         }else{
             getGuideList(1);
         }
-    }, [])
+    }, [,accessToken])
 
     const theme = createTheme({ // Theme
         typography: {
@@ -130,6 +147,7 @@ function MyGuideReview(props) {
                                       display="flex"
                                       justifyContent="center"
                                       alignItems="center"
+                                      onClick={() => navigate(`/tour/${item.tourId}`)}
                                 >
                                     <Box sx={{width:"100%", height:"100%", overflow:"hidden"}}>
                                         <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>

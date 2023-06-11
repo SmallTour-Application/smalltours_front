@@ -6,24 +6,17 @@ import {
 } from "@mui/material";
 import TopBar from "../component/TopNav";
 import Typography from "@mui/material/Typography";
-import MyInfo from "./MyInfo";
 import {useNavigate, useParams} from "react-router-dom";
-import Plan from "./Plan";
-import PlanLog from "./PlanLog";
-import MyReview from "./MyReview";
-import MyGuideReview from "./MyGuideReview";
-import MyFavoriteTour from "./MyFavoriteTour";
-import MyFavoriteGuide from "./MyFavoriteGuide";
-import {useSelector} from "react-redux";
+import GuideMyInfo from "./GuideMyInfo";
+import GuideMyTour from "./GuideMyTour";
 
 const page=[
     {url:"info", name:"개인정보"},
-    {url:"plan", name:"내 여행"},
-    {url:"review", name:"리뷰 확인"},
-    {url:"guide", name:"가이드 리뷰 확인"},
-    {url:"ftour", name:"관심 여행"},
-    {url:"fguide", name:"관심 가이드"},]
-function MyPage(props) {
+    {url:"tour", name:"내 여행"},
+    {url:"question", name:"질문 확인"},
+    {url:"answer", name:"내 답변 확인"},
+    {url:"stat", name:"통계"},]
+function GuideMain(props) {
     const move = useNavigate();
 
     const params = useParams();
@@ -35,12 +28,8 @@ function MyPage(props) {
         },
     });
 
-    const accessToken = useSelector((state) => state.accessToken);
-    const role = useSelector((state) => state.role);
-
     useEffect(() => {
-
-        accessToken && setKeyword(params.value);
+        setKeyword(params.value);
     }, [])
 
     useEffect(() => {
@@ -68,12 +57,12 @@ function MyPage(props) {
                             <Grid item container xs={12} display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
                                 <Grid xs={12} item display={"flex"} justifyContent={"flex-start"} alignItmes={"center"}>
                                     <Typography
-                                        onClick={() => move(`/my/${item.url}`)}
+                                        onClick={() => move(`/guide/main/${item.url}`)}
                                         sx={{fontSize:"1rem",
                                             fontWeight: keyword === item.url ? "900" : "700" ,
-                                        my:"1rem",
-                                        color : keyword === item.url && "#6CB0FF" ,
-                                    }}>
+                                            my:"1rem",
+                                            color : keyword === item.url && "#6CB0FF" ,
+                                        }}>
                                         {item.name}
                                     </Typography>
                                 </Grid>
@@ -83,22 +72,10 @@ function MyPage(props) {
                 </Grid>
                 <Grid container item md={9} xs={12}>
                     {keyword === "info" && (
-                        <MyInfo/>
+                        <GuideMyInfo/>
                     )}
-                    {keyword === "plan" && (
-                        <Plan/>
-                    )}
-                    {keyword === "review" && (
-                        <MyReview/>
-                    )}
-                    {keyword === "guide" && (
-                        <MyGuideReview/>
-                    )}
-                    {keyword === "ftour" && (
-                        <MyFavoriteTour/>
-                    )}
-                    {keyword === "fguide" && (
-                        <MyFavoriteGuide/>
+                    {keyword === "tour" && (
+                        <GuideMyTour/>
                     )}
                 </Grid>
             </Grid>
@@ -106,4 +83,4 @@ function MyPage(props) {
     );
 }
 
-export default MyPage;
+export default GuideMain;

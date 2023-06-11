@@ -62,6 +62,15 @@ function Plan(props) {
 
     const [star, setStar] = useState(5); // 별갯수
 
+    const [paymentId, setPaymentId] = useState(0); // 결제 id
+
+    const [packageName, setPackageName] = useState("");
+
+    const [guideName, setGuideName] = useState("");
+
+    const [reviewContent, setReviewContent] = useState("");
+
+    const [reviewId, setReviewId] = useState(0);
 
 
     // 결제내역 불러오는 api(검색 미사용)(최초사용)
@@ -130,13 +139,36 @@ function Plan(props) {
         setLoad(false);
     }
 
+    // 리뷰작성
+    const writeReview = async (id) => {
+        setLoad(true);
+        const response = await axios.post(
+            reviewType === false ?
+            `http://localhost:8099/review/package/write?packageId=${id}&content=${reviewContent}&rating=${star}` :
+                `http://localhost:8099/review/guide/write?guideId=${id}&content=${reviewContent}&rating=${star}`,
+            null,
+            {headers:{'Authorization': `${accessToken}`,}}
+        )
+        if(type === 0){
+            // 전체검색인 경우
+            for(let i = 1; i <= page; i++){
+                await getPayment(i)
+            }
+        }else{
+            for(let i = 1; i <= page; i++){
+                await getPaymentSearch(i)
+            }
+        }
+        setReviewContent("")
+        setStar(5)
+        setLoad(false);
+    }
+
 
     useEffect(() => {
         // 로그인 체크
-        !accessToken ? navigate("/login") : getPayment(1); // 로그인된 상태면 1페이지 전체검색
-    }, [])
-
-    // 페이지값이 변경되면 api재호출
+        accessToken && getPayment(1); // 로그인된 상태면 1페이지 전체검색
+    }, [,accessToken])
 
 
     return (
@@ -185,10 +217,17 @@ function Plan(props) {
                                 multiline
                                 rows={7}
                                 fullWidth
+                                value={reviewContent}
+                                onChange={(e) => setReviewContent(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{mt:"2rem"}}>
-                            <Button fullWidth sx={{backgroundColor:"#6CB0FF", border:0, borderRadius:"2vw", height:"200%"}}>
+                            <Button
+                                onClick={() => {
+                                    writeReview(reviewId);
+                                    handleClose();
+                                }}
+                                fullWidth sx={{backgroundColor:"#6CB0FF", border:0, borderRadius:"2vw", height:"200%"}}>
                                 <Typography sx={{color:"#FFFFFF"}}>
                                     작성완료
                                 </Typography>
@@ -298,6 +337,7 @@ function Plan(props) {
                                   justifyContent={"center"}
                                   alignItems={"center"}
                                   sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0, m:0}}
+                                  onClick={() => navigate(`/tour/${item.packageId}`)}
                             >
                                 <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
                             </Grid>
@@ -324,7 +364,7 @@ function Plan(props) {
                                     <Typography noWrap sx={{fontSize:"1.3rem", fontWeight:"700"}}>{item.packageName}</Typography>
                                 </Grid>
                                 <Grid xs={12} item sx={{my:"1rem"}}>
-                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>김용식 가이드</Typography>
+                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>{item.guideName} 가이드</Typography>
                                 </Grid>
                                 <Grid xs={12} item>
                                     <Typography sx={{fontWeight:"700"}}>{item.people}인</Typography>
@@ -349,16 +389,22 @@ function Plan(props) {
                                 </Grid>
                                 {dayjs(item.departureDay) > dayjs().add(3,"day") && (
                                     <Grid item xs={12} sx={{ px:"3rem"}}>
-                                        <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                        <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
+                                            onClick={() => cancelPayment(item.paymentId)}
+                                        >
                                             <Typography sx={{color:"#000000"}}>예약 취소</Typography>
                                         </Button>
                                     </Grid>
                                 )}
-                                {item.canReview && (
+                                {item.canReview && dayjs(item.departureDay) < dayjs() && (
                                     <Grid item xs={12} sx={{ px:"3rem"}}>
                                         <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
                                                 onClick={() => {
+                                                    setPackageName(item.packageName);
+                                                    setGuideName(item.guideName);
                                                     setReviewType(false);
+                                                    setPaymentId(item.paymentId);
+                                                    setReviewId(item.packageId)
                                                     handleOpen();
                                                 }}
                                         >
@@ -366,16 +412,22 @@ function Plan(props) {
                                         </Button>
                                     </Grid>
                                 )}
-                                <Grid item xs={12} sx={{ px:"3rem"}}>
-                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
-                                            onClick={() => {
-                                                setReviewType(true);
-                                                handleOpen();
-                                            }}
-                                    >
-                                        <Typography sx={{color:"#000000"}}>가이드 리뷰</Typography>
-                                    </Button>
-                                </Grid>
+                                {item.canGuideReview && dayjs(item.departureDay) < dayjs() && (
+                                    <Grid item xs={12} sx={{ px:"3rem"}}>
+                                        <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth
+                                                onClick={() => {
+                                                    setPackageName(item.packageName);
+                                                    setGuideName(item.guideName);
+                                                    setReviewType(true);
+                                                    setPaymentId(item.paymentId);
+                                                    setReviewId(item.guideId)
+                                                    handleOpen();
+                                                }}
+                                        >
+                                            <Typography sx={{color:"#000000"}}>가이드 리뷰</Typography>
+                                        </Button>
+                                    </Grid>
+                                )}
                             </Grid>
                         </Grid>
                     )

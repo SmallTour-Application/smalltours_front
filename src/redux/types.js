@@ -7,4 +7,6 @@ export const SET_SEARCH_START = 'SET_SEARCH_START'
 export const SET_SEARCH_END = 'SET_SEARCH_END'
 export const SET_SEARCH_LOCATION = 'SET_SEARCH_LOCATION'
 export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE'
+export const SET_ROLE = 'SET_ROLE'
+
 

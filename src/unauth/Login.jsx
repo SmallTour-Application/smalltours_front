@@ -6,7 +6,7 @@ import kakao from "../images/kakao.svg"
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
-import {setAccessToken} from "../redux/actions";
+import {setAccessToken, setMemberId, setRole} from "../redux/actions";
 import Cookies from "js-cookie"
 
 // 로그인 페이지
@@ -22,6 +22,7 @@ function Login(props) {
 
     const dispatch = useDispatch();// redux dispatch
     const accessToken = useSelector((state) => state.accessToken); // 엑세스 토큰
+    const role = useSelector((state) => state.role); // role
 
     const [email, setEmail] = useState(""); // 이메일
     const [pw, setPw] = useState(""); // 비밀번호
@@ -33,14 +34,22 @@ function Login(props) {
     useEffect(() => {
         // 이미 로그인 상태인 경우 메인 페이지로 이동
         if (accessToken) {
-            navigate("/main")
+            if(role === 0){
+                navigate("/main")
+            }else if(role === 2){
+                navigate("/guide/main/info")
+            }
         }
     },[accessToken])
 
     useEffect(() => {
         // 이미 로그인 상태인 경우 메인 페이지로 이동
         if (accessToken) {
-            navigate("/main")
+            if(role === 0){
+                navigate("/main")
+            }else if(role === 2){
+                navigate("/guide/main/info")
+            }
         }
     },[])
 
@@ -62,11 +71,19 @@ function Login(props) {
             console.log(res);
             // 쿠키에 저장(임시)
             Cookies.set('accessToken', res.data.token)
+            Cookies.set('role', res.data.role)
+            Cookies.set('memberId', res.data.id)
             dispatch(setAccessToken(res.data.token))
+            dispatch(setMemberId(res.data.id))
             // role이 0인 경우 (일반 회원인 경우)
             if(res.data.role === 0){
                 // 메인페이지로 이동
+                dispatch(setRole(res.data.role))
                 navigate("/main")
+            }else if(res.data.role === 2){
+                // 가이드 페이지로 이동
+                dispatch(setRole(res.data.role))
+                navigate("/guide/main/info")
             }
         })
     }
@@ -75,7 +92,7 @@ function Login(props) {
         <ThemeProvider theme={theme}>
             <TopBar/>
 
-            <Grid container sx={{px:{xs:"3%", md:"20%", lg:"30%"}}}>
+            <Grid container sx={{px:{xs:"3%", md:"20%", lg:"30%"}, pt:"10rem"}}>
                 <Grid item xs={12} sx={{pt:"4rem"}}>
                     <p className={styles.font_body_login}>로그인</p>
                 </Grid>

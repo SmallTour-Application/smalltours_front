@@ -141,8 +141,8 @@ function Tour(props) {
                     setSchedule(res.data);
                     const tempArr1 = [];
                     for(let i = 0; i < res.data.length ; i++){
+                        tempArr1.push({scheduleId : (res.data)[i].id, itemId : 0})
                         for(let j = 0; j < (res.data)[i].scheduleItemDTOList.length ; j++){
-                            tempArr1.push({scheduleId : (res.data)[i].id, itemId : 0})
                             if(((res.data)[i].scheduleItemDTOList)[j].defaultItem === 1){
                                 tempArr1[i].itemId = ((res.data)[i].scheduleItemDTOList)[j].id
                             }
@@ -158,16 +158,19 @@ function Tour(props) {
     const calcPrice = () => {
         let defaultPrice = tourInfo.defaultPrice;
         let optionPrice = 0;
-        for(let i = 0; i < selectSchedule.length; i++){
-            for(let q = 0 ; q < schedule.length ; q++){
-                for(let p = 0 ; p < schedule[q].scheduleItemDTOList.length ; p++){
-                    if(selectSchedule[i].itemId === schedule[q].scheduleItemDTOList[p].id){
-                        optionPrice += schedule[q].scheduleItemDTOList[p].price
+        for(let i = 0; i < selectSchedule.length; i++){ // selectSchedule의 길이
+            for(let j = 0 ; j < schedule.length; j++){ // schedule의 길이
+                for(let p = 0 ; p < (schedule[j].scheduleItemDTOList).length ; p++){
+                    // selectSchedule의 i번째와 scheduleItemDTOList p 번째를 비교
+                    if((schedule[j].scheduleItemDTOList)[p].id == selectSchedule[i].itemId){
+                        console.log(`p=${p} j=${j}` + (schedule[j].scheduleItemDTOList)[p].price + " id는 ? " + (schedule[j].scheduleItemDTOList)[p].id)
+                        optionPrice += (schedule[j].scheduleItemDTOList)[p].price;
                     }
                 }
+
             }
         }
-        setPrice((defaultPrice + optionPrice) * travelers)
+        setPrice(((defaultPrice / tourInfo.minGroupSize) + optionPrice) * travelers)
     }
 
     useEffect(() => {
@@ -180,6 +183,7 @@ function Tour(props) {
     useEffect(() => {
         if(selectSchedule.length > 0 && travelers > 0){
             calcPrice()
+            console.log("계산기 작동")
         }
     }, [selectSchedule, travelers])
 
@@ -248,7 +252,7 @@ function Tour(props) {
                                   display={"flex"} justifyContent={"flex-start"} alignItems={"center"}
                                   sx={{direction:"flex", justifyContent:"flex-start", alignItems:"center"}}>
                                 <Typography sx={{fontWeight:"900", fontSize:"1.5rem"}}>
-                                    가격 : {tourInfo && tourInfo.defaultPrice}원 (3인기준)
+                                    가격 : {tourInfo && tourInfo.defaultPrice}원 (1인기준)
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -291,7 +295,7 @@ function Tour(props) {
                             </Grid>
                             {schedule.map((item, idx) => {
                                     return(
-                                        item.tourDay === dur && (
+                                        item.tourDay === (dur - 1) && (
                             <Grid xs={12} item display={"flex"} justifyContent={"center"} alignItmes={"center"}>
                                                 <Accordion fullWidth sx={{width:"100%"}} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                                                     <AccordionSummary sx={{backgroundColor:'#D9D9D9'}} expandIcon={<ExpandMoreIcon />}>
@@ -299,15 +303,16 @@ function Tour(props) {
                                                             {item.startTime} ~ {item.endTime}
                                                         </Typography>
                                                     </AccordionSummary>
-                                                    <RadioGroup   defaultValue={selectSchedule[idx].itemId} onChange={(e) => {
+                                                    <RadioGroup  value={selectSchedule[idx].itemId} defaultValue={selectSchedule[idx].itemId} onChange={(e) => {
                                                         // 1. 기존의 배열을 깊은복사합니다.
                                                         let tempArr = JSON.parse(JSON.stringify(selectSchedule))
                                                         // 2. 기존의 배열에 들어간 내용을 수정합니다.
-                                                        for(let i = 0 ; i < selectSchedule.length ; i++) {
-                                                            if(tempArr[i].scheduleId === item.id){
+                                                        for(let i = 0 ; i < tempArr.length ; i++) {
+                                                            if(tempArr[i].scheduleId == item.id){
                                                                 tempArr[i].itemId = e.target.value
                                                             }
                                                         }
+                                                        console.log(tempArr);
                                                         // 3. state를 수정합니다.
                                                         setSelectSchedule(tempArr);
                                                     }}>

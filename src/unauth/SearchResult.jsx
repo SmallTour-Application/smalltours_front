@@ -256,7 +256,7 @@ function SearchResult(props) {
                                     {/* 투어 이미지 **/}
                                     <Grid item xs={12} display={"flex"} justifyContent="center" alignItems="center">
                                         <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden"}}>
-                                            <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                            <img src={item.thumb} style={{width:"100%", aspectRatio:"3/2", objectFit:"cover"}}/>
                                         </Box>
                                     </Grid>
                                     {/* 여행 제목 **/}
@@ -269,7 +269,7 @@ function SearchResult(props) {
                                     <Grid container item xs={12} display={"flex"} justifyContent="flex-start" alignItems="center" sx={{pb:"1rem", px:"1rem"}}>
                                         <Grid xs={1} item  display={"flex"} justifyContent="flex-start" alignItems="center">
                                             <Box sx={{width:"100%", aspectRatio:"1/1", borderRadius:"50vw", overflow:"hidden"}}>
-                                                <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                                <img src={item.guideProfileImg} onError={testImg} style={{width:"100%", aspectRatio:"1/1", objectFit:"cover"}}/>
                                             </Box>
                                         </Grid>
                                         <Grid xs={11} item  display={"flex"} justifyContent="flex-start" alignItems="center">
@@ -312,7 +312,7 @@ function SearchResult(props) {
                                     {/* 가이드 이미지 **/}
                                     <Grid item xs={12} display={"flex"} justifyContent="center" alignItems="center">
                                         <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden"}}>
-                                            <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                            <img src={item.guideProfileImg} onError={testImg} style={{width:"100%", aspectRatio:"1/1", objectFit:"cover"}}/>
                                         </Box>
                                     </Grid>
                                     {/* 가이드 이름 **/}

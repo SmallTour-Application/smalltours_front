@@ -212,7 +212,7 @@ function Main(props) {
                                               }}
                                         >
                                             <Typography sx={{fontWeight:"500", fontSize:"1rem", color:"#000000", textAlign:"center"}}>
-                                                여행좋아여행좋아여행좋아여행좋아여행좋아여행좋아여행좋아
+                                                가이드 소개입니다.
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -237,7 +237,7 @@ function Main(props) {
                     {topTour && topTour.map((item, idx) => {
                         return(
                             <Grid item container xs={4} sx={{m:0, p:0, width:"100%"}} key={idx}>
-                                <Grid item container xs={12} sx={{borderRadius:"1vw", borderColor:"#8D8D8D", p:"1rem", border:1, width:"100%"}}>
+                                <Grid item container xs={12} sx={{border:1,borderRadius:"1vw", borderColor:"#A2A2A2", p:"1rem", width:"100%"}}>
                                     {/* image **/}
                                     <Grid item xs={12}>
                                         <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden", borderRadius:"1vw"}}>
@@ -245,16 +245,26 @@ function Main(props) {
                                         </Box>
                                     </Grid>
                                     {/* 투어제목 **/}
-                                    <Grid item xs={12} sx={{mt:"0.5rem"}}>
-                                        <Typography sx={{fontWeight:"900", fontSize:"1rem"}}>
+                                    {/* 가이드이름 **/}
+                                    <Grid item xs={12} display={"flex"} justfyContent={"center"} alignItems={"center"}
+                                          sx={{
+                                              width:"100%",
+                                              direction: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: "center",
+                                              pt:"0.5rem"
+                                          }}
+                                    >
+                                        <Typography sx={{fontWeight:"900", fontSize:"1.3rem", color:"#000000"}}>
                                             {item.title}
                                         </Typography>
                                     </Grid>
                                     {/* 평점 **/}
-                                    <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                    <Grid item xs={12} display={"flex"} justfyContent={"center"} alignItems={"center"}
                                           sx={{
+                                              width:"100%",
                                               direction: 'flex',
-                                              justifyContent: 'flex-start',
+                                              justifyContent: 'center',
                                               alignItems: "center",
                                               pt:"0.5rem"
                                           }}
@@ -264,7 +274,7 @@ function Main(props) {
                                         {item.rating > 2 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
                                         {item.rating > 3 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
                                         {item.rating > 4 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
-                                        <Typography sx={{fontWeight:"700", fontSize:"1rem", color:"#000000"}}>
+                                        <Typography sx={{fontWeight:"900", fontSize:"1rem", color:"#000000"}}>
                                             {item.rating.toFixed(1)}
                                         </Typography>
                                     </Grid>
@@ -272,13 +282,25 @@ function Main(props) {
                                     <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
                                           sx={{
                                               direction: 'flex',
-                                              justifyContent: 'flex-start',
+                                              justifyContent: 'center',
                                               alignItems: "center",
                                               pt:"0.5rem"
                                           }}
                                     >
-                                        <Typography sx={{fontWeight:"900", fontSize:"1rem", color:"#8D8D8D"}}>
-                                            {item.price} / {item.minPeople}
+                                        <Typography sx={{fontWeight:"500", fontSize:"1rem", color:"#000000"}}>
+                                            {item.price}원 / {item.minPeople}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} display={"flex"} justfyContent={"flex-start"} alignItems={"center"}
+                                          sx={{
+                                              direction: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: "center",
+                                              pt:"0.5rem"
+                                          }}
+                                    >
+                                        <Typography sx={{fontWeight:"500", fontSize:"1rem", color:"#000000"}}>
+                                            {item.minPeople}명 ~ {item.maxPeople}명
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -287,7 +309,49 @@ function Main(props) {
                     })}
 
                 </Grid>
+                {/* footer **/}
+                <Grid container xs={12} sx={{py:"20rem"}}>
+                    <Grid container xs={12}>
+                        <Grid item xs={3}  direction='row'  justifyContent='center'>
+                            <p className={styles.font_footer_logo}>스몰투어</p>
+                        </Grid>
+                        <Grid container item xs={9}>
+                            <Grid item xs={3}>
+                                <p className={styles.font_footer_menu}>이음코딩 이용약관</p>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <p className={styles.font_footer_menu}>개인정보 처리방침</p>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <p className={styles.font_footer_menu}>책임의 한계와 법적 고지</p>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <p className={styles.font_footer_menu}>커뮤니티 가이드라인</p>
+                            </Grid>
 
+                            <Grid item xs={12}>
+                                <p className={styles.font_footer_description}>
+                                    이음코딩은 LatteIs에서 서비스하는 여행 플랫폼입니다.
+                                </p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p className={styles.font_footer_description}>
+                                    (주)라떼는 | 대표자 : 이상훈 | 사업자번호 : 아직없음
+                                </p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p className={styles.font_footer_description}>
+                                    주소 : 경기 의정부시 가능동 562-6 경민대학교 효행관 404호 들어와서 왼쪽
+                                </p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p className={styles.font_footer_description}>
+                                    ©LATTEIS. ALL RIGHTS RESERVED.
+                                </p>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Grid>
         </ThemeProvider>
     );

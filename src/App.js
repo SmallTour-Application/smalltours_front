@@ -16,6 +16,13 @@ import GuideJoin from "./unauth/GuideJoin";
 import GuideMain from "./guide/GuideMain";
 import GuideInfo from "./unauth/GuideInfo";
 import AddTour from "./guide/AddTour";
+import AddTourSchedule from "./guide/AddTourSchedule";
+import EditTour1 from "./guide/EditTour1";
+import EditTour2 from "./guide/EditTour2";
+import CreateTour3 from "./guide/CreateTour3";
+import CreateTour4 from "./guide/CreateTour4";
+import EditTour3 from "./guide/Edittour3";
+import EditTour4 from "./guide/EditTour4";
 
 
 function App() {
@@ -55,7 +62,21 @@ function App() {
           {/* 가이드 메인 **/}
           <Route path="/guide/main/:value" element={<GuideMain/>}/>
           {/* tour 만들기 **/}
-          <Route path="/guide/createTour" element={<AddTour/>}/>
+          <Route path="/guide/createTour1" element={<AddTour/>}/>
+          {/* schedule 만들기 **/}
+          <Route path="/guide/createTour2/:value" element={<AddTourSchedule/>}/>
+          {/* 나머지 만들기 **/}
+          <Route path="/guide/createTour3/:value" element={<CreateTour3/>}/>
+          {/* 그 나머지 만들기 **/}
+          <Route path="/guide/createTour4/:value" element={<CreateTour4/>}/>
+          {/* 투어 수정1 **/}
+          <Route path="/guide/editTour1/:value" element={<EditTour1/>}/>
+          {/* 투어 수정2 **/}
+          <Route path="/guide/editTour2/:value" element={<EditTour2/>}/>
+          {/* 투어 수정3 **/}
+          <Route path="/guide/editTour3/:value" element={<EditTour3/>}/>
+          {/* 투어 수정4 **/}
+          <Route path="/guide/editTour4/:value" element={<EditTour4/>}/>
 
       </Routes>
   );

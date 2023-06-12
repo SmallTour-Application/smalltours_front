@@ -76,7 +76,7 @@ function GuideMyInfo(props) {
                 if(res.data.profile){
                     const temp = res.data.profile.split("\\");
                     console.log(temp)
-                    setImg("http://localhost:8099/eumCodingImgs/member/" + (temp[temp.length-1]))
+                    setImg(res.data.profile)
                 }
             }
         })

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Button, createTheme, Grid, TextField, ThemeProvider} from "@mui/material";
 import TopBar from "../component/TopNav";
 import Typography from "@mui/material/Typography";
@@ -7,10 +7,12 @@ import IconButton from "@mui/material/IconButton";
 import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-function AddTour(props) {
+function EditTour1(props) {
+    const param = useParams();
+
     const navigate = useNavigate()
 
     const accessToken = useSelector((state) => state.accessToken);
@@ -20,6 +22,8 @@ function AddTour(props) {
             fontFamily: 'NanumSquareNeo',
         },
     });
+
+    const [tourInfo, setTourInfo] = useState(null);
 
     const [thumb, setThumb] = useState(null); // 썸네일
     const [title, setTitle] = useState(""); // 제목
@@ -31,7 +35,31 @@ function AddTour(props) {
     const [img, setImg] = useState(null); // 설명이미지
     const [price, setPrice] = useState(0); // 기본가격
     const [meeting, setMeeting] = useState(""); // 미팅장소
-    const [tourId, setTourId] = useState(0); // 생성된 여행 아이디 들어갈 곳
+
+    // 투어정보 불러오기
+    const getTourInfo = async (id) => {
+        const response = await axios.get(
+            `http://localhost:8099/package/unauth/view?id=${id}`
+        ).then((res) => {
+            if(res.data){
+                console.log(res)
+                setTourInfo(res.data)
+                const tempArr = []
+                for(let i = 1 ; i <= res.data.duration ; i++){
+                    tempArr.push(i);
+                }
+                setDuration(tempArr);
+                setTitle(res.data.title)
+                setSubTitle(res.data.subTitle)
+                setDescription(res.data.description)
+                setDuration(res.data.duration)
+                setMinPeople(res.data.minGroupSize)
+                setMaxPeople(res.data.maxGroupSize)
+                setPrice(res.data.price)
+                setMeeting(res.data.meetingPoint)
+            }
+        })
+    }
 
     // 서버로 전송하기
     const handleSubmit = async () => {
@@ -48,13 +76,18 @@ function AddTour(props) {
         console.log("tour 생성 시도...")
         const fd = new FormData();
         // 썸네일
-        Object.values(thumb).forEach((thumb) => {
-            fd.append('thumb', thumb);
-        }); // 파일 임포트
+        if(thumb){
+            Object.values(thumb).forEach((thumb) => {
+                fd.append('thumb', thumb);
+            }); // 파일 임포트
+        }
         // 설명이미지
-        Object.values(img).forEach((img) => {
-            fd.append('tourImages', img);
-        }); // 파일 임포트
+        if(img){
+            Object.values(img).forEach((img) => {
+                fd.append('tourImages', img);
+            }); // 파일 임포트
+        }
+        fd.append('id', param.value);
         fd.append('defaultPrice', price);
         fd.append('description', description);
         fd.append('duration', duration)
@@ -67,18 +100,18 @@ function AddTour(props) {
 
         // 회원가입 api 호출
         const response = await axios.post(
-            `http://localhost:8099/package/add`,
+            `http://localhost:8099/package/update`,
             fd,
             {
                 headers:{
                     'Content-Type':`multipart/form-data`,
-        'Authorization': `${accessToken}`,
+                    'Authorization': `${accessToken}`,
                 },
             }
         ).then((res) => {
             console.log("다음단계로 이동합니다.")
             alert("다음단계로 이동합니다.");
-            navigate(`/guide/createTour2/${res.data.id}`)
+            navigate(`/guide/editTour2/${param.value}`) // 이동
         }).catch((res) => {
             console.log("생성 실패. 다시 시도해 주세요.");
             alert("생성 실패. 계속해서 장애가 발생하면 고객센터에 문의해 주세요.")
@@ -86,6 +119,12 @@ function AddTour(props) {
 
 
     }
+
+    useEffect(() => {
+        if(accessToken){
+            getTourInfo(param.value);
+        }
+    },[,accessToken])
 
 
 
@@ -99,7 +138,7 @@ function AddTour(props) {
                   alignItems="flex-start"
             >
                 <Typography sx={{fontSize: "2rem", fontWeight: "700"}}>
-                    여행추가(1/4)
+                    여행수정(1/4)
                 </Typography>
                 {/* 투어제목 **/}
                 <Grid item xs={12}>
@@ -127,13 +166,23 @@ function AddTour(props) {
                     </Button>
                 </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', width:"100%" }}>
-                    {thumb === null && (
+                    {tourInfo && tourInfo.thumb === "" && thumb === null && (
                         <Typography>선택된 파일 없음</Typography>
                     )}
                     {thumb && (
                         <Box sx={{width:"100px", aspectRatio:"16/9", overflow:"hidden", borderRadius:"10px"}}>
                             <img
                                 src={URL.createObjectURL(thumb[0])}
+                                alt="썸네일"
+                                loading="lazy"
+                                style={{width:"100%", height:"100%", objectFit:"cover"}}
+                            />
+                        </Box>
+                    )}
+                    {!thumb && tourInfo && tourInfo.thumb !== "" && (
+                        <Box sx={{width:"100px", aspectRatio:"16/9", overflow:"hidden", borderRadius:"10px"}}>
+                            <img
+                                src={tourInfo.thumb}
                                 alt="썸네일"
                                 loading="lazy"
                                 style={{width:"100%", height:"100%", objectFit:"cover"}}
@@ -232,14 +281,24 @@ function AddTour(props) {
                     </Button>
                 </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', width:"100%" }}>
-                    {!img && (
+                    {tourInfo && tourInfo.toursImgDTOList && tourInfo.toursImagesDTOList.length < 1 && img === null && (
                         <Typography>선택된 파일 없음</Typography>
                     )}
                     {img && (
                         <Box sx={{width:"100px", aspectRatio:"16/9", overflow:"hidden", borderRadius:"10px"}}>
                             <img
                                 src={URL.createObjectURL(img[0])}
-                                alt="설명이미지"
+                                alt="썸네일"
+                                loading="lazy"
+                                style={{width:"100%", height:"100%", objectFit:"cover"}}
+                            />
+                        </Box>
+                    )}
+                    {!img && tourInfo && tourInfo.toursImagesDTOList.length > 0 && (
+                        <Box sx={{width:"100px", aspectRatio:"16/9", overflow:"hidden", borderRadius:"10px"}}>
+                            <img
+                                src={tourInfo.toursImagesDTOList[0].imagePath}
+                                alt="썸네일"
                                 loading="lazy"
                                 style={{width:"100%", height:"100%", objectFit:"cover"}}
                             />
@@ -259,4 +318,4 @@ function AddTour(props) {
     );
 }
 
-export default AddTour;
+export default EditTour1;

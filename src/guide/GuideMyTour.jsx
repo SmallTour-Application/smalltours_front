@@ -83,6 +83,24 @@ function GuideMyTour(props) {
         setLoad(false);
     }
 
+    // 여행삭제하기
+    const delTour = async (id) => {
+        setLoad(true);
+        const response = await axios.post(
+            `http://localhost:8099/package/delete`,
+            {
+                id:id
+            },
+            {headers:{'Authorization': `${accessToken}`,}}
+        ).catch((err) => {
+            console.log(err)
+        }).then((res) => {
+                getMyTour(1);
+            }
+        )
+        setLoad(false);
+    }
+
 
     useEffect(() => {
         // 로그인 체크
@@ -100,7 +118,7 @@ function GuideMyTour(props) {
                     </Typography>
                 </Grid>
                 <Grid xs={1} item display={"flex"} justifyContent="center" alignItems={"center"}>
-                    <Button variant={"outlined"} sx={{borderColor:"#000000"}}>+</Button>
+                    <Button variant={"outlined"} sx={{borderColor:"#000000"}} onClick={() => navigate("/guide/createTour1")} >+</Button>
                 </Grid>
                 <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"}>
                     <Typography sx={{fontSize: "1rem", fontWeight: "700", color:"#888888"}}>
@@ -130,9 +148,9 @@ function GuideMyTour(props) {
                                   display={"flex"}
                                   justifyContent={"center"}
                                   alignItems={"center"}
-                                  sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0, m:0}}
+                                  sx={{width:"100%", aspectRatio:"16/9", display: "flex", overflow:"hidden", p:0, m:0}}
                             >
-                                <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
+                                <img src={item.thumb === "" ? testImg : item.thumb} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
                             </Grid>
                             <Grid xs={5} item container
                                   display={"flex"}
@@ -151,7 +169,7 @@ function GuideMyTour(props) {
                                         {item.approvals === false && "승인대기"}
                                     </span>
                                 </Grid>
-                                <Grid xs={12} item>
+                                <Grid xs={12} item onClick={() => navigate(`/tour/${item.id}`)} >
                                     <Typography noWrap sx={{fontSize:"1.3rem", fontWeight:"700"}}>{item.packageName}</Typography>
                                 </Grid>
                                 <Grid xs={12} item>
@@ -165,18 +183,13 @@ function GuideMyTour(props) {
                                   spacing={1}
                             >
                                 <Grid item xs={12} sx={{ px:"3rem"}}>
-                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
-                                        <Typography sx={{color:"#000000"}}>여행 삭제</Typography>
+                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth onClick={() => delTour(item.packageId)} >
+                                        <Typography sx={{color:"#000000"}} >여행 삭제</Typography>
                                     </Button>
                                 </Grid>
                                 <Grid item xs={12} sx={{ px:"3rem"}}>
-                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
+                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth onClick={() => navigate(`/guide/editTour1/${item.packageId}`)} >
                                         <Typography sx={{color:"#000000"}}>여행 수정</Typography>
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={12} sx={{ px:"3rem"}}>
-                                    <Button variant={"outlined"} sx={{borderColor:"#DDDDDD"}} fullWidth>
-                                        <Typography sx={{color:"#000000"}}>판매 일시정지</Typography>
                                     </Button>
                                 </Grid>
                             </Grid>

@@ -70,9 +70,6 @@ function Plan(props) {
 
     const [reviewContent, setReviewContent] = useState("");
 
-    const [reviewId, setReviewId] = useState(0);
-
-
     // 결제내역 불러오는 api(검색 미사용)(최초사용)
     const getPayment = async (newPage) => {
         setLoad(true);
@@ -144,8 +141,8 @@ function Plan(props) {
         setLoad(true);
         const response = await axios.post(
             reviewType === false ?
-            `http://localhost:8099/review/package/write?packageId=${id}&content=${reviewContent}&rating=${star}` :
-                `http://localhost:8099/review/guide/write?guideId=${id}&content=${reviewContent}&rating=${star}`,
+            `http://localhost:8099/review/package/write?paymentId=${id}&content=${reviewContent}&rating=${star}` :
+                `http://localhost:8099/review/guide/write?paymentId=${id}&content=${reviewContent}&rating=${star}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         )
@@ -163,6 +160,7 @@ function Plan(props) {
         setStar(5)
         setLoad(false);
     }
+
 
 
     useEffect(() => {
@@ -224,7 +222,7 @@ function Plan(props) {
                         <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{mt:"2rem"}}>
                             <Button
                                 onClick={() => {
-                                    writeReview(reviewId);
+                                    writeReview(paymentId);
                                     handleClose();
                                 }}
                                 fullWidth sx={{backgroundColor:"#6CB0FF", border:0, borderRadius:"2vw", height:"200%"}}>
@@ -336,10 +334,10 @@ function Plan(props) {
                                   display={"flex"}
                                   justifyContent={"center"}
                                   alignItems={"center"}
-                                  sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0, m:0}}
+                                  sx={{width:"100%", aspectRatio:"13/9", display: "flex", overflow:"hidden", p:0, m:0}}
                                   onClick={() => navigate(`/tour/${item.packageId}`)}
                             >
-                                <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
+                                <img src={!item.thumb ? testImg : item.thumb} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
                             </Grid>
                             <Grid xs={5} item container
                                   display={"flex"}
@@ -404,7 +402,6 @@ function Plan(props) {
                                                     setGuideName(item.guideName);
                                                     setReviewType(false);
                                                     setPaymentId(item.paymentId);
-                                                    setReviewId(item.packageId)
                                                     handleOpen();
                                                 }}
                                         >
@@ -420,7 +417,6 @@ function Plan(props) {
                                                     setGuideName(item.guideName);
                                                     setReviewType(true);
                                                     setPaymentId(item.paymentId);
-                                                    setReviewId(item.guideId)
                                                     handleOpen();
                                                 }}
                                         >

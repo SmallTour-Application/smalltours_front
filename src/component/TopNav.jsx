@@ -50,6 +50,8 @@ const overseasList = ["동아시아", "유럽", "북미", "남미", "동남아",
 export default function TopBar() {
     const accessToken = useSelector((state) => state.accessToken);
 
+    const role = useSelector((state) => state.role);
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();// redux dispatch
@@ -207,6 +209,8 @@ export default function TopBar() {
     const logout = () => {
         dispatch(clearAccessToken()); // 리덕스에서 토큰 제거
         Cookies.remove('accessToken'); // 쿠키에 들어있던 accessToken 제거
+        // 이동
+        navigate("/login");
     }
 
     // 디버깅용
@@ -797,7 +801,7 @@ export default function TopBar() {
 
                         </Grid>
 
-                        <IconButton onClick={() => navigate("/my/info")}>
+                        <IconButton onClick={() => role === 0 ? navigate("/my/info") : navigate("/guide/main/info")}>
                             <AccountCircleIcon sx={{fontSize:"3rem"}} />
                         </IconButton>
 

@@ -28,11 +28,16 @@ import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import FaceIcon from '@mui/icons-material/Face6';
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
+import {useSelector} from "react-redux";
 
 
 
 
 function Tour(props) {
+    const accessToken = useSelector((state) => state.accessToken)
+
+    const role = useSelector((state) => state.role)
+
     const params = useParams();
 
     const navigate = useNavigate();
@@ -76,6 +81,12 @@ function Tour(props) {
 
     const [price, setPrice] = useState(0);
 
+    const [page, setPage] = useState(1);
+
+    const [more, setMore] = useState(true)
+
+    const [hotelInfo, setHotelInfo] = useState(null);
+
     const handleSelect = date => {
         setSelectedDate(dayjs(date));
     };
@@ -101,6 +112,15 @@ function Tour(props) {
                     tempArr.push(i);
                 }
                 setDuration(tempArr);
+                // 잠금기간 세팅하기
+                if(res.data.guideLockDTOList){
+                    const arrr = [];
+                    for(let i = 0 ; i < res.data.guideLockDTOList.length; i++){
+                        arrr.push({start:dayjs(res.data.guideLockDTOList[i].startDay), end:dayjs(res.data.guideLockDTOList[i].endDay)})
+                    }
+                    setDisallowedRanges(arrr);
+                }
+
             }
         })
     }
@@ -112,7 +132,23 @@ function Tour(props) {
         ).then((res) => {
                 if (res.data) {
                     console.log(res)
-                    setReview(res.data);
+                    if(res.data){
+                        if(paramPage === 1){
+                            setReview(res.data);
+                        }else{
+                            if(res.data.review){
+                                const asdf = JSON.parse(JSON.stringify(review))
+                                const temp = res.data.review.concat(review.review);
+                                asdf.review = temp;
+                                setReview(asdf);
+                                if(res.data.review.length < 10){
+                                    setMore(false);
+                                }
+                            }else{
+                                setMore(false);
+                            }
+                        }
+                    }
                 }
             }
         )
@@ -154,6 +190,74 @@ function Tour(props) {
         ).catch((err) => console.log(err))
     }
 
+    const [airline, setAirline] = useState(null);
+
+    // 항공사 정보 불러오기
+    const getAirline = async () => {
+        const response = await axios.get(
+            `http://localhost:8099/package/airline/unauth/view?id=${params.value}`
+        ).then(
+            (res)=>{
+                console.log(res);
+                if(res.data){
+                    setAirline(res.data)
+                }
+            }
+        )
+    }
+
+
+    // 서버에서 숙소정보 가져오기
+    const getHotel = async () => {
+        const response = await axios.get(
+            `http://localhost:8099/package/hotel/unauth/view?id=${params.value}`
+        ).then(
+            (res)=>{
+                console.log(res);
+                if(res.data){
+                    setHotelInfo(res.data)
+                }
+            }
+        )
+    }
+
+
+    // 좋아요!
+    const good = async () => {
+        const response = await axios.post(
+            `http://localhost:8099/favorite/tours/add`,
+            {id:params.value},
+            {headers:{'Authorization': `${accessToken}`,}}
+        ).catch((err) => {
+            console.log(err)
+            alert("구독 해제는 마이페이지에서 가능합니다.")
+        }).then((res) => {
+            alert("구독 성공")
+        })
+    }
+
+    // 좋아요!
+    const payOk = async () => {
+        const fd = new FormData();
+        fd.append("departureDay", dayjs(selectedDate).format("YYYY-MM-DD"))
+        const tempArr = [];
+        selectSchedule.map((item) => tempArr.push(item.itemId))
+        fd.append("items", tempArr)
+        fd.append("packageId", params.value)
+        fd.append("people", travelers)
+        const response = await axios.post(
+            `http://localhost:8099/payment/ok?departureDay`,
+            fd,
+            {headers:{'Authorization': `${accessToken}`,}}
+        ).catch((err) => {
+            console.log(err)
+            alert("구매성공`")
+        }).then((res) => {
+            alert("구매성공")
+        })
+    }
+
+
     // 실시간 가격 계산하기 -> selectSchedule와 travler에 변동이 생길 때마다 계산합니다.
     const calcPrice = () => {
         let defaultPrice = tourInfo.defaultPrice;
@@ -178,6 +282,8 @@ function Tour(props) {
         getReviewInfo(params.value, 1);
         getReviewRating(params.value)
         getSchedule(params.value)
+        getAirline()
+        getHotel()
     },[])
 
     useEffect(() => {
@@ -186,6 +292,12 @@ function Tour(props) {
             console.log("계산기 작동")
         }
     }, [selectSchedule, travelers])
+
+    useEffect(() => {
+        if(page > 1) {
+            getReviewInfo(params.value,page)
+        }
+    }, [page])
 
 
     return (
@@ -200,7 +312,7 @@ function Tour(props) {
                         {/* 여행 썸네일 **/}
                         <Grid item xs={12} md={6}>
                             <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden", borderRadius:"1vw"}}>
-                                <img src={testImg} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                                <img src={tourInfo ? tourInfo.thumb : testImg} onError={testImg} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                             </Box>
                         </Grid>
                         {/* 여행 썸네일 옆 요약정보 **/}
@@ -230,7 +342,7 @@ function Tour(props) {
                                   display={"flex"} justifyContent={"flex-start"} alignItems={"center"}
                                   sx={{direction:"flex", justifyContent:"flex-start", alignItems:"center"}}>
                                 <Typography sx={{fontWeight:"900", fontSize:"1rem"}}>
-                                    {review && review.count}개의 리뷰 | {tourInfo && (tourInfo.duration)}일 동안 떠나요
+                                    {review && review.count}개의 리뷰 | {tourInfo && (tourInfo.duration)}일 동안 떠나요 | {accessToken && <span onClick={() => good()} >(좋아요)</span>}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}
@@ -270,9 +382,14 @@ function Tour(props) {
                     </Grid>
                     {/* 이미지들 **/}
                     <Grid xs={12} item>
-                        <Box sx={{width:"100%"}}>
-                            <img src={testImg} style={{width:"100%", height:"auto"}} />
-                        </Box>
+                        {tourInfo && tourInfo.toursImagesDTOList && tourInfo.toursImagesDTOList.map((item) => {
+                            return(
+                                <Box sx={{width:"100%"}}>
+                                    <img src={item.imagePath} style={{width:"100%", height:"auto"}} />
+                                </Box>
+                                )
+
+                        })}
                     </Grid>
 
                     {/* 내용 **/}
@@ -281,6 +398,150 @@ function Tour(props) {
                             {tourInfo && tourInfo.description}
                         </Typography>
                     </Grid>
+
+                    {airline && airline.map((aItem) => {
+                        return(
+                            <Grid item container xs={12} display={"flex"} justifyContent={"center"} alignItmes={"center"} sx={{pt:"3rem"}} spacing={3}>
+                                <Grid xs={12} item>
+                                    <Typography sx={{fontWeight:"900", fontSize:"1.5rem"}}>
+                                        항공사 정보
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    항공사 이름
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {aItem.name}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    항공사 이메일
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {aItem.contactEmail}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    항공사 전화번호
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {aItem.contactTel}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    항공사 국적
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {aItem.country}
+                                </Grid>
+
+                                {aItem.flightDTO && (
+                                    <Grid container item xs={12}>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            항공편(예정)
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {aItem.flightDTO.flightName}
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            좌석타입
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {aItem.flightDTO.seatType}
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            출발공항
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {aItem.flightDTO.arrivalAirport}
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            도착지
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {aItem.flightDTO.departCity}
+                                        </Grid>
+                                    </Grid>
+                                )
+                                }
+                            </Grid>
+                        )
+                    }
+                    )}
+
+
+                    {hotelInfo && hotelInfo.map((hItem) => {
+                        return(
+                            <Grid item container xs={12} display={"flex"} justifyContent={"center"} alignItmes={"center"} sx={{pt:"3rem"}} spacing={3}>
+                                <Grid xs={12} item>
+                                    <Typography sx={{fontWeight:"900", fontSize:"1.5rem"}}>
+                                        숙소 정보
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    숙소 이름
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {hotelInfo.name}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    숙소 주소
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {hotelInfo.address}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    숙소 전화번호
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {hotelInfo.hotelTel}
+                                </Grid>
+
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                    숙소 소개
+                                </Grid>
+                                <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                    {hotelInfo.description}
+                                </Grid>
+
+                                {hotelInfo.roomDTO && (
+                                    <Grid container item xs={12}>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            방이름
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {hotelInfo.roomDTO.name}
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            방 인원
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {hotelInfo.roomDTO.minPeople} ~ {hotelInfo.roomDTO.maxPeople}
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            방 설명
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            {hotelInfo.roomDTO.description}
+                                        </Grid>
+                                        <Grid xs={12} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
+                                            이미지
+                                        </Grid>
+                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
+                                            <Box sx={{width: "300px", aspectRatio: "16/9", overflow:"hidden"}}>
+                                                <img src={hotelInfo.roomDTO.image === "" ? testImg : hotelInfo.roomDTO.image }/>
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
+                                )
+                                }
+                            </Grid>
+                        )
+                    }
+
+                    )}
                 </Grid>
 
 
@@ -295,7 +556,7 @@ function Tour(props) {
                             </Grid>
                             {schedule.map((item, idx) => {
                                     return(
-                                        item.tourDay === (dur - 1) && (
+                                        item.tourDay === (dur) && (
                             <Grid xs={12} item display={"flex"} justifyContent={"center"} alignItmes={"center"}>
                                                 <Accordion fullWidth sx={{width:"100%"}} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                                                     <AccordionSummary sx={{backgroundColor:'#D9D9D9'}} expandIcon={<ExpandMoreIcon />}>
@@ -395,11 +656,11 @@ function Tour(props) {
                                 인원 설정
                             </Typography>
                             <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                                <IconButton onClick={decreaseTravelers} disabled={travelers === 3} sx={{color:"#000000"}}>
+                                <IconButton onClick={decreaseTravelers} disabled={travelers === (tourInfo ? tourInfo.minGroupSize : 3)} sx={{color:"#000000"}}>
                                     <RemoveCircleRoundedIcon sx={{fontSize:"4rem" }}/>
                                 </IconButton>
                                 <Typography sx={{ mx: "2rem", fontSize:"3rem", fontWeight:"700", color:"#000000" }}>{travelers}</Typography>
-                                <IconButton onClick={increaseTravelers} disabled={travelers === 5} sx={{color:"#000000"}}>
+                                <IconButton onClick={increaseTravelers} disabled={travelers === (tourInfo ? tourInfo.maxGroupSize : 5)} sx={{color:"#000000"}}>
                                     <AddCircleRoundedIcon sx={{fontSize:"4rem"}} />
                                 </IconButton>
                             </Box>
@@ -409,7 +670,17 @@ function Tour(props) {
                                 총 여행 금액 : <b style={{fontWeight:"900"}}>{price}원</b>
                             </Typography>
                             <Button variant={"outlined"} sx={{backgroundColor:"#3972B3", px:"1rem",py:"0.5rem", borderRadius:"50px"}}
-                                    display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                    display={"flex"} justifyContent={"center"} alignItems={"center"}
+                            onClick={() => {
+                                if(!accessToken) {
+                                    alert("로그인이 필요한 서비스입니다.")
+                                }else if(role === 2) {
+                                    alert("가이드 회원은 불가능한 서비스 입니다.")
+                                }else {
+                                    payOk();
+                                }
+                            }}
+                            >
                                 <Typography sx={{color:"#FFFFFF", fontSize:"2rem", fontWeight:"700"}}>구매하러가기</Typography>
                             </Button>
                         </Grid>
@@ -418,7 +689,7 @@ function Tour(props) {
 
 
 
-                {/* 리뷰 **/}
+
                 <Grid container item xs={12} sx={{px:'20%', pt:0, mt:0}}>
                     <Grid item xs={12}
                           display="flex"
@@ -426,8 +697,8 @@ function Tour(props) {
                           alignItems="flex-end"
                           sx={{pt:'7vw'}}
                     >
-                        <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>수강평&nbsp;</Typography>
-                        <Typography sx={{fontSize:"1rem", fontWeight:"500", pb:"0.5rem"}}>총 207개</Typography>
+                        <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>리뷰&nbsp;</Typography>
+                        <Typography sx={{fontSize:"1rem", fontWeight:"500", pb:"0.5rem"}}>총 {review && review.count}개</Typography>
                     </Grid>
                     <Grid item xs={12}
                           display="flex"
@@ -435,12 +706,12 @@ function Tour(props) {
                           alignItems="center"
                           sx={{pb:'7vw', mt:'1rem'}}
                     >
-                        <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>
-                        <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>
-                        <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>
-                        <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>
-                        <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>
-                        <Typography sx={{fontWeight:"700", fontSie:"2rem", pt:"0.5rem"}}>(5.0)</Typography>
+                        {reviewRating > 0 && <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>}
+                        {reviewRating > 1 && <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>}
+                        {reviewRating > 2 && <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>}
+                        {reviewRating > 3 && <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>}
+                        {reviewRating > 4 && <StarIcon sx={{ color: '#F2D857', fontSize: '3rem' }}/>}
+                        <Typography sx={{fontWeight:"700", fontSie:"2rem", pt:"0.5rem"}}>({reviewRating})</Typography>
                     </Grid>
                     {/* 리뷰 정렬 옵션 **/}
                     <Grid container item xs={12}
@@ -450,94 +721,103 @@ function Tour(props) {
                           sx={{mb:'0.5vw'}}
                     >
                         <Typography sx={{fontSize:"1rem", fontWeight:"700", mx:"1rem"}}>최신 순</Typography>
-                        <Typography sx={{fontSize:"1rem", fontWeight:"700", mx:"1rem"}}>좋아요 순</Typography>
-                        <Typography sx={{fontSize:"1rem", fontWeight:"700", mx:"1rem"}}>높은 평점 순</Typography>
-                        <Typography sx={{fontSize:"1rem", fontWeight:"700", mx:"1rem"}}>낮은 평점 순</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Divider sx={{borderWidth:'0.1rem', borderColor:'#000000'}}/>
                     </Grid>
                     {/* 리뷰목록 **/}
-                    <Grid
-                        container
-                        item xs={12}
-                        display="flex"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        sx={{mt:'1rem'}}
-                    >
-                        <Grid container item xs={12} sx={{mt:'0.3vw'}}>
-                            <Grid item
-                                  display="flex"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                  xs={1} sx={{pr:'1vw'}}>
-                                <FaceIcon sx={{fontSize:'4rem'}}/>
-                            </Grid>
+                    {/* 리뷰 **/}
+                    {review && review.review.map((item) => {
+                        return(
                             <Grid
-                                item
                                 container
+                                item xs={12}
                                 display="flex"
                                 justifyContent="flex-start"
                                 alignItems="center"
-                                xs={1}
+                                sx={{mt:'1rem'}}
                             >
-                                <Grid
-                                    item
-                                    xs={12}
-                                    display="flex"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-end"
-                                >
-                                    <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                    <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                    <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                    <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
-                                    <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>
+                                <Grid container item xs={12} sx={{mt:'0.3vw'}}>
+                                    <Grid item
+                                          display="flex"
+                                          justifyContent="flex-start"
+                                          alignItems="center"
+                                          xs={1} sx={{pr:'1vw'}}>
+                                        <FaceIcon sx={{fontSize:'4rem'}}/>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        container
+                                        display="flex"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        xs={1}
+                                    >
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            display="flex"
+                                            justifyContent="flex-start"
+                                            alignItems="flex-end"
+                                        >
+                                            {item.rating > 0 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
+                                            {item.rating > 1 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
+                                            {item.rating > 2 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
+                                            {item.rating > 3 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
+                                            {item.rating > 4 && <StarIcon sx={{ color: '#F2D857', fontSize: '1.5rem' }}/>}
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            display="flex"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            sx={{pl:0}}
+                                        >
+                                            <Typography sx={{fontSize:"1rem", fontWeight:"700"}}>닉네임</Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item
+                                          display="flex"
+                                          justifyContent="flex-start"
+                                          alignItems="center"
+                                          xs={12} sx={{mt:'1vw'}}>
+                                        <Typography>
+                                            {item.content}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item
+                                          display="flex"
+                                          justifyContent="flex-start"
+                                          alignItems="center"
+                                          xs={12} sx={{mt:'1vw'}}>
+                                        <Typography sx={{color:"#8D8D8D"}}>
+                                            {item.createdDay}
+                                        </Typography>
+                                        <br/>
+                                    </Grid>
+                                    <Grid item
+                                          xs={12} sx={{mt:'2vw', mb:'1vw'}}>
+                                        <Divider fullWidth/>
+                                        <br/>
+                                    </Grid>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    display="flex"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    sx={{pl:0}}
-                                >
-                                    <Typography sx={{fontSize:"1rem", fontWeight:"700"}}>닉네임</Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid item
-                                  display="flex"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                  xs={12} sx={{mt:'1vw'}}>
-                                <Typography>
-                                    내용내용내용내용내용내용내용
-                                </Typography>
-                            </Grid>
-                            <Grid item
-                                  display="flex"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                  xs={12} sx={{mt:'1vw'}}>
-                                <Typography sx={{color:"#8D8D8D"}}>
-                                    2022-03-18 ♥2
-                                </Typography>
-                                <br/>
-                            </Grid>
-                            <Grid item
-                                  xs={12} sx={{mt:'2vw', mb:'1vw'}}>
-                                <Divider fullWidth/>
-                                <br/>
-                            </Grid>
-                        </Grid>
 
-                    </Grid>
-                    <Grid xs={12} item sx={{mt:'1vw', mb:'7vw'}}>
-                        <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}>
-                            <Typography sx={{color:"#000000"}}>리뷰 더보기</Typography>
-                        </Button>
-                    </Grid>
+                            </Grid>
+                        )
+                    })}
+
+
+                    {more === true && (
+                        <Grid xs={12} item sx={{mt:'1vw', mb:'7vw'}}>
+                            <Button variant="outlined" fullWidth sx={{borderColor:'#000000', borderRadius:'10px'}}
+                                    onClick={() => setPage(page + 1)}
+                            >
+                                <Typography sx={{color:"#000000"}} >리뷰 더보기</Typography>
+                            </Button>
+                        </Grid>
+                    )}
+                    
                 </Grid>
 
 

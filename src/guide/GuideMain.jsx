@@ -9,13 +9,16 @@ import Typography from "@mui/material/Typography";
 import {useNavigate, useParams} from "react-router-dom";
 import GuideMyInfo from "./GuideMyInfo";
 import GuideMyTour from "./GuideMyTour";
+import Education from "./Education";
+import Sell from "./Sell";
 
 const page=[
     {url:"info", name:"개인정보"},
     {url:"tour", name:"내 여행"},
-    {url:"question", name:"질문 확인"},
-    {url:"answer", name:"내 답변 확인"},
-    {url:"stat", name:"통계"},]
+    {url:"sell", name:"판매 내역"},
+    {url:"stat", name:"통계"},
+    {url:"edu", name:"온라인 교육"}
+]
 function GuideMain(props) {
     const move = useNavigate();
 
@@ -76,6 +79,12 @@ function GuideMain(props) {
                     )}
                     {keyword === "tour" && (
                         <GuideMyTour/>
+                    )}
+                    {keyword === "edu" && (
+                        <Education/>
+                    )}
+                    {keyword === "sell" && (
+                    <Sell/>
                     )}
                 </Grid>
             </Grid>

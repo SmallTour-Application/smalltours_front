@@ -394,7 +394,9 @@ function CreateTour3(props) {
                     </Grid>
                 </Grid>
                 <Grid xs={12} item sx={{py:"3rem"}}>
-                    <Button variant={"outlined"} fullWidth onClick={() => navigate(`/guide/createTour4/${param.value}`)} >다음단계로</Button>
+                    <Button fullWidth variant={"outlined"} onClick={() => navigate(`/guide/createTour4/${param.value}`)} >
+                        다음단계로
+                    </Button>
                 </Grid>
             </Grid>
         </ThemeProvider>

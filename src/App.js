@@ -23,6 +23,9 @@ import CreateTour3 from "./guide/CreateTour3";
 import CreateTour4 from "./guide/CreateTour4";
 import EditTour3 from "./guide/Edittour3";
 import EditTour4 from "./guide/EditTour4";
+import Confirm from "./unauth/Confirm";
+import Dashboard from "./admin/Dashboard";
+import AdminPanel from "./admin/AdminPanel";
 
 
 function App() {
@@ -77,6 +80,11 @@ function App() {
           <Route path="/guide/editTour3/:value" element={<EditTour3/>}/>
           {/* 투어 수정4 **/}
           <Route path="/guide/editTour4/:value" element={<EditTour4/>}/>
+          <Route path="/confirm/:token" render={() => <Confirm />} />
+
+
+          {/* ADMIN!!!!! **/}
+          <Route path="/admin/*" element={<AdminPanel />} />
 
       </Routes>
   );

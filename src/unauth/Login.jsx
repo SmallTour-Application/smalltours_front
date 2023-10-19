@@ -38,6 +38,8 @@ function Login(props) {
                 navigate("/main")
             }else if(role === 2){
                 navigate("/guide/main/info")
+            } else if(role === 3){
+                navigate("/admin/dashboard"); // admin인 경우 admin dashboard로 이동
             }
         }
     },[accessToken])
@@ -49,6 +51,8 @@ function Login(props) {
                 navigate("/main")
             }else if(role === 2){
                 navigate("/guide/main/info")
+            }else if(role === 3){
+                navigate("/admin/dashboard"); // admin인 경우 admin dashboard로 이동
             }
         }
     },[])
@@ -84,6 +88,12 @@ function Login(props) {
                 // 가이드 페이지로 이동
                 dispatch(setRole(res.data.role))
                 navigate("/guide/main/info")
+            }else if(res.data.role === 3){
+                // 가이드 페이지로 이동
+                dispatch(setRole(res.data.role))
+                navigate("/admin/dashboard")
+            }else{
+                alert("애애애애애애애앵")
             }
         })
     }

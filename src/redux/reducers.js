@@ -12,6 +12,7 @@ const initialState = {
     searchPage:1,
     role:999,
     memberId:0,
+    isLoading:false, // 로딩
 };
 
 const reducer = (state = initialState, action) => {
@@ -75,6 +76,11 @@ const reducer = (state = initialState, action) => {
             return{
                 ...state,
                 memberId: action.payload,
+            };
+        case 'SET_ISLOADING':
+            return{
+                ...state,
+                isLoading: action.payload,
             };
         default:
             return state;

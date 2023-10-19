@@ -148,6 +148,7 @@ function GuideMyTour(props) {
                                   display={"flex"}
                                   justifyContent={"center"}
                                   alignItems={"center"}
+                                  onClick={() => navigate(`/tour/${item.packageId}`)}
                                   sx={{width:"100%", aspectRatio:"16/9", display: "flex", overflow:"hidden", p:0, m:0}}
                             >
                                 <img src={item.thumb === "" ? testImg : item.thumb} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>

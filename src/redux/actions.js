@@ -11,6 +11,8 @@ export const SET_SEARCH_LOCATION = 'SET_SEARCH_LOCATION'
 export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE'
 export const SET_ROLE = 'SET_ROLE'
 export const SET_MEMBER_ID = 'SET_MEMBER_ID'
+export const SET_ISLOADING = 'SET_ISLOADING'
+
 
 
 
@@ -70,3 +72,8 @@ export const setMemberId = (memberId) => ({
     type: SET_MEMBER_ID,
     payload: memberId,
 })
+export const setIsLoading = (isLoading) => ({
+    type: SET_ISLOADING,
+    payload: isLoading,
+})
+

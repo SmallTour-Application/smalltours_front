@@ -310,7 +310,9 @@ function SearchResult(props) {
                                 <Grid xs={12} container item display={"flex"} justifyContent="center" alignItems="center"
                                       sx={{border:2, borderColor:"#DDDDDD", borderRadius:"1vw", overflow:"hidden"}}>
                                     {/* 가이드 이미지 **/}
-                                    <Grid item xs={12} display={"flex"} justifyContent="center" alignItems="center">
+                                    <Grid item xs={12} display={"flex"} justifyContent="center" alignItems="center"
+                                        onClick={() => navigate(`/guideInfo/${item.guideId}`)}
+                                    >
                                         <Box sx={{width:"100%", aspectRatio:"16/9", overflow:"hidden"}}>
                                             <img src={item.guideProfileImg} onError={testImg} style={{width:"100%", aspectRatio:"1/1", objectFit:"cover"}}/>
                                         </Box>

@@ -48,6 +48,7 @@ const overseasList = ["동아시아", "유럽", "북미", "남미", "동남아",
 
 
 export default function TopBar() {
+
     const accessToken = useSelector((state) => state.accessToken);
 
     const role = useSelector((state) => state.role);
@@ -239,7 +240,7 @@ export default function TopBar() {
                         <span
                             noWrap
                             style={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}
-                            onClick={() => console.log(accessToken)}
+                            onClick={() => navigate("/main")}
                         >
                             <b className={styles.font_logo}>SMALLTOUR</b>
                         </span>

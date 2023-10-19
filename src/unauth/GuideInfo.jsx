@@ -105,7 +105,7 @@ function GuideInfo(props) {
             <Grid container sx={{px:{xs:"3%", md:"20%", lg:"30%"}, pt:"10rem"}}>
                 <Grid item xs={4}>
                     <Box sx={{borderRadius:"1000px", width:"100%", aspectRatio:"1/1", overflow:"hidden"}}>
-                        <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                        <img src={guideInfo ? guideInfo.profileImg : testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                     </Box>
                 </Grid>
                 <Grid item xs={8} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} sx={{pl:"1rem"}}>
@@ -143,7 +143,7 @@ function GuideInfo(props) {
                                   sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0, m:0}}
                                   onClick={() => navigate(`/tour/${item.tourId}`)}
                             >
-                                <img src={testImg} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
+                                <img src={item.thumb} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
                             </Grid>
                             <Grid xs={8} item container
                                   display={"flex"}

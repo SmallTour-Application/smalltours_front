@@ -436,7 +436,7 @@ function Tour(props) {
                                 </Grid>
 
                                 {aItem.flightDTO && (
-                                    <Grid container item xs={12}>
+                                    <Grid container item xs={12} spacing={3}>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                             항공편(예정)
                                         </Grid>
@@ -482,56 +482,53 @@ function Tour(props) {
                                     숙소 이름
                                 </Grid>
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                    {hotelInfo.name}
+                                    {hItem.name}
                                 </Grid>
 
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                     숙소 주소
                                 </Grid>
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                    {hotelInfo.address}
+                                    {hItem.address}
                                 </Grid>
 
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                     숙소 전화번호
                                 </Grid>
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                    {hotelInfo.hotelTel}
+                                    {hItem.hotelTel}
                                 </Grid>
 
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                     숙소 소개
                                 </Grid>
                                 <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                    {hotelInfo.description}
+                                    {hItem.description}
                                 </Grid>
 
-                                {hotelInfo.roomDTO && (
-                                    <Grid container item xs={12}>
+                                {hItem.roomDTO && (
+                                    <Grid container item xs={12} spacing={3}>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                             방이름
                                         </Grid>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                            {hotelInfo.roomDTO.name}
+                                            {hItem.roomDTO.name}
                                         </Grid>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                             방 인원
                                         </Grid>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                            {hotelInfo.roomDTO.minPeople} ~ {hotelInfo.roomDTO.maxPeople}
+                                            {hItem.roomDTO.minPeople} ~ {hItem.roomDTO.maxPeople}
                                         </Grid>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
                                             방 설명
                                         </Grid>
                                         <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                            {hotelInfo.roomDTO.description}
+                                            {hItem.roomDTO.description}
                                         </Grid>
-                                        <Grid xs={12} item sx={{display:"flex", justifyContent:"flex-end", alignItem:"center"}}>
-                                            이미지
-                                        </Grid>
-                                        <Grid xs={6} item sx={{display:"flex", justifyContent:"flex-start", alignItem:"center"}}>
-                                            <Box sx={{width: "300px", aspectRatio: "16/9", overflow:"hidden"}}>
-                                                <img src={hotelInfo.roomDTO.image === "" ? testImg : hotelInfo.roomDTO.image }/>
+                                        <Grid xs={12} item sx={{display:"flex", justifyContent:"center", alignItem:"center"}}>
+                                            <Box sx={{width: "500px", aspectRatio: "16/9", overflow:"hidden"}}>
+                                                <img src={hItem.roomDTO.image === "" ? testImg : hItem.roomDTO.image }/>
                                             </Box>
                                         </Grid>
                                     </Grid>

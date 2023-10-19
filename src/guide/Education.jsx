@@ -244,7 +244,7 @@ function Education(props) {
     }
 
     return (
-        <Grid content item xs={12}>
+        <Grid container item xs={12}>
             <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
                 <Typography sx={{fontSize: "2rem", fontWeight: "700"}}>
                     온라인 교육
@@ -272,7 +272,7 @@ function Education(props) {
                     </Box>
                 </div>
             </Grid>
-            <Grid item xs={11} display={"flex"} justifyContent="center" alignItems={"center"}>
+            <Grid item xs={10} display={"flex"} justifyContent="center" alignItems={"center"}>
                 <Button variant="contained" color="primary" onClick={handlePlayPause} sx={{mr: "1rem"}}>
                     {playing ? <PauseIcon/> : <PlayArrowIcon/>}
                 </Button>
@@ -288,9 +288,9 @@ function Education(props) {
                     valueLabelDisplay="auto"
                 />
                 <Button variant="contained" color="primary"
-                        onClick={() => playerWrapperRef.current && toggleFullScreen(playerWrapperRef.current)}>전체화면</Button>
+                        onClick={() => playerWrapperRef.current && toggleFullScreen(playerWrapperRef.current)}>full</Button>
             </Grid>
-            <Grid item xs={1} display={"flex"} justifyContent="center" alignItems={"center"}>
+            <Grid item xs={2} display={"flex"} justifyContent="center" alignItems={"center"}>
                 <VolumeDownIcon/>
                 <Slider value={volume} onChange={handleVolumeChange}
                         min={0}

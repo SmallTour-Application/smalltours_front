@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Checkbox, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography} from "@mui/material";
+import {
+    Button,
+    Checkbox,
+    FormControlLabel,
+    Grid, Paper,
+    Radio,
+    RadioGroup, Table, TableBody,
+    TableCell, TableContainer, TableHead, TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
 import {useSelector} from "react-redux";
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -29,6 +39,8 @@ function CustomerSearch(props) {
 
     const [memberResult, setMemberResult] = useState(null); // 회원 검색 결과
 
+    const [memberCheck, setMemberCheck] = useState([]); // 회원 선택
+
 
     // role checkbox에서 배열로 state에 넣어줄 func
     const handleCheckboxChange = (event) => {
@@ -41,32 +53,46 @@ function CustomerSearch(props) {
 
     // 회원 검색 메서드
     const searchMember = async(memberName, memberEmail, memberTel, memberBirth, page) => {
-        const data = {
-            ...(memberName && { memberName: memberName }),
-            ...(memberEmail && { memberEmail: memberEmail }),
-            ...(memberTel && { memberTel: memberTel }),
-            ...(memberBirth && { memberBirth: memberBirth }),
-            size: pageSize,
-            page: page
-        };
+        let name = "";
+        let email = "";
+        let tel = ""
+        let birth = "";
+        if(memberName){
+            name = `memberName=${memberName}&`
+        }
+        if(memberEmail){
+            email = `memberEmail=${memberEmail}&`
+        }
+        if(memberTel){
+            tel = `memberTel=${memberTel}&`
+        }
+        if(memberBirth){
+            birth = `birthDay=${memberBirth}&`
+        }
+        console.log("회원검색...")
+        console.log(`http://localhost:8099/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`)
         const response = await axios.post(
-            `http://localhost:8099/admin/member/search/member`,
-            data,
+            `http://localhost:8099/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`,
+            {},
     {
             headers: {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `${accessToken}`,
             }
             }
         ).then((res) => {
             // res.data가 있는지 없는지 체크합니다.
             if(res.data){
                 console.log(res.data);
-            }
-            // 현재 페이지가 1페이지이면 memberResult를 업데이트 하고 아니면 concat으로 추가합니다.
-            if(page === 1){
-                setMemberResult(res.data);
-            }else{
-                setMemberResult(memberResult.concat(res.data));
+                // 현재 페이지가 1페이지이면 memberResult를 업데이트 하고 아니면 concat으로 추가합니다.
+                if(page === 1){
+                    setMemberResult(res.data);
+                    // memberCheck를 res.data.contentMember의 길이만큼 false로 초기화합니다.
+                    setMemberCheck(Array(res.data.contentMember.length).fill(false));
+                }else{
+                    setMemberResult(memberResult.concat(res.data));
+                    // res.data.contentMember의 길이만큼 false로 초기화된 배열을 memberCheck 뒤에 붙입니다.
+                    setMemberCheck(memberCheck.concat(Array(res.data.contentMember.length).fill(false)));
+                }
             }
         })
     }
@@ -240,8 +266,10 @@ function CustomerSearch(props) {
                         // 검색 메서드를 호출합니다.
                         // 최초 검색시에는 1페이지를 호출합니다.
                         searchMember(memberName, memberEmail, memberTel, memberBirth, 1).then(
-                            // 성공 시 url의 page를 1로 변경합니다.
-                            handleSearch(1);
+                            (res) => {
+                                // 성공 시 url의 page를 1로 변경합니다.
+                                handleSearch(1)
+                            }
                         )
                     }}
                 >
@@ -251,9 +279,103 @@ function CustomerSearch(props) {
 
             {/* 이 아래는 검색 후에만 보이게 합니다. **/}
 
-            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
+            <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
                 <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline'}}>검색결과</Typography>
-                <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>N건</Typography>
+                {memberResult && (
+                    <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{memberResult.count}건</Typography>
+                )}
+            </Grid>
+            <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-end", alignItems:"center", mt:"1rem"}}>
+                <Button
+                    sx={{
+                        backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
+                        ':hover': {
+                            backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
+                        },
+                        color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
+                        padding: '5px 20px', // 버튼의 패딩을 설정합니다.
+                        borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
+                    }}
+                    onClick={() => {
+                        // memberCheck의 모든 값을 true로 변경합니다.
+                        setMemberCheck(memberCheck.map((item) => {
+                            return true;
+                        }
+                        ))
+                    }}
+                >
+                    <Typography>전체 선택</Typography>
+                </Button>
+                <Button
+                    sx={{
+                        ml:"1rem",
+                        backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
+                        ':hover': {
+                            backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
+                        },
+                        color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
+                        padding: '5px 20px', // 버튼의 패딩을 설정합니다.
+                        borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
+                    }}
+                    onClick={() => {
+                        // memberCheck의 모든 값을 false로 변경합니다.
+                        setMemberCheck(memberCheck.map((item) => {
+                                return false;
+                            }))
+                    }}
+                >
+                    <Typography>선택 해제</Typography>
+                </Button>
+            </Grid>
+            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>선택</TableCell>
+                                <TableCell>멤버 ID</TableCell>
+                                <TableCell>생년월일</TableCell>
+                                <TableCell>가입일</TableCell>
+                                <TableCell>이메일</TableCell>
+                                <TableCell>이름</TableCell>
+                                <TableCell>전화번호</TableCell>
+                                <TableCell>Role</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {memberResult && memberResult.contentMember.map((member, idx) => {
+                                return(
+                                    <TableRow key={idx} onClick={() => navigate(`/admin/customer/info/${member.id}`)}>
+                                        <TableCell><Checkbox checked={memberCheck[idx]} onChange={
+                                            () => {
+                                                // memberCheck의 해당 idx만 e.target.value로 변경합니다.
+                                                setMemberCheck(memberCheck.map((item, idx2) => {
+                                                    if (idx === idx2) {
+                                                        return !item;
+                                                    }
+                                                    return item;
+                                                }))
+                                            }
+                                        } /></TableCell>
+                                        <TableCell>{member.id}</TableCell>
+                                        <TableCell>{member.birthDay}</TableCell>
+                                        <TableCell>{member.joinDay}</TableCell>
+                                        <TableCell>{member.memberEmail}</TableCell>
+                                        <TableCell>{member.memberName}</TableCell>
+                                        <TableCell>{member.memberTel}</TableCell>
+                                        <TableCell>
+                                            {member.role === 0 && "일반회원"}
+                                            {member.role === 1 && "미인증가이드"}
+                                            {member.role === 2 && "가이드"}
+                                            {member.role === 3 && "관리자"}
+                                        </TableCell>
+                                    </TableRow>
+                                )
+
+                        })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Grid>
         </Grid>
     );

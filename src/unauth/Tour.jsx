@@ -566,7 +566,7 @@ function Tour(props) {
                                                         let tempArr = JSON.parse(JSON.stringify(selectSchedule))
                                                         // 2. 기존의 배열에 들어간 내용을 수정합니다.
                                                         for(let i = 0 ; i < tempArr.length ; i++) {
-                                                            if(tempArr[i].scheduleId == item.id){
+                                                            if(tempArr[i].scheduleId === item.id){
                                                                 tempArr[i].itemId = e.target.value
                                                             }
                                                         }

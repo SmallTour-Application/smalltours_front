@@ -21,13 +21,24 @@ import {
     Checkbox,
     RadioGroup,
     Radio,
-    FormControlLabel, Pagination
+    FormControlLabel, Pagination, TextField
 } from "@mui/material";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {useSelector} from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from "@mui/icons-material/Check";
+import EditableName from "./customer/EditableName";
+import EditableNickname from "./customer/EditableNickname";
+import EditableEmail from "./customer/EditableEmail";
+import EditableTel from "./customer/EditableTel";
+import WriteTourList from "./customer/WriteTourList";
+import PaymentList from "./customer/PaymentList";
+import WriteTourReview from "./customer/WriteTourReview";
+import WriteGuideReview from "./customer/WriteGuideReview";
+import ReceivedGuideReview from "./customer/ReceivedGuideReview";
+import ReceivedTourReview from "./customer/ReceivedTourReview";
 
 const defaultSize = 10; // 기본 페이징 사이즈
 
@@ -40,10 +51,17 @@ function CustomerInfo(props) {
 
     const params = useParams(); // params.value에 memberId가 들어있음
 
+    const memberId = params.value;
+
+
+    // name edit
+    const [nameEdit, setNameEdit] = useState(false);
+
+
     // 회원정보
 
     const [memberResult, setMemberResult] = useState(null);
-    const [memberRole, setMemberRole] = useState(0); // 0: 일반회원, 1: 미등록가이드, 2: 가이드, 3: 관리자
+    const [memberRole, setMemberRole] = useState(99); // 0: 일반회원, 1: 미등록가이드, 2: 가이드, 3: 관리자
 
     // 결제내역
 
@@ -68,6 +86,97 @@ function CustomerInfo(props) {
     const [myTourListTotalCnt, setMyTourListTotalCnt] = useState(0); // 내 패키지 총 페이지
 
 
+    // 멤버 이름 수정하기
+    const editMemberName = async(memberId, name) => {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/admin/member/update/name?memberId=${memberId}`,
+            {
+                name: name
+            },
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            // 회원정보 다시 호출
+            getMemberInfo(params.value);
+        }).catch((err) => {
+            console.log(err);
+            alert("이름 변경 실패");
+        })
+    }
+
+    // 멤버 닉네임 수정하기
+    const editMemberNickname = async(memberId, nickname) => {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/admin/member/update/nickname?memberId=${memberId}`,
+            {
+                nickname: nickname
+            },
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            // 회원정보 다시 호출
+            getMemberInfo(params.value);
+        }).catch((err) => {
+            console.log(err);
+            alert("동일한 닉네임이 존재해요.");
+        })
+
+    }
+
+    // 멤버 이메일 수정하기
+    const editMemberEmail = async(memberId, email) => {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/admin/member/update/email?memberId=${memberId}`,
+            {
+                email: email
+            },
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            // 회원정보 다시 호출
+            getMemberInfo(params.value);
+        }).catch((err) => {
+            console.log(err);
+            alert("이메일 변경 실패");
+        })
+
+    }
+
+    // 멤버 전화번호 수정하기
+    const editMemberTel = async(memberId, tel) => {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/admin/member/update/tel?memberId=${memberId}`,
+            {
+                tel: tel
+            },
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            // 회원정보 다시 호출
+            getMemberInfo(params.value);
+        }).catch((err) => {
+            console.log(err);
+            alert("같은 전화번호가 존재해요");
+        })
+    }
+
+    useEffect(() => {
+        console.log(nameEdit);
+    }, [nameEdit])
+
+
     // 멤버 정보 가져오기 api
     const getMemberInfo = async(memberId) => {
         console.log("회원 정보를 가져옵니다...")
@@ -86,39 +195,19 @@ function CustomerInfo(props) {
                 setMemberRole(res.data.role);
 
                 let name = (
-                    <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
-                        {res.data.name}
-                        <IconButton size={"small"}>
-                            <EditIcon/>
-                        </IconButton>
-                    </Typography>
+                    <EditableName name={res.data.name} onEdit={() => setNameEdit(!nameEdit)} editMemberName={editMemberName} memberId={res.data.id} />
                 )
 
                 let nickname = (
-                    <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
-                        {res.data.nickname}
-                        <IconButton size={"small"}>
-                            <EditIcon/>
-                        </IconButton>
-                    </Typography>
+                    <EditableNickname nickname={res.data.nickname} onEdit={() => setNameEdit(!nameEdit)} editMemberNickname={editMemberNickname} memberId={res.data.id} />
                 )
 
                 let tel = (
-                    <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
-                        {res.data.tel}
-                        <IconButton size={"small"}>
-                            <EditIcon/>
-                        </IconButton>
-                    </Typography>
+                    <EditableTel tel={res.data.tel} onEdit={() => setNameEdit(!nameEdit)} editMemberTel={editMemberTel} memberId={res.data.id} />
                 )
 
                 let email = (
-                    <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
-                        {res.data.email}
-                        <IconButton size={"small"}>
-                            <EditIcon/>
-                        </IconButton>
-                    </Typography>
+                    <EditableEmail email={res.data.email} onEdit={() => setNameEdit(!nameEdit)} editMemberEmail={editMemberEmail} memberId={res.data.id} />
                 )
 
 
@@ -136,9 +225,6 @@ function CustomerInfo(props) {
                 let roleElement = (
                     <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
                         {role}
-                        <IconButton size={"small"}>
-                            <EditIcon/>
-                        </IconButton>
                     </Typography>
                 )
 
@@ -174,114 +260,23 @@ function CustomerInfo(props) {
                 ];
 
                 setMemberResult(profileEntries);
+
+                return res;
             }
         }).catch((err) => console.log(err))
+        return response;
     }
 
-    // 결제내역 가져오기 api
-    const getPaymentInfo = async(memberId, state, page) => {
-        console.log("결제 내역을 가져옵니다...")
-        console.log(`http://localhost:8099/admin/member/payment/member?memberId=${memberId}&state=${state}&page=${page}`)
-        const response = await axios.get(
-            `http://localhost:8099/admin/member/payment/member?memberId=${memberId}&state=${state}`,
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            }
-        ).then((res) => {
-            if(res && res.data && res.data.paymentList){
-                console.log(res);
-                setPaymentListResult(res.data.paymentList);
-                setPaymentListTotalCnt(res.data.totalCnt);
-            }
-        }).catch((err) => console.log(err))
 
-    }
 
-    // 작성한 여행리뷰 가져오기 api
-    const getTourReviewInfo = async(memberId, page) => {
-        console.log("작성한 여행리뷰를 가져옵니다...")
-        console.log(`http://localhost:8099/admin/member/review/member?memberId=${memberId}&page=${page}`)
-        const response = await axios.get(
-            `http://localhost:8099/admin/member/review/member?memberId=${memberId}&page=${page}`,
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            }
-        ).then((res) => {
-            if(res && res.data){
-                console.log(res);
-                setTourReviewListResult(res.data.reviewList);
-                setTourReviewListTotalCnt(res.data.totalCnt);
-            }
-        }).catch((err) => console.log(err))
-
-    }
-
-    // 작성한 가이드 리뷰 가져오기 api
-    const getGuideReviewInfo = async(memberId, page) => {
-        console.log("작성한 가이드 리뷰를 가져옵니다...")
-        console.log(`http://localhost:8099/admin/member/review/guide?memberId=${memberId}&page=${page}`)
-        const response = await axios.get(
-            `http://localhost:8099/admin/member/review/guide?memberId=${memberId}&page=${page}`,
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            }
-        ).then((res) => {
-            if(res && res.data){
-                console.log(res);
-                setGuideReviewListResult(res.data.reviewList);
-                setGuideReviewListTotalCnt(res.data.totalCnt);
-            }
-        }).catch((err) => console.log(err))
-    }
-
-    // 생성한 투어 목록 가져오기
-    const getMyTourList = async(memberId, page) => {
-        console.log("생성한 투어 목록을 가져옵니다...")
-        console.log(`http://localhost:8099/admin/member/tour/member?memberId=${memberId}&page=${page}`)
-        const response = await axios.get(
-            `http://localhost:8099/admin/member/tour/member?memberId=${memberId}&page=${page}`,
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            }
-        ).then((res) => {
-            if(res && res.data){
-                console.log(res);
-                setMyTourListResult(res.data.toursList);
-                setMyTourListTotalCnt(res.data.totalCnt);
-            }
-        }).catch((err) => console.log(err))
-
-    }
 
     useEffect(() => {
         if(accessToken){
             getMemberInfo(params.value).then((res) => {
-                if(res && res.data.role === 0){
-                    getPaymentInfo(params.value, paymentInfoSort, paymentListPage); // 결제내역
-                    getTourReviewInfo(params.value, tourReviewListPage); // 여행리뷰
-                    getGuideReviewInfo(params.value, guideReviewListPage); // 가이드리뷰
-                }else if(res && res.data.role === 2){
-                    getMyTourList(params.value, myTourListPage); // 내 투어 목록
-                }
+                console.log("회원정보 가져오기 완료")
             })
         }
-    }, [, accessToken]);
-
-    // 결제내역 sort 바뀔때 호출
-    useEffect(() => {
-        if(accessToken){
-            setPaymentListPage(0);
-            getPaymentInfo(params.value, paymentInfoSort, 0); // 결제내역
-        }
-    }, [paymentInfoSort]);
+    }, [accessToken]);
 
     return (
         <Grid container sx={{width:"100%", display:"flex", mt:"3rem", px:"3rem", mb:"3rem"}}>
@@ -304,322 +299,40 @@ function CustomerInfo(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {/* 결제내역 **/}
-            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"1rem", mt:"3rem"}} onClick={() => console.log(memberRole)}>
-                <Typography sx={{fontSize:"2rem", fontWeight:"700", display:"inline"}}>결제내역</Typography>
-                <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{paymentListTotalCnt}건</Typography>
-            </Grid>
-            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                <RadioGroup row value={paymentInfoSort} onChange={(event) => {
-                    setPaymentInfoSort(event.target.value);
-                }}>
-                    <FormControlLabel value="0" control={<Radio />} label="미결제" />
-                    <FormControlLabel value="1" control={<Radio />} label="결제" />
-                    <FormControlLabel value="2" control={<Radio />} label="취소" />
-                </RadioGroup>
-            </Grid>
-            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>번호</TableCell>
-                                <TableCell>상품명</TableCell>
-                                <TableCell>이메일</TableCell>
-                                <TableCell>결제금액</TableCell>
-                                <TableCell>결제인원</TableCell>
-                                <TableCell>결제일</TableCell>
-                                <TableCell>결과</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {paymentListResult && paymentListResult.map((paymentListItem, paymentListIdx) => {
-                                return(
-                                    <TableRow>
-                                        {/*id**/}
-                                        <TableCell>{paymentListIdx}</TableCell>
-                                        <TableCell>{paymentListItem.toursTitle}</TableCell>
-                                        <TableCell>{paymentListItem.email}</TableCell>
-                                        <TableCell>{paymentListItem.price}</TableCell>
-                                        <TableCell>{paymentListItem.people}</TableCell>
-                                        <TableCell>{paymentListItem.paymentDay}</TableCell>
-                                        <TableCell>
-                                            {paymentListItem.state === 0 && "미결제"}
-                                            {paymentListItem.state === 1 && "결제"}
-                                            {paymentListItem.state === 2 && "취소"}
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
-            {paymentListTotalCnt >= defaultSize && (
-            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: "1rem" }}>
-                <Pagination count={Math.ceil(paymentListTotalCnt / defaultSize)} page={paymentListPage + 1} onChange={(event, newPage) => {
-                    setPaymentListPage(newPage - 1);
-                }} />
-            </Grid>
+
+            {/* 결제목록 **/}
+            {memberRole === 0 && (
+                <PaymentList memberId={memberId} />
             )}
+
             {/* 작성한 여행리뷰 **/}
             {memberRole === 0 && (
-                <Grid item container xs={12}>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"1rem", mt:"3rem"}}>
-                        <Typography sx={{fontSize:"2rem", fontWeight:"700", display:"inline"}}>작성한 여행리뷰</Typography>
-                        <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{tourReviewListTotalCnt}건</Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>번호</TableCell>
-                                        <TableCell>상품명</TableCell>
-                                        <TableCell>가이드명</TableCell>
-                                        <TableCell>점수</TableCell>
-                                        <TableCell>내용</TableCell>
-                                        <TableCell>결제ID</TableCell>
-                                        <TableCell>작성일시</TableCell>
-                                        <TableCell>수정</TableCell>
-                                        <TableCell>삭제</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {tourReviewListResult && tourReviewListResult.map((tourReviewListItem, tourReviewListIdx) => {
-                                        return(
-                                            <TableRow>
-                                                {/*id**/}
-                                                <TableCell>{tourReviewListIdx}</TableCell>
-                                                <TableCell>{tourReviewListItem.packageName}</TableCell>
-                                                <TableCell>{tourReviewListItem.guideName}</TableCell>
-                                                <TableCell>{tourReviewListItem.score}</TableCell>
-                                                <TableCell>{tourReviewListItem.content}</TableCell>
-                                                <TableCell>{tourReviewListItem.paymentId}</TableCell>
-                                                <TableCell>{tourReviewListItem.reviewDate}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>수정</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>삭제</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Grid>
-                    {tourReviewListTotalCnt >= defaultSize && (
-                        <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: "1rem" }}>
-                            <Pagination count={Math.ceil(tourReviewListTotalCnt / defaultSize)} page={tourReviewListPage + 1} onChange={(event, newPage) => {
-                                setTourReviewListPage(newPage - 1);
-                            }} />
-                        </Grid>
-                    )}
-                </Grid>
+                <WriteTourReview memberId={memberId} />
             )}
 
             {/* 작성한 가이드리뷰 **/}
 
             {memberRole === 0 && (
-
-                <Grid container item xs={12}>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"1rem", mt:"3rem"}}>
-                        <Typography sx={{fontSize:"2rem", fontWeight:"700", display:"inline"}}>작성한 가이드리뷰</Typography>
-                        <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{guideReviewListTotalCnt}건</Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>번호</TableCell>
-                                        <TableCell>상품명</TableCell>
-                                        <TableCell>가이드명</TableCell>
-                                        <TableCell>점수</TableCell>
-                                        <TableCell>내용</TableCell>
-                                        <TableCell>결제ID</TableCell>
-                                        <TableCell>작성일시</TableCell>
-                                        <TableCell>수정</TableCell>
-                                        <TableCell>삭제</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {guideReviewListResult && guideReviewListResult.map((guideReviewListItem, guideReviewListIdx) => {
-                                        return(
-                                            <TableRow>
-                                                {/*id**/}
-                                                <TableCell>{guideReviewListIdx}</TableCell>
-                                                <TableCell>{guideReviewListItem.packageName}</TableCell>
-                                                <TableCell>{guideReviewListItem.guideName}</TableCell>
-                                                <TableCell>{guideReviewListItem.score}</TableCell>
-                                                <TableCell>{guideReviewListItem.content}</TableCell>
-                                                <TableCell>{guideReviewListItem.paymentId}</TableCell>
-                                                <TableCell>{guideReviewListItem.reviewDate}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>수정</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>삭제</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Grid>
-                    {guideReviewListTotalCnt >= defaultSize && (
-                        <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: "1rem" }}>
-                            <Pagination count={Math.ceil(guideReviewListPage / defaultSize)} page={guideReviewListPage + 1} onChange={(event, newPage) => {
-                                setGuideReviewListPage(newPage - 1);
-                            }} />
-                        </Grid>
-                    )}
-                </Grid>
+                <WriteGuideReview memberId={memberId} />
             )}
 
             {/* 작성한 투어 목록 **/}
 
             {memberRole === 2 && (
-
-                <Grid container item xs={12}>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"1rem", mt:"3rem"}}>
-                        <Typography sx={{fontSize:"2rem", fontWeight:"700", display:"inline"}}>패키지</Typography>
-                        <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{guideReviewListTotalCnt}건</Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>번호</TableCell>
-                                        <TableCell>상품명</TableCell>
-                                        <TableCell>생성일시</TableCell>
-                                        <TableCell>수정일시</TableCell>
-                                        <TableCell>상태</TableCell>
-                                        <TableCell>판매량</TableCell>
-                                        <TableCell>수정</TableCell>
-                                        <TableCell>삭제</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {myTourListResult && myTourListResult.map((myTourListItem, myTourListIdx) => {
-                                        return(
-                                            <TableRow>
-                                                {/*id**/}
-                                                <TableCell>{myTourListIdx}</TableCell>
-                                                <TableCell>{myTourListItem.toursTitle}</TableCell>
-                                                <TableCell>{myTourListItem.createDate}</TableCell>
-                                                <TableCell>{myTourListItem.updateDate}</TableCell>
-                                                <TableCell>
-                                                    {myTourListItem.state === 0 && "미승인"}
-                                                    {myTourListItem.state === 1 && "승인"}
-                                                    {myTourListItem.state === 2 && "일시정지"}
-                                                    {myTourListItem.state === 3 && "삭제"}
-                                                </TableCell>
-                                                <TableCell>{myTourListItem.sales}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>수정</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        sx={{
-                                                            ml:"1rem",
-                                                            backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
-                                                            ':hover': {
-                                                                backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
-                                                            },
-                                                            color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
-                                                            padding: '3px 3px', // 버튼의 패딩을 설정합니다.
-                                                            borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
-                                                        }}
-                                                    >
-                                                        <Typography>삭제</Typography>
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Grid>
-                    {myTourListTotalCnt >= defaultSize && (
-                        <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: "1rem" }}>
-                            <Pagination count={Math.ceil(myTourListPage / defaultSize)} page={myTourListPage + 1} onChange={(event, newPage) => {
-                                setMyTourListPage(newPage - 1);
-                            }} />
-                        </Grid>
-                    )}
-                </Grid>
+                <WriteTourList memberId={memberId} />
             )}
+
+            {/* 받은 가이드 리뷰 **/}
+            {memberRole === 2 && (
+                <ReceivedGuideReview memberId={memberId} />
+            )}
+
+            {/* 받은 여행 리뷰 **/}
+            {memberRole === 2 && (
+                <ReceivedTourReview memberId={memberId} />
+            )}
+
+
 
 
         </Grid>

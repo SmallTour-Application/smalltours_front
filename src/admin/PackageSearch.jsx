@@ -208,7 +208,7 @@ function PackageSearch(props) {
                             <TableBody>
                                 {result && result.map((item, idx) => {
                                     return(
-                                        <TableRow>
+                                        <TableRow onClick={() => navigate(`/admin/package/info/${item.tourId}`)}>
                                             {/*id**/}
                                             <TableCell>{idx}</TableCell>
                                             <TableCell>{item.tourName}</TableCell>

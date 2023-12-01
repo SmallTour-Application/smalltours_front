@@ -7,6 +7,7 @@ import CustomerSearch from "./CustomerSearch";
 import PackageSearch from "./PackageSearch";
 import ReservationSearch from "./ReservationSearch";
 import CustomerInfo from "./CustomerInfo";
+import PackageInfo from "./PackageInfo";
 
 const AdminPanel = () => {
     const theme = createTheme({ // Theme
@@ -27,6 +28,8 @@ const AdminPanel = () => {
                         <Route path="reservation/search" element={<ReservationSearch />} />
                         {/*멤버 정보**/}
                         <Route path="customer/info/:value" element={<CustomerInfo />} />
+                        {/* 패키지 정보 **/}
+                        <Route path="package/info/:value" element={<PackageInfo />} />
                     </Routes>
                 </div>
             </div>

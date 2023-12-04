@@ -10,6 +10,8 @@ import CustomerInfo from "./CustomerInfo";
 import PackageInfo from "./PackageInfo";
 import EducationSearch from "./EducationSearch";
 import ReservationInfo from "./ReservationInfo";
+import EducationInfo from "./EducationInfo";
+import Settings from "./Settings";
 
 const AdminPanel = () => {
     const theme = createTheme({ // Theme
@@ -35,6 +37,11 @@ const AdminPanel = () => {
                         <Route path="education/search" element={<EducationSearch />} />
                         {/* 예약 정보 **/}
                         <Route path="reservation/info/:value" element={<ReservationInfo />} />
+                        {/** 교육정보 */}
+                        <Route path="education/info/:value" element={<EducationInfo />} />
+                        {/*settings**/}
+                        <Route path={"settings"} element={<Settings/>} />
+
                     </Routes>
                 </div>
             </div>

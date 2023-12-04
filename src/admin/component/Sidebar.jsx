@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MailIcon from '@mui/icons-material/Mail';
-import { setIsLoading } from "../../redux/actions";
+import {clearAccessToken, setIsLoading} from "../../redux/actions";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CategoryIcon from '@mui/icons-material/Category';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
@@ -22,6 +22,7 @@ import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import Cookies from "js-cookie";
 
 
 const drawerWidth = 240;
@@ -61,6 +62,14 @@ const Sidebar = () => {
             }
         }
     },[])
+
+    // 로그아웃
+    const logout = () => {
+        dispatch(clearAccessToken()); // 리덕스에서 토큰 제거
+        Cookies.remove('accessToken'); // 쿠키에 들어있던 accessToken 제거
+        // 이동
+        navigate("/login");
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -132,6 +141,30 @@ const Sidebar = () => {
                             </ListItem>
                         )
                     })}
+                    <ListItem
+                        button
+                        onClick={() => accessToken ? logout() : navigate("/login")}
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: '#405261',
+                                '& .MuiTypography-root': { // ListItemText 내부의 Typography에 접근
+                                    color: '#ffffff'
+                                }
+                            }
+                        }}
+                    >
+                        <ListItemIcon
+                            sx={{
+                                color: '#B0B0B0', // 기본 아이콘 색상을 설정하였습니다. 원하는 색으로 바꿔주세요.
+                                '&:hover': {
+                                    color: '#ffffff'
+                                }
+                            }}
+                        >
+                            <PeopleAltIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={"로그아웃"} />
+                    </ListItem>
                 </List>
             </Drawer>
         </ThemeProvider>

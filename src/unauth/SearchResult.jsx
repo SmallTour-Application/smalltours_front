@@ -137,6 +137,11 @@ function SearchResult(props) {
 
     // 검색 api 호출
     const search = async () => {
+        // 여행날짜와 인원수는 필수값이므로 없을 경우에는 alert
+        if(!start || !end || !people){
+            alert("여행날짜와 인원수는 필수값입니다.")
+            return;
+        }
         const response = await axios.get(
             `http://localhost:8099/unauth/search/package?keyword=${keyword}&start=${dayjs(start).format('YYYY-MM-DD').toString()}&end=${dayjs(end).format('YYYY-MM-DD').toString()}&location=${loc}&people=${people}&sort=0&type=0&size=12`
         ).then((res) => {

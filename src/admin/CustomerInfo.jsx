@@ -21,7 +21,7 @@ import {
     Checkbox,
     RadioGroup,
     Radio,
-    FormControlLabel, Pagination, TextField
+    FormControlLabel, Pagination, TextField, Modal
 } from "@mui/material";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
@@ -39,10 +39,17 @@ import WriteTourReview from "./customer/WriteTourReview";
 import WriteGuideReview from "./customer/WriteGuideReview";
 import ReceivedGuideReview from "./customer/ReceivedGuideReview";
 import ReceivedTourReview from "./customer/ReceivedTourReview";
+import GuideEducationList from "./customer/GuideEducationList";
 
 const defaultSize = 10; // 기본 페이징 사이즈
 
 function CustomerInfo(props) {
+    const [selectedRole, setSelectedRole] = useState('0');
+    const [roleModalOpen, setRoleModalOpen] = useState(false);
+
+    const handleRoleChange = (event) => {
+        setSelectedRole(event.target.value);
+    };
 
     const accessToken = useSelector((state) => state.accessToken); // 엑세스 토큰
 
@@ -225,6 +232,24 @@ function CustomerInfo(props) {
                 let roleElement = (
                     <Typography sx={{fontSize:"0.8rem", fontWeight:"500"}}>
                         {role}
+                        <Button
+                            sx={{
+                                ml:"2rem",
+                                backgroundColor: 'skyblue', // 버튼의 배경색을 하늘색으로 설정합니다.
+                                ':hover': {
+                                    backgroundColor: 'deepskyblue', // 마우스 오버시 버튼의 배경색을 조금 더 진한 하늘색으로 설정합니다.
+                                },
+                                color: 'white', // 버튼의 텍스트 색상을 흰색으로 설정합니다.
+                                padding: '3px 20px', // 버튼의 패딩을 설정합니다.
+                                borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
+                            }}
+                            onClick={() => {
+                                // modal open
+                                setRoleModalOpen(true);
+                            }}
+                        >
+                            <Typography>수정</Typography>
+                        </Button>
                     </Typography>
                 )
 
@@ -278,8 +303,70 @@ function CustomerInfo(props) {
         }
     }, [accessToken]);
 
+    const updateMemberRole = async (memberId, role) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/admin/member/role/update?memberId=${memberId}&role=${role}`, null,
+                {
+                    headers: {
+                        Authorization: `${accessToken}`,
+                    }
+                }
+                );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating member role", error);
+            alert("역할 변경 실패")
+            throw error;
+        }
+    };
+
+
+
+
+    const roleBody = (
+        <Box
+            sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '80vw',
+                maxWidth: 400,
+                bgcolor: 'background.paper',
+                border: '1px solid #e0e0e0',
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 3,
+            }}
+        >
+            <RadioGroup value={selectedRole} onChange={handleRoleChange}>
+                <FormControlLabel value="0" control={<Radio />} label="일반회원" />
+                <FormControlLabel value="1" control={<Radio />} label="미등록가이드" />
+                <FormControlLabel value="2" control={<Radio />} label="가이드" />
+                <FormControlLabel value="3" control={<Radio />} label="관리자" />
+            </RadioGroup>
+            <Button onClick={() => {
+                updateMemberRole(memberId, selectedRole).then(() => {
+                    alert("역할 변경 완료")
+                    getMemberInfo(params.value);
+                    //modal 닫기
+                    setRoleModalOpen(false);
+                })
+            }}>역할 변경</Button>
+        </Box>
+    )
+
     return (
         <Grid container sx={{width:"100%", display:"flex", mt:"3rem", px:"3rem", mb:"3rem"}}>
+            <Modal
+                open={roleModalOpen}
+
+                onClose={() => setRoleModalOpen(false)}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+            >
+                {roleBody}
+            </Modal>
             <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"3rem"}}>
                 <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>회원정보</Typography>
             </Grid>
@@ -330,6 +417,10 @@ function CustomerInfo(props) {
             {/* 받은 여행 리뷰 **/}
             {memberRole === 2 && (
                 <ReceivedTourReview memberId={memberId} />
+            )}
+
+            {memberRole === 2 && (
+                <GuideEducationList memberId={memberId} />
             )}
 
 

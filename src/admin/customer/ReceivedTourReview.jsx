@@ -51,26 +51,6 @@ function ReceivedTourReview({memberId}) {
 
     }
 
-    /** 삭제 api 호출 */
-    const deleteApi = async(reviewId) => {
-        console.log("여행 리뷰를 삭제합니다...")
-        console.log(`http://localhost:8099/admin/review/delete?reviewId=${reviewId}`)
-        const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/admin/review/delete?reviewId=${reviewId}`,
-            {},
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                }
-            }
-        ).then((res) => {
-                console.log(res);
-                getApi(memberId, parseInt(sort), page); // 재로드
-        }).catch((err) => console.log(err))
-
-
-    }
-
     useEffect(() => {
         if(accessToken){
             getApi(memberId, 0,0);
@@ -84,6 +64,26 @@ function ReceivedTourReview({memberId}) {
             getApi(memberId, parseInt(sort), 0); // 결제내역
         }
     }, [sort]);
+
+    /** 삭제 api 호출 */
+    const deleteApi = async(reviewId) => {
+        console.log("여행 리뷰를 삭제합니다...")
+        console.log(`http://localhost:8099/admin/review/delete?reviewId=${reviewId}`)
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/admin/review/delete?reviewId=${reviewId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            console.log(res);
+            getApi(memberId, parseInt(sort), page); // 재로드
+        }).catch((err) => console.log(err))
+
+
+    }
 
     const [reviewId, setReviewId] = useState(0); // 리뷰 아이디
 

@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from "react-redux";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
-import {Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
+import {Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
 import TourReviewList from "./package/TourReviewList";
 import dayjs from "dayjs";
+import TourPaymentList from "./package/TourPaymentList";
 
 function PackageInfo(props) {
     const accessToken = useSelector((state) => state.accessToken); // 엑세스 토큰
@@ -26,7 +27,7 @@ function PackageInfo(props) {
         console.log("여행 정보를 가져옵니다...")
         console.log(`${process.env.REACT_APP_API_URL}/admin/package/detail/img?tourId=${paramTourId}`)
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/admin/package/detail/img?page=1&tourId=${paramTourId}`,
+            `${process.env.REACT_APP_API_URL}/admin/package/detail/img?tourId=${paramTourId}`,
             {
                 headers: {
                     Authorization: `${accessToken}`,
@@ -57,41 +58,55 @@ function PackageInfo(props) {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
                         <TableRow>
-                            <TableCell align="right">상품명</TableCell>
-                            <TableCell align="left">{result.tourName}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>썸네일 이미지</TableCell>
+                            <TableCell align="left">
+                                <Box sx={{
+                                    width:"300px",
+                                    aspectRatio:"16/9",
+                                    borderRadius:"10px",
+                                    overflow:"hidden",
+                                }}>
+                                    <img src={result && result.profile} alt="프로필 이미지" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                </Box>
+                            </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">가이드</TableCell>
-                            <TableCell align="left">{result.tourSeller}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>상품명</TableCell>
+                            <TableCell align="left">{result && result.tourName}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">평점</TableCell>
-                            <TableCell align="left">{result.rating}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>가이드</TableCell>
+                            <TableCell align="left">{result && result.tourSeller}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">금액</TableCell>
-                            <TableCell align="left">{result.price}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>평점</TableCell>
+                            <TableCell align="left">{result && result.rating}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">최소인원</TableCell>
-                            <TableCell align="left">{result.people}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>금액</TableCell>
+                            <TableCell align="left">{result && result.price}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">최대인원</TableCell>
-                            <TableCell align="left">{result.people}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>최소인원</TableCell>
+                            <TableCell align="left">{result && result.minPeople}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">등록일시</TableCell>
-                            <TableCell align="left">{dayjs().format("yyyy-mm-dd")}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>최대인원</TableCell>
+                            <TableCell align="left">{result && result.maxPeople}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="right">상태</TableCell>
-                            <TableCell align="left">{result.status}</TableCell>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>등록일시</TableCell>
+                            <TableCell align="left">{result && result.createdDay}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>상태</TableCell>
+                            <TableCell align="left">{result && result.status}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
             <TourReviewList tourId={tourId}/>
+            <TourPaymentList tourId={tourId}/>
         </Grid>
     );
 }

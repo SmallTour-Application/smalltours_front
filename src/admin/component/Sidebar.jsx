@@ -6,9 +6,9 @@ import {
     Drawer,
     Typography,
     Divider,
-    ListItemIcon, createTheme, ThemeProvider
+    ListItemIcon, createTheme, ThemeProvider,
+    Box
 } from '@mui/material';
-import { Box } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -21,6 +21,8 @@ import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+
 
 const drawerWidth = 240;
 
@@ -83,12 +85,12 @@ const Sidebar = () => {
                 </Box>
                 <Divider />
                 <List>
-                    {['고객', '패키지 및 상품', '예약', '배너', '부가기능', '보고서', '설정', '대시보드'].map((text, index) => {
+                    {['고객', '패키지 및 상품', '예약', '교육', '부가기능', '보고서', '설정', '대시보드'].map((text, index) => {
                         const paths = [
                             "/admin/customer/search",
                             "/admin/package/search",
                             "/admin/reservation/search",
-                            "/admin/banner",
+                            "/admin/education/search", // 교육에 해당하는 경로 추가
                             "/admin/feature",
                             "/admin/report",
                             "/admin/settings",
@@ -119,7 +121,8 @@ const Sidebar = () => {
                                     {index === 0 && <PeopleAltIcon />}
                                     {index === 1 && <CategoryIcon />}
                                     {index === 2 && <BookOnlineIcon />}
-                                    {index === 3 && <ViewCarouselIcon />}
+                                    {index === 3 && <MenuBookIcon  />} {/* 교육 아이콘 추가 */}
+                                    {/**index === 4 && <ViewCarouselIcon />*/}
                                     {index === 4 && <HandymanIcon />}
                                     {index === 5 && <AssessmentIcon />}
                                     {index === 6 && <SettingsIcon />}

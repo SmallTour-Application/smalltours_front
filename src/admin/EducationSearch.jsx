@@ -1,22 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 import {useLocation, useNavigate} from "react-router-dom";
+import axios from "axios";
 import {
     Button,
-    Checkbox, FormControlLabel,
+    FormControlLabel,
     Grid, Pagination,
-    Paper, Radio, RadioGroup,
-    Table, TableBody, TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
+    Paper,
+    Radio,
+    RadioGroup, Table, TableBody, TableCell,
+    TableContainer, TableHead, TableRow,
     TextField,
     Typography
 } from "@mui/material";
-import axios from "axios";
 
-function PackageSearch(props) {
-
+function EducationSearch(props) {
     const defaultSize = 10; // 한 페이지에 보여줄 아이템의 수
     // accessToken
 
@@ -33,72 +31,45 @@ function PackageSearch(props) {
     // 현재의 URL 파라미터를 가져옵니다.
     const params = new URLSearchParams(location.search);
 
-    const getPackageList = async (paramPage) => {
-        let url = `${process.env.REACT_APP_API_URL}/admin/package/list?page=${paramPage}`;
-
-        // 검색 조건을 가져옵니다.
-        let packageName = document.getElementById("packageName").value;
-        let packageDuration = document.getElementById("packageDuration").value;
-        let packagePrice = document.getElementById("packagePrice").value;
-        let packagePeople = document.getElementById("packagePeople").value;
-
-        // 검색 조건을 URL에 추가합니다.
-        if(packageName !== "") url += "&title=" + packageName;
-        if(packageDuration !== "") url += "&duration=" + packageDuration;
-        if(packagePrice !== "") url += "&price=" + packagePrice;
-        if(packagePeople !== "") url += "&people=" + packagePeople;
-
-        // 검색 조건이 없을 경우 경고창을 띄웁니다.
-        if(packageName === "" && packageDuration === "" && packagePrice === "" && packagePeople === "") {
-            alert("검색 조건을 입력해주세요.");
-            return;
+    const getReservationList = async(page, title,startDate, endDate) => { // date들은 getElementsById로 가져옵니다.
+        console.log("예약 정보를 가져옵니다...")
+        console.log(`${process.env.REACT_APP_API_URL}/admin/education/list?startDate=${startDate}&endDate=${endDate}&title=${title}&page=${page}&size=${defaultSize}`)
+        let url = `${process.env.REACT_APP_API_URL}/admin/education/list?page=${page}&size=${defaultSize}`;
+        if(title !== "" && title !== null){
+            url += `&title=${title}`;
         }
-
+        if(startDate !== "" && startDate !== null){
+            url += `&startDate=${startDate}`;
+        }
+        if(endDate !== "" && endDate !== null){
+            url += `&endDate=${endDate}`;
+        }
         const response = await axios.get(
             url,
             {
                 headers: {
                     Authorization: `${accessToken}`,
-                },
+                }
             }
         ).then((res) => {
             if(res && res.data){
                 console.log(res);
-                setResult(res.data.adminToursList);
+                setResult(res.data.educationList);
                 setTotalCnt(res.data.count);
-                if(res.data.count === 0){
-                    alert("검색 결과가 없습니다.")
-                }
             }
-        }).catch((err) => {
-            alert("검색 결과가 없습니다.")
-        })
+        }).catch((err) => console.log(err))
     }
-
-    // useEffect(() => {
-    //     if(accessToken) {
-    //         // 페이지 파라미터가 없을 경우 1페이지를 호출합니다.
-    //         if(params.get("page") === null) {
-    //             getPackageList(1);
-    //         }
-    //         // 페이지 파라미터가 있을 경우 해당 페이지를 호출합니다.
-    //         else {
-    //             getPackageList(params.get("page"));
-    //         }
-    //     }
-    // },[accessToken])
-
     return (
         <Grid container sx={{width:"100%", display:"flex", mt:"3rem", px:"3rem"}}>
             <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>
-                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>패키지검색</Typography>
+                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>교육검색</Typography>
             </Grid>
 
-            {/* 가입기간 **/}
-            <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
+            {/* 제목 **/}
+            <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
                 <Typography sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>
-                    패키지명
-                    <TextField id={"packageName"} variant={"outlined"} size={"small"}
+                    제목
+                    <TextField id={"title"} variant={"outlined"} size={"small"}
                                sx={{
                                    ml:"1rem",
                                    height: '30px', // 높이 지정
@@ -111,8 +82,12 @@ function PackageSearch(props) {
             </Grid>
             <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
                 <Typography sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>
-                    기간
-                    <TextField id={"packageDuration"} variant={"outlined"} type={"number"}
+                    시작일
+                    <TextField id={"startDateTextField"} variant={"outlined"}
+                               type="date" // <-- 여기서 type을 "date"로 설정
+                               InputLabelProps={{
+                                   shrink: true, // 이 속성은 날짜 선택기의 레이블이 항상 위로 올라가게 합니다.
+                               }}
                                sx={{
                                    ml:"1rem",
                                    height: '30px', // 높이 지정
@@ -125,22 +100,12 @@ function PackageSearch(props) {
             </Grid>
             <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
                 <Typography sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>
-                    가격
-                    <TextField id={"packagePrice"} variant={"outlined"} type={"number"}
-                               sx={{
-                                   ml:"1rem",
-                                   height: '30px', // 높이 지정
-                                   '& .MuiOutlinedInput-root': {
-                                       height: '100%', // 높이를 100%로 지정하여 TextField의 높이와 동일하게 만듭니다.
-                                   }
+                    종료일
+                    <TextField id={"endDateTextField"} variant={"outlined"}
+                               type="date" // <-- 여기서 type을 "date"로 설정
+                               InputLabelProps={{
+                                   shrink: true, // 이 속성은 날짜 선택기의 레이블이 항상 위로 올라가게 합니다.
                                }}
-                    />
-                </Typography>
-            </Grid>
-            <Grid item xs={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                <Typography sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>
-                    인원수
-                    <TextField id={"packagePeople"} variant={"outlined"} type={"number"}
                                sx={{
                                    ml:"1rem",
                                    height: '30px', // 높이 지정
@@ -163,9 +128,27 @@ function PackageSearch(props) {
                         borderRadius: '5px', // 버튼의 모서리를 둥글게 만듭니다.
                     }}
                     onClick={() => {
-                        getPackageList(1);
+                        // 시작일이 종료일보다 늦을 경우 경고창을 띄웁니다.
+                        if(document.getElementById("startDateTextField").value > document.getElementById("endDateTextField").value){
+                            alert("시작일이 종료일보다 늦을 수 없습니다.");
+                            return;
+                        }
+                        // 날짜가 하나만 입력되지 않은 경우 경고창을 띄움
+                        if((document.getElementById("startDateTextField").value !== "" && document.getElementById("endDateTextField").value === "") || (document.getElementById("startDateTextField").value === "" && document.getElementById("endDateTextField").value !== "") ){
+                            alert("날짜를 입력해주세요.");
+                            return;
+                        }
+                        // 날짜가 둘다 입력되지 않은 경우 날짜 파라미터에 null을 넣어서 검색합니다.
+                        if(document.getElementById("startDateTextField").value === "" && document.getElementById("endDateTextField").value === ""){
+                            getReservationList(0, document.getElementById("title").value, null, null);
+                            // page를 1로 초기화합니다.
+                            params.set("page", 0);
+                            return;
+                        }else {
+                            getReservationList(0, document.getElementById("title").value, document.getElementById("startDateTextField").value, document.getElementById("endDateTextField").value);
+                        }
                         // page를 1로 초기화합니다.
-                        params.set("page", 1);
+                        params.set("page", 0);
                     }}
                 >
                     <Typography>검색</Typography>
@@ -181,28 +164,15 @@ function PackageSearch(props) {
                     <Typography sx={{fontSize:"1.3rem", fontWeight:"700", display: 'inline', color:"gray", ml:"1rem"}}>{totalCnt}건</Typography>
                 </Grid>
                 <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
-                    <RadioGroup row value={sort} onChange={(event) => {
-                        setSort(event.target.value);
-                    }}>
-                        <FormControlLabel value="0" control={<Radio />} label="삭제됨" />
-                        <FormControlLabel value="1" control={<Radio />} label="기본" />
-                    </RadioGroup>
-                </Grid>
-                <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mt:"1rem"}}>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>번호</TableCell>
-                                    <TableCell>패키지명</TableCell>
-                                    <TableCell>생성일시</TableCell>
-                                    <TableCell>수정일시</TableCell>
-                                    <TableCell>상태</TableCell>
-                                    <TableCell>가격</TableCell>
-                                    <TableCell>최대인원</TableCell>
-                                    <TableCell>최소인원</TableCell>
-                                    <TableCell>기간</TableCell>
-                                    <TableCell>판매자</TableCell>
+                                    <TableCell>제목</TableCell>
+                                    <TableCell>시작일</TableCell>
+                                    <TableCell>종료일</TableCell>
+                                    <TableCell>재생시간</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -211,15 +181,10 @@ function PackageSearch(props) {
                                         <TableRow onClick={() => navigate(`/admin/package/info/${item.tourId}`)}>
                                             {/*id**/}
                                             <TableCell>{idx}</TableCell>
-                                            <TableCell>{item.tourName}</TableCell>
-                                            <TableCell>{item.createdDay}</TableCell>
-                                            <TableCell>{item.updateDay}</TableCell>
-                                            <TableCell>{item.approval}</TableCell>
-                                            <TableCell>{item.price}</TableCell>
-                                            <TableCell>{item.maxPeople}</TableCell>
-                                            <TableCell>{item.minPeople}</TableCell>
-                                            <TableCell>{item.duration}</TableCell>
-                                            <TableCell>{item.guideName}</TableCell>
+                                            <TableCell>{item.educationTitle}</TableCell>
+                                            <TableCell>{item.startDay}</TableCell>
+                                            <TableCell>{item.endDay}</TableCell>
+                                            <TableCell>{item.playTime}</TableCell>
                                         </TableRow>
                                     )
                                 })}
@@ -239,4 +204,4 @@ function PackageSearch(props) {
     );
 }
 
-export default PackageSearch;
+export default EducationSearch;

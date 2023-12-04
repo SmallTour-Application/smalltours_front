@@ -8,6 +8,8 @@ import PackageSearch from "./PackageSearch";
 import ReservationSearch from "./ReservationSearch";
 import CustomerInfo from "./CustomerInfo";
 import PackageInfo from "./PackageInfo";
+import EducationSearch from "./EducationSearch";
+import ReservationInfo from "./ReservationInfo";
 
 const AdminPanel = () => {
     const theme = createTheme({ // Theme
@@ -30,6 +32,9 @@ const AdminPanel = () => {
                         <Route path="customer/info/:value" element={<CustomerInfo />} />
                         {/* 패키지 정보 **/}
                         <Route path="package/info/:value" element={<PackageInfo />} />
+                        <Route path="education/search" element={<EducationSearch />} />
+                        {/* 예약 정보 **/}
+                        <Route path="reservation/info/:value" element={<ReservationInfo />} />
                     </Routes>
                 </div>
             </div>

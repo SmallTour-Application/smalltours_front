@@ -102,7 +102,7 @@ function Tour(props) {
     // 투어정보 불러오기
     const getTourInfo = async (id) => {
         const response = await axios.get(
-            `http://localhost:8099/package/unauth/view?id=${id}`
+            `${process.env.REACT_APP_API_URL}/package/unauth/view?id=${id}`
         ).then((res) => {
             if(res.data){
                 console.log(res)
@@ -128,7 +128,7 @@ function Tour(props) {
     // 리뷰정보 불러오기
     const getReviewInfo = async (id, paramPage) => {
         const response = await axios.post(
-            `http://localhost:8099/review/package/unauth/list?packageId=${id}&page=${paramPage}`
+            `${process.env.REACT_APP_API_URL}/review/package/unauth/list?packageId=${id}&page=${paramPage}`
         ).then((res) => {
                 if (res.data) {
                     console.log(res)
@@ -157,7 +157,7 @@ function Tour(props) {
     // 리뷰평점 불러오기
     const getReviewRating = async (id, paramPage) => {
         const response = await axios.get(
-            `http://localhost:8099/review/package/unauth/rating?id=${id}`
+            `${process.env.REACT_APP_API_URL}/review/package/unauth/rating?id=${id}`
         ).then((res) => {
                 if (res.data) {
                     console.log(res)
@@ -170,7 +170,7 @@ function Tour(props) {
     // 스케쥴 불러오기
     const getSchedule = async (id) => {
         const response = await axios.get(
-            `http://localhost:8099/package/schedule/unauth/view?id=${id}`
+            `${process.env.REACT_APP_API_URL}/package/schedule/unauth/view?id=${id}`
         ).then((res) => {
                 if (res.data) {
                     console.log(res)
@@ -195,7 +195,7 @@ function Tour(props) {
     // 항공사 정보 불러오기
     const getAirline = async () => {
         const response = await axios.get(
-            `http://localhost:8099/package/airline/unauth/view?id=${params.value}`
+            `${process.env.REACT_APP_API_URL}/package/airline/unauth/view?id=${params.value}`
         ).then(
             (res)=>{
                 console.log(res);
@@ -210,7 +210,7 @@ function Tour(props) {
     // 서버에서 숙소정보 가져오기
     const getHotel = async () => {
         const response = await axios.get(
-            `http://localhost:8099/package/hotel/unauth/view?id=${params.value}`
+            `${process.env.REACT_APP_API_URL}/package/hotel/unauth/view?id=${params.value}`
         ).then(
             (res)=>{
                 console.log(res);
@@ -225,7 +225,7 @@ function Tour(props) {
     // 좋아요!
     const good = async () => {
         const response = await axios.post(
-            `http://localhost:8099/favorite/tours/add`,
+            `${process.env.REACT_APP_API_URL}/favorite/tours/add`,
             {id:params.value},
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -246,7 +246,7 @@ function Tour(props) {
         fd.append("packageId", params.value)
         fd.append("people", travelers)
         const response = await axios.post(
-            `http://localhost:8099/payment/ok?departureDay`,
+            `${process.env.REACT_APP_API_URL}/payment/ok?departureDay`,
             fd,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {

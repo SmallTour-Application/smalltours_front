@@ -62,7 +62,7 @@ function GuideMyTour(props) {
     const getMyTour = async (newPage) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/myPackage/list?page=${newPage}&sort=0`,
+            `${process.env.REACT_APP_API_URL}/myPackage/list?page=${newPage}&sort=0`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -87,7 +87,7 @@ function GuideMyTour(props) {
     const delTour = async (id) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/package/delete`,
+            `${process.env.REACT_APP_API_URL}/package/delete`,
             {
                 id:id
             },

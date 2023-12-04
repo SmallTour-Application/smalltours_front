@@ -32,7 +32,7 @@ function WriteGuideReview({memberId}) {
         console.log("작성한 가이드 리뷰를 가져옵니다...")
         console.log(`http://localhost:8099/admin/member/review/guide?memberId=${memberId}&page=${page}$state=${sort}`)
         const response = await axios.get(
-            `http://localhost:8099/admin/member/review/guide?memberId=${memberId}&page=${page}&state=${sort}`,
+            `${process.env.REACT_APP_API_URL}/admin/member/review/guide?memberId=${memberId}&page=${page}&state=${sort}`,
             {
                 headers: {
                     Authorization: `${accessToken}`,

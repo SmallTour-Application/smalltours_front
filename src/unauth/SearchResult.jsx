@@ -143,7 +143,7 @@ function SearchResult(props) {
             return;
         }
         const response = await axios.get(
-            `http://localhost:8099/unauth/search/package?keyword=${keyword}&start=${dayjs(start).format('YYYY-MM-DD').toString()}&end=${dayjs(end).format('YYYY-MM-DD').toString()}&location=${loc}&people=${people}&sort=0&type=0&size=12`
+            `${process.env.REACT_APP_API_URL}/unauth/search/package?keyword=${keyword}&start=${dayjs(start).format('YYYY-MM-DD').toString()}&end=${dayjs(end).format('YYYY-MM-DD').toString()}&location=${loc}&people=${people}&sort=0&type=0&size=12`
         ).then((res) => {
             console.log(res.data);
             setResult(res.data);
@@ -155,7 +155,7 @@ function SearchResult(props) {
     // 가이드 검색 api 호출
     const guideSearch = async () => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/search/guide?keyword=${keyword}&sort=0&type=0&size=12`
+            `${process.env.REACT_APP_API_URL}/unauth/search/guide?keyword=${keyword}&sort=0&type=0&size=12`
         ).then((res) => {
             console.log(res.data);
             setResult(res.data);

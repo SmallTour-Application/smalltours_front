@@ -79,9 +79,9 @@ function CustomerSearch(props) {
             birth = `birthDay=${memberBirth}&`
         }
         console.log("회원검색...")
-        console.log(`http://localhost:8099/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`)
+        console.log(`${process.env.REACT_APP_API_URL}/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`)
         const response = await axios.post(
-            `http://localhost:8099/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`,
+            `${process.env.REACT_APP_API_URL}/admin/member/search/member?${name}${email}${tel}${birth}page=${page}&size=${pageSize}`,
             {},
     {
             headers: {

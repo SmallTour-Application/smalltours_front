@@ -11,7 +11,7 @@ export default function Confirm() {
 
     const confirm = async () => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/member/confirm-email?token=${token}`
+            `${process.env.REACT_APP_API_URL}/unauth/member/confirm-email?token=${token}`
         );
         alert("가입을 축하드립니다.")
         navigate("/login")

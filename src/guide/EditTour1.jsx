@@ -39,7 +39,7 @@ function EditTour1(props) {
     // 투어정보 불러오기
     const getTourInfo = async (id) => {
         const response = await axios.get(
-            `http://localhost:8099/package/unauth/view?id=${id}`
+            `${process.env.REACT_APP_API_URL}/package/unauth/view?id=${id}`
         ).then((res) => {
             if(res.data){
                 console.log(res)
@@ -100,7 +100,7 @@ function EditTour1(props) {
 
         // 회원가입 api 호출
         const response = await axios.post(
-            `http://localhost:8099/package/update`,
+            `${process.env.REACT_APP_API_URL}/package/update`,
             fd,
             {
                 headers:{

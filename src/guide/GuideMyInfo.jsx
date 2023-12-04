@@ -59,7 +59,7 @@ function GuideMyInfo(props) {
     // 개인정보 가져오는
     const getInfo = async () => {
         const response = await axios.post(
-            `http://localhost:8099/member/info`, null,{
+            `${process.env.REACT_APP_API_URL}/member/info`, null,{
                 headers: {
                     'Authorization': `${accessToken}`,
                 },
@@ -85,7 +85,7 @@ function GuideMyInfo(props) {
     // 닉네임 변경
     const updateNickname = async () => {
         const response = await axios.post(
-            `http://localhost:8099/member/updatenickname`, {nickname: nickname}, {
+            `${process.env.REACT_APP_API_URL}/member/updatenickname`, {nickname: nickname}, {
                 headers:{'Authorization': `${accessToken}`,}
             }
         ).then((res) => {
@@ -105,7 +105,7 @@ function GuideMyInfo(props) {
             return;
         }
         const response = await axios.post(
-            `http://localhost:8099/member/updatepw`, {chgPw: chgPw1, curPw: curPw}, {
+            `${process.env.REACT_APP_API_URL}/member/updatepw`, {chgPw: chgPw1, curPw: curPw}, {
                 headers:{'Authorization': `${accessToken}`,}
             }
         ).then((res) => {
@@ -124,7 +124,7 @@ function GuideMyInfo(props) {
     // 전화번호 변경
     const updateTel = async () => {
         const response = await axios.post(
-            `http://localhost:8099/member/updatetel`, {tel: tel}, {
+            `${process.env.REACT_APP_API_URL}/member/updatetel`, {tel: tel}, {
                 headers:{'Authorization': `${accessToken}`,}
             }
         ).then((res) => {
@@ -149,7 +149,7 @@ function GuideMyInfo(props) {
         }); // 파일 임포트
 
         const response = await axios.post(
-            `http://localhost:8099/member/updateProfileImg`,
+            `${process.env.REACT_APP_API_URL}/member/updateProfileImg`,
             fd,
             {
                 headers:{

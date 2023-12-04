@@ -103,7 +103,7 @@ function MyGuideReview(props) {
     const deleteReview = async (id) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/review/guide/delete?id=${id}`,
+            `${process.env.REACT_APP_API_URL}/review/guide/delete?id=${id}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -121,7 +121,7 @@ function MyGuideReview(props) {
     const getReviewList = async (newPage) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/review/guide/review?page=${newPage}`,
+            `${process.env.REACT_APP_API_URL}/review/guide/review?page=${newPage}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -143,7 +143,7 @@ function MyGuideReview(props) {
     const updateReview = async () => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/review/guide/update?content=${content}&rating=${rating}&id=${reviewId}`,
+            `${process.env.REACT_APP_API_URL}/review/guide/update?content=${content}&rating=${rating}&id=${reviewId}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {

@@ -69,7 +69,7 @@ function CreateTour4(props) {
     // 서버에서 숙소정보 가져오기
     const getHotel = async () => {
         const response = await axios.get(
-            `http://localhost:8099/package/airline/unauth/view?id=${param.value}`
+            `${process.env.REACT_APP_API_URL}/package/airline/unauth/view?id=${param.value}`
         ).then(
             (res)=>{
                 console.log(res);
@@ -90,7 +90,7 @@ function CreateTour4(props) {
     // airline 추가하기
     const addHotel = async () => {
         const response = await axios.post(
-            `http://localhost:8099/package/airline/add`,
+            `${process.env.REACT_APP_API_URL}/package/airline/add`,
             {
                 contactEmail:contactEmail,
                 contactTel:contactTel,
@@ -109,7 +109,7 @@ function CreateTour4(props) {
     // airline 삭제하기
     const delHotel = async (id) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/airline/delete`,
+            `${process.env.REACT_APP_API_URL}/package/airline/delete`,
             {
                 id:id
             },
@@ -124,7 +124,7 @@ function CreateTour4(props) {
     // 비행기 추가하기
     const addRoom = async (id) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/airline/flight/add`,
+            `${process.env.REACT_APP_API_URL}/package/airline/flight/add`,
             {
                 airlineId: id,
                 arrivalAirport: arrivalAirport,
@@ -147,7 +147,7 @@ function CreateTour4(props) {
     // 비행기 삭제하기
     const delRoom = async (id) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/airline/flight/delete`,
+            `${process.env.REACT_APP_API_URL}/package/airline/flight/delete`,
             {
                 id:id
             },

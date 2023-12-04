@@ -61,7 +61,7 @@ function MyGuideReview(props) {
     const getGuideList = async (newPage) => {
         setLoad(true);
         const response = await axios.get(
-            `http://localhost:8099/member/member/favoriteTour?page=${newPage}`,
+            `${process.env.REACT_APP_API_URL}/member/member/favoriteTour?page=${newPage}`,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => console.log).then(
             (res) => {
@@ -84,7 +84,7 @@ function MyGuideReview(props) {
     const cancelFavorite = async (id) => {
         setLoad(true)
         const response = await axios.post(
-            `http://localhost:8099/member/member/favoriteguide?`,
+            `${process.env.REACT_APP_API_URL}/member/member/favoriteguide?`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         )

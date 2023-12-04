@@ -41,7 +41,7 @@ function Main(props) {
     // TOP 가이드 가져오는 api 호출
     const getTopGuide = async () => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/main/top-ratings`
+            `${process.env.REACT_APP_API_URL}/unauth/main/top-ratings`
         ).catch((err) => {
             console.log(err)
             alert("오류 발생. 페이지를 새로고침 해주세요.")
@@ -54,7 +54,7 @@ function Main(props) {
     // 인기 패키지 가져오는 api 호출
     const getTopTour = async () => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/main/popularTours`
+            `${process.env.REACT_APP_API_URL}/unauth/main/popularTours`
         ).catch((err) => {
             console.log(err)
             alert("오류 발생. 페이지를 새로고침 해주세요.")

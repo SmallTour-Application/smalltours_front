@@ -189,7 +189,7 @@ function CustomerInfo(props) {
         console.log("회원 정보를 가져옵니다...")
         console.log(`http://localhost:8099/admin/member/info?memberId=${memberId}`)
         const response = await axios.post(
-            `http://localhost:8099/admin/member/info?memberId=${memberId}`,
+            `${process.env.REACT_APP_API_URL}/admin/member/info?memberId=${memberId}`,
             {},
             {
                 headers: {

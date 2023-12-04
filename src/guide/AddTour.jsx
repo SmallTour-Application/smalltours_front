@@ -67,7 +67,7 @@ function AddTour(props) {
 
         // 회원가입 api 호출
         const response = await axios.post(
-            `http://localhost:8099/package/add`,
+            `${process.env.REACT_APP_API_URL}/package/add`,
             fd,
             {
                 headers:{

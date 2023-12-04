@@ -65,7 +65,7 @@ function EditTour3(props) {
     // 서버에서 숙소정보 가져오기
     const getHotel = async () => {
         const response = await axios.get(
-            `http://localhost:8099/package/hotel/unauth/view?id=${param.value}`
+            `${process.env.REACT_APP_API_URL}/package/hotel/unauth/view?id=${param.value}`
         ).then(
             (res)=>{
                 console.log(res);
@@ -86,7 +86,7 @@ function EditTour3(props) {
     // 숙소 추가하기
     const addHotel = async () => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/hotel/add`,
+            `${process.env.REACT_APP_API_URL}/package/hotel/add`,
             {
                 address:hotelAddress,
                 description:hotelDescription,
@@ -107,7 +107,7 @@ function EditTour3(props) {
     // 숙소 삭제하기
     const delHotel = async (id) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/hotel/delete`,
+            `${process.env.REACT_APP_API_URL}/package/hotel/delete`,
             {
                 id:id
             },
@@ -136,7 +136,7 @@ function EditTour3(props) {
         fd.append('price', 1);
 
         const response = await axios.post(
-            `http://localhost:8099/package/hotel/room/add`,
+            `${process.env.REACT_APP_API_URL}/package/hotel/room/add`,
             fd,
             {headers:{'Authorization': `${accessToken}`,}}
         ).then((res) => {
@@ -149,7 +149,7 @@ function EditTour3(props) {
     // 방 삭제하기
     const delRoom = async (id) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/hotel/room/delete`,
+            `${process.env.REACT_APP_API_URL}/package/hotel/room/delete`,
             {
                 id:id
             },

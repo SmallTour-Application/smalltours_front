@@ -157,7 +157,7 @@ function Education(props) {
     // 교육리스트 가져오기
     const getEdu = async () => {
         const response = await axios.post(
-            `http://localhost:8099/education/list`, null, {
+            `${process.env.REACT_APP_API_URL}/education/list`, null, {
                 headers: {'Authorization': `${accessToken}`,}
             }
         ).then((res) => {
@@ -179,7 +179,7 @@ function Education(props) {
         const seconds = Math.floor(paramMax % 60);
         console.log(`${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`)
         const response = await axios.post(
-            `http://localhost:8099/education/log/view/result`,
+            `${process.env.REACT_APP_API_URL}/education/log/view/result`,
             {
                 lastView: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
                 educationId: id
@@ -210,7 +210,7 @@ function Education(props) {
     // 동영상 정보 가져오기
     const getVideo = async (id) => {
         const response = await axios.post(
-            `http://localhost:8099/education/view?id=${id}`, null, {
+            `${process.env.REACT_APP_API_URL}/education/view?id=${id}`, null, {
                 headers: {'Authorization': `${accessToken}`,}
             }
         ).then((res) => {

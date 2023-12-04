@@ -32,7 +32,7 @@ function GuideInfo(props) {
     const getGuideInfo = async (id) => {
         // 가이드 정보
         const response = await axios.get(
-            `http://localhost:8099/unauth/profile/guide?guideId=${id}`
+            `${process.env.REACT_APP_API_URL}/unauth/profile/guide?guideId=${id}`
         ).then((res) => {
             console.log(res)
             if(res.data){
@@ -44,7 +44,7 @@ function GuideInfo(props) {
     // 가이드 투어 불러오기
     const getGuideTour = async (id, paramPage) => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/profile/guide/tours?guideId=${id}&page=${paramPage}`
+            `${process.env.REACT_APP_API_URL}/unauth/profile/guide/tours?guideId=${id}&page=${paramPage}`
         ).then((res) => {
             console.log(res);
             // 페이징
@@ -64,7 +64,7 @@ function GuideInfo(props) {
     // 가이드 리뷰 불러오기
     const getGuideReview = async (id, paramPage) => {
         const response = await axios.get(
-            `http://localhost:8099/unauth/profile/guide/review?guideId=${id}&page=${paramPage}`
+            `${process.env.REACT_APP_API_URL}/unauth/profile/guide/review?guideId=${id}&page=${paramPage}`
         ).then((res) => {
             console.log(res);
             // 페이징

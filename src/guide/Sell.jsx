@@ -80,7 +80,7 @@ function Sell(props) {
     const getMyTour = async (newPage) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/payment/sell?startDay=${start.format('YYYY-MM-DD')}&endDay=${end.format('YYYY-MM-DD')}&page=${newPage}&type=0`,
+            `${process.env.REACT_APP_API_URL}/payment/sell?startDay=${start.format('YYYY-MM-DD')}&endDay=${end.format('YYYY-MM-DD')}&page=${newPage}&type=0`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -105,7 +105,7 @@ function Sell(props) {
     const getDetail = async (id) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/payment/info?paymentId=${id}`,
+            `${process.env.REACT_APP_API_URL}/payment/info?paymentId=${id}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {

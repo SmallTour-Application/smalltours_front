@@ -40,7 +40,7 @@ function AddTourSchedule(props) {
     // 투어정보 불러오기
     const getTourInfo = async (id) => {
         const response = await axios.get(
-            `http://localhost:8099/package/unauth/view?id=${id}`
+            `${process.env.REACT_APP_API_URL}/package/unauth/view?id=${id}`
         ).then((res) => {
             if(res.data){
                 console.log(res)
@@ -57,7 +57,7 @@ function AddTourSchedule(props) {
     // 스케쥴 정보 가져오기
     const getSchedule = async (id) => {
         const response = await axios.get(
-            `http://localhost:8099/package/schedule/unauth/view?id=${id}`
+            `${process.env.REACT_APP_API_URL}/package/schedule/unauth/view?id=${id}`
         ).then((res) => {
                 if (res.data) {
                     console.log(res)
@@ -78,7 +78,7 @@ function AddTourSchedule(props) {
             }
         )
         const response = await axios.post(
-            `http://localhost:8099/package/schedule/add`,
+            `${process.env.REACT_APP_API_URL}/package/schedule/add`,
             {
                 endTime : `${endTime.hour().toString().padStart(2,'0')}:${endTime.minute().toString().padStart(2,'0')}`,
                 startTime : `${startTime.hour().toString().padStart(2,'0')}:${startTime.hour().toString().padStart(2,'0')}`,
@@ -97,7 +97,7 @@ function AddTourSchedule(props) {
     // 스케쥴에 아이템 추가하기
     const addItem = async (scheduleId) => { // 매개변수 : 스케쥴의 아이디를 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/schedule/item/add`,
+            `${process.env.REACT_APP_API_URL}/package/schedule/item/add`,
             {
                 content:content,
                 defaultItem : 0,
@@ -121,7 +121,7 @@ function AddTourSchedule(props) {
     // 스케쥴 제거
     const delSchedule = async (scheduleId) => { // 매개변수 : duration (몇일차인지) 넣으면 됩니다.
         const response = await axios.post(
-            `http://localhost:8099/package/schedule/delete`,
+            `${process.env.REACT_APP_API_URL}/package/schedule/delete`,
             {
                 id:scheduleId,
             },
@@ -136,7 +136,7 @@ function AddTourSchedule(props) {
     // 아이템 제거
     const delItem = async (itemId) => {
         const response = await axios.post(
-            `http://localhost:8099/package/schedule/item/delete`,
+            `${process.env.REACT_APP_API_URL}/package/schedule/item/delete`,
             {
                 id:itemId,
             },
@@ -151,7 +151,7 @@ function AddTourSchedule(props) {
     // 기본값으로 설정하기
     const setDefault = async (id) => {
         const response = await axios.post(
-            `http://localhost:8099/package/schedule/item/default_item`,
+            `${process.env.REACT_APP_API_URL}/package/schedule/item/default_item`,
             {
                 id:id,
             },

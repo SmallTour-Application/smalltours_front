@@ -29,7 +29,7 @@ function PaymentList({memberId}) {
     /* 내 결제 목록 불러오기 **/
     const getPaymentInfo = async(memberId, state, page) => {
         console.log("결제 내역을 가져옵니다...")
-        console.log(`http://localhost:8099/admin/member/payment/member?memberId=${memberId}&state=${state}&page=${page}`)
+        console.log(`${process.env.REACT_APP_API_URL}/admin/member/payment/member?memberId=${memberId}&state=${state}&page=${page}`)
         const response = await axios.get(
             `${process.env.REACT_APP_API_URL}/admin/member/payment/member?memberId=${memberId}&state=${state}`,
             {

@@ -74,7 +74,7 @@ function Plan(props) {
     const getPayment = async (newPage) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/payment/myPayment?page=${newPage}`,
+            `${process.env.REACT_APP_API_URL}/payment/myPayment?page=${newPage}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => {
@@ -96,7 +96,7 @@ function Plan(props) {
     const getPaymentSearch = async (newPage) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/payment/search?page=${newPage}&startDay=${start.format('YYYY-MM-DD').toString()}`+
+            `${process.env.REACT_APP_API_URL}/payment/search?page=${newPage}&startDay=${start.format('YYYY-MM-DD').toString()}`+
                 `&endDay=${end.format('YYYY-MM-DD').toString()}&keyword=${keyword}&type=0`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
@@ -119,7 +119,7 @@ function Plan(props) {
     const cancelPayment = async (id) => {
         setLoad(true);
         const response = await axios.post(
-            `http://localhost:8099/payment/cancel?paymentId=${id}`,
+            `${process.env.REACT_APP_API_URL}/payment/cancel?paymentId=${id}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         )
@@ -141,8 +141,8 @@ function Plan(props) {
         setLoad(true);
         const response = await axios.post(
             reviewType === false ?
-            `http://localhost:8099/review/package/write?paymentId=${id}&content=${reviewContent}&rating=${star}` :
-                `http://localhost:8099/review/guide/write?paymentId=${id}&content=${reviewContent}&rating=${star}`,
+            `${process.env.REACT_APP_API_URL}/review/package/write?paymentId=${id}&content=${reviewContent}&rating=${star}` :
+                `${process.env.REACT_APP_API_URL}/review/guide/write?paymentId=${id}&content=${reviewContent}&rating=${star}`,
             null,
             {headers:{'Authorization': `${accessToken}`,}}
         )

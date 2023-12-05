@@ -12,6 +12,7 @@ import EducationSearch from "./EducationSearch";
 import ReservationInfo from "./ReservationInfo";
 import EducationInfo from "./EducationInfo";
 import Settings from "./Settings";
+import Report from "./Report";
 
 const AdminPanel = () => {
     const theme = createTheme({ // Theme
@@ -41,6 +42,7 @@ const AdminPanel = () => {
                         <Route path="education/info/:value" element={<EducationInfo />} />
                         {/*settings**/}
                         <Route path={"settings"} element={<Settings/>} />
+                        <Route path={"report"} element={<Report/>} />
 
                     </Routes>
                 </div>

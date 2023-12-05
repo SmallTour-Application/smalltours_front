@@ -394,8 +394,8 @@ function Tour(props) {
 
                     {/* 내용 **/}
                     <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItmes={"center"} sx={{pt:"3rem"}}>
-                        <Typography sx={{fontWeight:"900", fontSize:"1.5rem"}}>
-                            {tourInfo && tourInfo.description}
+                        <Typography sx={{fontWeight:"900", fontSize:"1.5rem", whiteSpace: 'pre-line'}}>
+                            {tourInfo && tourInfo.description.replace(/<br\/>/g, '\n')}
                         </Typography>
                     </Grid>
 

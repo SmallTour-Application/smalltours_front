@@ -82,7 +82,7 @@ function Settings(props) {
     return (
         <Grid container sx={{width:"100%", display:"flex", mt:"3rem", px:"3rem", mb:"3rem"}}>
             <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"3rem"}}>
-                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>부가기능</Typography>
+                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>설정</Typography>
             </Grid>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">

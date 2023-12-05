@@ -1,6 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import {Button, Slider, Box, ThemeProvider, createTheme, Tooltip, Modal, RadioGroup, Radio, Paper} from '@mui/material';
+import {
+    Button,
+    Slider,
+    Box,
+    ThemeProvider,
+    createTheme,
+    Tooltip,
+    Modal,
+    RadioGroup,
+    Radio,
+    Paper,
+    MenuItem, Select, InputLabel, FormControl
+} from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -52,6 +64,13 @@ function Education(props) {
     const [currentTime, setCurrentTime] = useState(0); // 현재재생위치
 
     const [chgValue, setChgValue] = useState(true);
+
+    // 교육리스트
+    const [eduList, setEduList] = useState(null);
+    const [eduId, setEduId] = useState(0);
+    const [eduStart, setEduStart] = useState("");
+    const [eduEnd, setEduEnd] = useState("");
+    const [eduIdx, setEduIdx] = useState(99);
 
 
     // 현재 재생 위치 가져오기
@@ -161,9 +180,17 @@ function Education(props) {
                 headers: {'Authorization': `${accessToken}`,}
             }
         ).then((res) => {
+            console.log("교육리스트 가져오기")
             console.log(res)
                 if (res.data) {
-                    setResult(res.data)
+                    const temp = [];
+                    res.data.forEach((item) => {
+                        if(item.state === 0 || item.state === 2 || item.state === 3){
+                            temp.push(item)
+                        }
+                    }
+                    )
+                    setEduList(temp)
                 }
             }
         ).catch((err) => {
@@ -202,7 +229,7 @@ function Education(props) {
             //         chgCount++;
             //     }
             // }
-            videoResult(result[0].id, maxPlayed);
+            videoResult(eduId, maxPlayed);
             // maxplayed 보다 테스트 시간이 크면 테스트 했는지 체크합니다.
 
         }
@@ -229,19 +256,12 @@ function Education(props) {
         if (accessToken) {
             getEdu()
         }
-    }, [, accessToken])
+    }, [accessToken])
 
-    // 교육정보 가져온 후 video 정보 가져오기
+    // videoUrl이 바뀌면 영상 재생 정지
     useEffect(() => {
-        if (result !== null) {
-            getVideo(result[0].id)
-        }
-    }, [result])
-
-    // videoUrl이 없으면 빈화면 출력(아직 로드되지 않은 경우)
-    if (videoUrl === "") {
-        return (<div>아직 로드되지 않았어요.</div>)
-    }
+        setPlaying(false)
+    }, [videoUrl])
 
     return (
         <Grid container item xs={12}>
@@ -250,55 +270,105 @@ function Education(props) {
                     온라인 교육
                 </Typography>
             </Grid>
+            {/* 교육 목록 넣을 곳 **/}
             <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
-                <Typography sx={{fontSize: "1rem", fontWeight: "700", color: "#A2A2A2"}}>
-                    할당된 영상이 있어요.
-                </Typography>
-            </Grid>
-            <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
-                <div ref={playerWrapperRef}>
-                    <Box sx={{width: "100%", aspectRatio: "16/9"}}>
-                        <ReactPlayer
-                            url={videoUrl}
-                            ref={playerRef}
-                            playing={playing}
-                            controls={false}
-                            volume={volume}
-                            width={"100%"}
-                            height={"100%"}
-                            onDuration={handleDuration}
-                            onProgress={handleProgress}
-                        />
-                    </Box>
-                </div>
-            </Grid>
-            <Grid item xs={10} display={"flex"} justifyContent="center" alignItems={"center"}>
-                <Button variant="contained" color="primary" onClick={handlePlayPause} sx={{mr: "1rem"}}>
-                    {playing ? <PauseIcon/> : <PlayArrowIcon/>}
-                </Button>
-                <Slider
-                    components={{
-                        ValueLabel: ValueLabelComponent
+                <FormControl sx={{ m: 1, minWidth: 200 }}> {/* 너비를 늘려줍니다 */}
+                    <InputLabel id="demo-simple-select-label">교육선택</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={eduIdx}
+                        label="교육선택"
+                        onChange={(e) => {
+                            setEduIdx(e.target.value)
+                            setEduId(eduList[parseInt(e.target.value)].id)
+                            setEduStart(eduList[e.target.value].startDay)
+                            setEduEnd(eduList[e.target.value].endDay)
+                        }}
+                    >
+                        {eduList && eduList.map((item, idx) => (
+                            <MenuItem key={idx} value={idx}>{item.title}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <Button
+                    sx={{
+                        ml: "1rem",
+                        backgroundColor: 'skyblue',
+                        ':hover': {
+                            backgroundColor: 'deepskyblue',
+                        },
+                        color: 'white',
+                        padding: '10px 20px',
+                        borderRadius: '5px',
+                        display: 'block', // 버튼을 블록 요소로 만들어 전체 너비를 차지하게 합니다.
                     }}
-                    min={0}
-                    max={duration}
-                    step={1}
-                    value={currentTime}
-                    onChange={handleSeek}
-                    valueLabelDisplay="auto"
-                />
-                <Button variant="contained" color="primary"
-                        onClick={() => playerWrapperRef.current && toggleFullScreen(playerWrapperRef.current)}>full</Button>
+                    onClick={() => {
+                        if (eduId === 99) {
+                            alert("교육을 선택해주세요.")
+                        } else {
+                            getVideo(eduId)
+                        }
+                    }}
+                >
+                    <Typography>선택 교육 듣기</Typography>
+                </Button>
             </Grid>
-            <Grid item xs={2} display={"flex"} justifyContent="center" alignItems={"center"}>
-                <VolumeDownIcon/>
-                <Slider value={volume} onChange={handleVolumeChange}
-                        min={0}
-                        max={0.999999}
-                        step={0.0001}
-                        aria-labelledby="continuous-slider"/>
-                <VolumeUpIcon/>
-            </Grid>
+            {eduStart !== "" && eduEnd !== "" && (
+                <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
+                    <Typography sx={{fontSize: "1rem", fontWeight: "700", color: "#A2A2A2"}}>
+                        수강기간 : {eduStart} ~ {eduEnd}
+                    </Typography>
+                </Grid>
+            )}
+            {videoUrl && (
+                <Grid item container xs={12}>
+                    <Grid item xs={12} display={"flex"} justifyContent="flex-start" alignItems={"center"} sx={{mb: "2rem"}}>
+                        <div ref={playerWrapperRef}>
+                            <Box sx={{width: "100%", aspectRatio: "16/9"}}>
+                                <ReactPlayer
+                                    url={videoUrl}
+                                    ref={playerRef}
+                                    playing={playing}
+                                    controls={false}
+                                    volume={volume}
+                                    width={"100%"}
+                                    height={"100%"}
+                                    onDuration={handleDuration}
+                                    onProgress={handleProgress}
+                                />
+                            </Box>
+                        </div>
+                    </Grid>
+                    <Grid item xs={10} display={"flex"} justifyContent="center" alignItems={"center"}>
+                        <Button variant="contained" color="primary" onClick={handlePlayPause} sx={{mr: "1rem"}}>
+                            {playing ? <PauseIcon/> : <PlayArrowIcon/>}
+                        </Button>
+                        <Slider
+                            components={{
+                                ValueLabel: ValueLabelComponent
+                            }}
+                            min={0}
+                            max={duration}
+                            step={1}
+                            value={currentTime}
+                            onChange={handleSeek}
+                            valueLabelDisplay="auto"
+                        />
+                        <Button variant="contained" color="primary"
+                                onClick={() => playerWrapperRef.current && toggleFullScreen(playerWrapperRef.current)}>full</Button>
+                    </Grid>
+                    <Grid item xs={2} display={"flex"} justifyContent="center" alignItems={"center"}>
+                        <VolumeDownIcon/>
+                        <Slider value={volume} onChange={handleVolumeChange}
+                                min={0}
+                                max={0.999999}
+                                step={0.0001}
+                                aria-labelledby="continuous-slider"/>
+                        <VolumeUpIcon/>
+                    </Grid>
+                </Grid>
+            )}
         </Grid>
     );
 }

@@ -11,6 +11,7 @@ import GuideMyInfo from "./GuideMyInfo";
 import GuideMyTour from "./GuideMyTour";
 import Education from "./Education";
 import Sell from "./Sell";
+import GuideStat from "./GuideStat";
 
 const page=[
     {url:"info", name:"개인정보"},
@@ -82,6 +83,9 @@ function GuideMain(props) {
                     )}
                     {keyword === "edu" && (
                         <Education/>
+                    )}
+                    {keyword === "stat" && (
+                        <GuideStat/>
                     )}
                     {keyword === "sell" && (
                     <Sell/>

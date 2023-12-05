@@ -79,7 +79,7 @@ function AddTour(props) {
             console.log("다음단계로 이동합니다.")
             alert("다음단계로 이동합니다.");
             navigate(`/guide/createTour2/${res.data.id}`)
-        }).catch((res) => {
+        }).catch((err) => {
             console.log("생성 실패. 다시 시도해 주세요.");
             alert("생성 실패. 계속해서 장애가 발생하면 고객센터에 문의해 주세요.")
         })

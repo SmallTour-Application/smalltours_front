@@ -338,7 +338,7 @@ function GuideJoin(props) {
                             </Button>
                         </Grid>
                         <Grid item xs="6" sx={{ display: 'flex', alignItems: 'center', width:"100%" }}>
-                            {portFolio === null(
+                            {portFolio === null && (
                                 <Typography>선택된 파일 없음</Typography>
                             )}
                             {portFolio && (

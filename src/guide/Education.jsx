@@ -247,9 +247,7 @@ function Education(props) {
                     setCurrentTime(hours * 3600 + minutes * 60 + seconds)
                 }
             }
-        ).catch((err) => {
-            alert("실패")
-        })
+        )
     }
     useEffect(() => {
         if (accessToken) {

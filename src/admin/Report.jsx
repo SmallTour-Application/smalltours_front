@@ -38,7 +38,7 @@ function Report(props) {
             console.log("member per month")
             console.log(res)
             if(res && res.data){
-                setMemberPerMonth(res.data[0].totalCnt)
+                setMemberPerMonth((res.data)[res.data.length -1].totalCnt)
                 const chartData = res.data.map(item => ({
                     month: item.month,
                     totalCnt: item.totalCnt
@@ -62,7 +62,7 @@ function Report(props) {
         ).then((res) => {
             if(res && res.data){
                 console.log(res.data)
-                setPaymentPerMonth(res.data[0].totalCnt)
+                setPaymentPerMonth((res.data)[res.data.length -1].totalCnt)
             }
         }).catch((err) => console.log(err))
     }

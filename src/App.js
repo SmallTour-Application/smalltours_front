@@ -46,11 +46,6 @@ function App() {
         }
     },[])
 
-    const ErrorFallback = () => {
-        // 아무것도안함
-        return null;
-    }
-
   return (
       <Routes>
           {/* 로그인 **/}
@@ -70,9 +65,7 @@ function App() {
           {/* 가이드 회원가입 **/}
           <Route path="/guideJoin" element={<GuideJoin/>}/>
           {/* 가이드 메인 **/}
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Route path="/guide/main/:value" element={<GuideMain/>}/>
-          </ErrorBoundary>
           {/* tour 만들기 **/}
           <Route path="/guide/createTour1" element={<AddTour/>}/>
           {/* schedule 만들기 **/}

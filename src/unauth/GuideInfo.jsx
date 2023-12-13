@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import {useNavigate, useParams} from "react-router-dom";
 import FaceIcon from "@mui/icons-material/Face6";
 import StarIcon from "@mui/icons-material/Star";
+import {useSelector} from "react-redux";
 
 function GuideInfo(props) {
     const theme = createTheme({ // Theme
@@ -15,6 +16,8 @@ function GuideInfo(props) {
             fontFamily: 'NanumSquareNeo',
         },
     });
+
+    const accessToken = useSelector((state) => state.accessToken); // 엑세스 토큰
 
     const params = useParams();
     const navigate = useNavigate()
@@ -58,6 +61,27 @@ function GuideInfo(props) {
                     setTourMore(false);
                 }
             }
+        })
+    }
+
+    // 가이드 좋아요 하기 ... /member/heart/add
+    const addGuideHeart = async (id) => {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/member/heart/add?guideId=${id}`,null,
+            {
+                headers: {
+                    Authorization: `${accessToken}`,
+                }
+            }
+        ).then((res) => {
+            console.log(res);
+            if(res.data){
+                alert("구독완료");
+                getGuideInfo(id);
+            }
+        }).catch((err) => {
+            console.log(err);
+            alert("구독해제는 마이페이지에서 가능합니다.");
         })
     }
 
@@ -118,13 +142,21 @@ function GuideInfo(props) {
                     <Typography sx={{fontSize:"1.5rem", fontWeight:"700"}}>가입일</Typography>
                 </Grid>
                 <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"}>
-                    <Typography sx={{fontSize:"1.3rem", fontWeight:"700", color:"#A2A2A2"}}>{guideInfo && dayjs(guideInfo.joinDay).format('YYYY년 mm월 DD일')}</Typography>
+                    <Typography sx={{fontSize:"1.3rem", fontWeight:"700", color:"#A2A2A2"}}>{guideInfo && dayjs(guideInfo.joinDay).format('YYYY년 MM월 DD일')}</Typography>
                 </Grid>
                 <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} sx={{mt:"3rem"}}>
                     <Typography  sx={{fontSize:"1.5rem", fontWeight:"700"}}>자기소개</Typography>
                 </Grid>
                 <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"}>
                     <Typography sx={{fontSize:"1.3rem", fontWeight:"700", color:"#A2A2A2"}}>{guideInfo && guideInfo.introduce}</Typography>
+                </Grid>
+                {/* 가이드 구독 버튼 **/}
+                <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} sx={{mt:"3rem"}}>
+                    <Button variant="outlined" fullWidth sx={{borderColor:'#DDDDDD', borderRadius:'10px'}}
+                        onClick={() => accessToken ? addGuideHeart(params.value) : alert("로그인이 필요합니다.")}
+                    >
+                        <Typography sx={{color:"#000000"}}>구독하기</Typography>
+                    </Button>
                 </Grid>
                 <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} sx={{my:"3rem"}}>
                     <Typography sx={{fontSize:"1.5rem", fontWeight:"800", color:"#000000"}}>{guideTour ? guideTour.count : "0"} 개의 여행을 준비했어요!</Typography>

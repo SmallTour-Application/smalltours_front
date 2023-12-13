@@ -10,6 +10,11 @@ import Typography from "@mui/material/Typography";
 import StarIcon from '@mui/icons-material/Star';
 import axios from "axios";
 import {setAccessToken} from "../redux/actions";
+import img0 from "../images/img.png";
+import img1 from "../images/img_1.png";
+import img2 from "../images/img_2.png";
+import img3 from "../images/img_3.png";
+import img4 from "../images/img_4.png";
 
 
 function Main(props) {
@@ -81,21 +86,35 @@ function Main(props) {
                     <Slider {...settings}>
                         <div className={styles.image_banner}>
                             <img
-                                src={testImg}
+                                src={img0}
                                 className={styles.image_thumbnail}
                                 alt={'testImg'}
                             />
                         </div>
                         <div className={styles.image_banner}>
                             <img
-                                src={testImg}
+                                src={img1}
                                 className={styles.image_thumbnail}
                                 alt={'testImg'}
                             />
                         </div>
                         <div className={styles.image_banner}>
                             <img
-                                src={testImg}
+                                src={img2}
+                                className={styles.image_thumbnail}
+                                alt={'testImg'}
+                            />
+                        </div>
+                        <div className={styles.image_banner}>
+                            <img
+                                src={img3}
+                                className={styles.image_thumbnail}
+                                alt={'testImg'}
+                            />
+                        </div>
+                        <div className={styles.image_banner}>
+                            <img
+                                src={img4}
                                 className={styles.image_thumbnail}
                                 alt={'testImg'}
                             />

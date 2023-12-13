@@ -72,7 +72,7 @@ function MyFavoriteGuide(props) {
                 }else if(result){
                     setResult({count:result.count, review: result.reviews.push(res.data.review)})
                 }
-                if(!result || (result && result.data.length < 10)){
+                if(!result || (result && result.data && result.data.length < 10)){
                     setLastPage(true);
                 }
             }
@@ -80,20 +80,24 @@ function MyFavoriteGuide(props) {
         setLoad(false);
     }
 
-    // 좋아요 취소 - api 만들어지면 수정
-    const cancelFavorite = async (id) => {
+    // 좋아요 취소 ... /member/heart/cancel
+    const cancelFavorite = async (guideId) => {
         setLoad(true)
         const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/member/heart/cancel?`,
-            {
-                guideId : id,
-            },
+            `${process.env.REACT_APP_API_URL}/member/heart/cancel?guideId=${guideId}`,
+            null,
             {headers:{'Authorization': `${accessToken}`,}}
+        ).catch((err) => console.log).then(
+            (res) => {
+                console.log(res);
+                if(res && res.data){
+                    getGuideList(1);
+                    setPage(1);
+                }
+            }
         )
-        for(let i = 1; i <= page; i++){
-            await getGuideList(i)
-        }
         setLoad(false);
+
     }
 
     useEffect(() => {
@@ -153,7 +157,7 @@ function MyFavoriteGuide(props) {
                                       onClick={() => navigate(`/guideInfo/${items.guideId}`)}
                                 >
                                     <Box sx={{width:"100%", aspectRatio:"1/1", borderRadius:"30vw", overflow:"hidden"}}>
-                                        <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                        <img src={items.guideImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                                     </Box>
                                 </Grid>
                                 <Grid xs={12}
@@ -183,7 +187,7 @@ function MyFavoriteGuide(props) {
                                       sx={{mt:"2rem", px:"30%"}}
                                 >
                                     <Button fullWidth sx={{border:2, borderColor:"#DDDDDD", borderRadius:"50vw"}}>
-                                        <Typography sx={{fontSize:"0.7rem", fontWeight:"700", color:"#000000"}}>구독취소</Typography>
+                                        <Typography sx={{fontSize:"0.7rem", fontWeight:"700", color:"#000000"}} onClick={() => cancelFavorite(items.guideId)}>구독취소</Typography>
                                     </Button>
                                 </Grid>
                             </Grid>

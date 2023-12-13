@@ -61,7 +61,7 @@ function MyGuideReview(props) {
     const getGuideList = async (newPage) => {
         setLoad(true);
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/member/member/favoriteTour?page=${newPage}`,
+            `${process.env.REACT_APP_API_URL}/member/favoriteTour?page=${newPage}`,
             {headers:{'Authorization': `${accessToken}`,}}
         ).catch((err) => console.log).then(
             (res) => {
@@ -72,7 +72,7 @@ function MyGuideReview(props) {
                 }else if(result){
                     setResult({count:result.count, review: result.reviews.push(res.data.review)})
                 }
-                if(!result || (result && result.data.length < 10)){
+                if(!result || (result && result.data && result.data.length < 10)){
                     setLastPage(true);
                 }
             }
@@ -80,18 +80,17 @@ function MyGuideReview(props) {
         setLoad(false);
     }
 
-    // 좋아요 취소 - api 만들어지면 수정
-    const cancelFavorite = async (id) => {
-        setLoad(true)
+    // 좋아요 취소 ... /favorite/tours/delete
+    const deleteFavorite = async (tourId) => {
         const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/member/member/favoriteguide?`,
-            null,
+            `${process.env.REACT_APP_API_URL}/favorite/tours/delete`,
+            {id: tourId},
             {headers:{'Authorization': `${accessToken}`,}}
-        )
-        for(let i = 1; i <= page; i++){
-            await getGuideList(i)
-        }
-        setLoad(false);
+        ).then((res) => {
+            // 다시 로드하기
+            getGuideList(1);
+            setPage(1);
+        })
     }
 
     useEffect(() => {
@@ -150,7 +149,7 @@ function MyGuideReview(props) {
                                       onClick={() => navigate(`/tour/${item.tourId}`)}
                                 >
                                     <Box sx={{width:"100%", height:"100%", overflow:"hidden"}}>
-                                        <img src={testImg} style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                                        <img src={item.tourThumb} style={{width:"100%", aspectRatio:"8/7", objectFit:"cover"}}/>
                                     </Box>
                                 </Grid>
                                 <Grid xs={12}
@@ -179,7 +178,9 @@ function MyGuideReview(props) {
                                       alignItems="center"
                                       sx={{mt:"2rem", px:"30%"}}
                                 >
-                                    <Button fullWidth sx={{border:2, borderColor:"#DDDDDD", borderRadius:"50vw"}}>
+                                    <Button fullWidth sx={{border:2, borderColor:"#DDDDDD", borderRadius:"50vw"}}
+                                            onClick={() => deleteFavorite(item.tourId)}
+                                    >
                                         <Typography sx={{fontSize:"0.7rem", fontWeight:"700", color:"#000000"}}>구독취소</Typography>
                                     </Button>
                                 </Grid>

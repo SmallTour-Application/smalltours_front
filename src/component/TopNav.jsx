@@ -201,6 +201,7 @@ export default function TopBar() {
 
     // 검색버튼 눌렀을 때 이동
     const handleSearch = () => {
+        console.log("검색시작")
         //window.location.replace(`/search?keyword=${keyword}&people=${adult}&start=${startDate.format('YYYY-MM-DD').toString()}&end=${endDate.format('YYYY-MM-DD').toString()}&loc=${region}&sort=0&type=0&page=1`)
         dispatch(setSearchTrigger(true)); // 검색 트리거를 true로 변경해 검색 컴포넌트에서 api 호출을 수행하도록 함
         navigate(`/search`)
@@ -802,7 +803,7 @@ export default function TopBar() {
 
                         </Grid>
 
-                        <IconButton onClick={() => role === 0 ? navigate("/my/info") : navigate("/guide/main/info")}>
+                        <IconButton onClick={() => role === "0" || role === 0 ? navigate("/my/info") : navigate("/guide/main/info")}>
                             <AccountCircleIcon sx={{fontSize:"3rem"}} />
                         </IconButton>
 

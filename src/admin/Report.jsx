@@ -35,6 +35,7 @@ function Report(props) {
                 },
             },
         ).then((res) => {
+            console.log("member per month")
             console.log(res)
             if(res && res.data){
                 setMemberPerMonth(res.data[0].totalCnt)

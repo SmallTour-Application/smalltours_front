@@ -39,6 +39,7 @@ function GuideJoin(props) {
     const [gender, setGender] = useState(0);
     const [file, setFile] = useState(null); // 파일
     const [img, setImg] = useState('');
+    const [portFolio, setPortFolio] = useState(null); // 포트폴리오 파일
 
 
     const theme = createTheme({ // Theme
@@ -102,6 +103,9 @@ function GuideJoin(props) {
         Object.values(file).forEach((file) => {
             fd.append('profileImgRequest', file);
         }); // 파일 임포트
+        Object.values(file).forEach((file) => {
+            fd.append('portfolioFile', portFolio);
+        }); // 파일 임포트
         fd.append('email', email); // 이메일
         fd.append('password', pw); // 비밀번호
         fd.append('birthDay', `${birth.format('YYYY-MM-DD').toString()}`) // 생일
@@ -112,7 +116,7 @@ function GuideJoin(props) {
         fd.append('role', 1) // 역할
         // 회원가입 api 호출
         const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/unauth/member/signup`,
+            `${process.env.REACT_APP_API_URL}/unauth/guide/signup`,
             fd,
             {
                 headers:{
@@ -308,6 +312,37 @@ function GuideJoin(props) {
                                         className={styles.image}
                                     />
                                 </div>
+                            )}
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item container xs={12} sx={{pt:2, width:"100%"}}>
+                    <Grid item container xs={12} sx={{pt:2 , width:"100%"}}>
+                        <Grid item xs="12">
+                            <p className={styles.font_body_menu}>포트폴리오</p>
+                        </Grid>
+                        <Grid item xs="6">
+                            <Button
+                                variant="contained"
+                                component="label"
+                                sx={{ backgroundColor:"#6CB0FF", width:"50%", aspectRatio:"5/1" }}
+                                size="small"
+                            >
+                                <Typography>파일 첨부</Typography>
+                                <input
+                                    type="file"
+                                    accept=".pdf"
+                                    hidden
+                                    onChange={(e) => setPortFolio(e.target.files)}
+                                />
+                            </Button>
+                        </Grid>
+                        <Grid item xs="6" sx={{ display: 'flex', alignItems: 'center', width:"100%" }}>
+                            {portFolio === null(
+                                <Typography>선택된 파일 없음</Typography>
+                            )}
+                            {portFolio && (
+                                <Typography>{portFolio.getFileName}</Typography>
                             )}
                         </Grid>
                     </Grid>

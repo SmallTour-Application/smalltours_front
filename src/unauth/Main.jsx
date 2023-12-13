@@ -44,7 +44,6 @@ function Main(props) {
             `${process.env.REACT_APP_API_URL}/unauth/main/top-ratings`
         ).catch((err) => {
             console.log(err)
-            alert("오류 발생. 페이지를 새로고침 해주세요.")
         }).then((res) => {
             console.log(res)
             setTopGuide(res.data.content);
@@ -57,7 +56,6 @@ function Main(props) {
             `${process.env.REACT_APP_API_URL}/unauth/main/popularTours`
         ).catch((err) => {
             console.log(err)
-            alert("오류 발생. 페이지를 새로고침 해주세요.")
         }).then((res) => {
             console.log(res)
             setTopTour(res.data.content);

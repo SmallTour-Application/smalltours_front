@@ -62,7 +62,9 @@ function Tour(props) {
 
     const isDisabled = ({ date }) => {
         const day = dayjs(date);
-        return disallowedRanges.some(range => day.isAfter(range.start) && day.isBefore(range.end));
+        return disallowedRanges.some(range =>
+            (day.isSame(range.start, 'day') || day.isAfter(range.start, 'day')) &&
+            (day.isSame(range.end, 'day') || day.isBefore(range.end, 'day')));
     };
 
     const [selectedDate, setSelectedDate] = useState(dayjs().toDate());
@@ -105,6 +107,7 @@ function Tour(props) {
             `${process.env.REACT_APP_API_URL}/package/unauth/view?id=${id}`
         ).then((res) => {
             if(res.data){
+                console.log("투어정보")
                 console.log(res)
                 setTourInfo(res.data)
                 const tempArr = []
@@ -116,9 +119,11 @@ function Tour(props) {
                 if(res.data.guideLockDTOList){
                     const arrr = [];
                     for(let i = 0 ; i < res.data.guideLockDTOList.length; i++){
-                        arrr.push({start:dayjs(res.data.guideLockDTOList[i].startDay), end:dayjs(res.data.guideLockDTOList[i].endDay)})
+                        arrr.push({start:dayjs(res.data.guideLockDTOList[i].startDay, "YYYY-MM-DD"), end:dayjs(res.data.guideLockDTOList[i].endDay, "YYYY-MM-DD")})
                     }
                     setDisallowedRanges(arrr);
+                    console.log("disable 날짜")
+                    console.log(arrr)
                 }
 
             }
@@ -274,7 +279,7 @@ function Tour(props) {
 
             }
         }
-        setPrice(((defaultPrice / tourInfo.minGroupSize) + optionPrice) * travelers)
+        setPrice(((defaultPrice*travelers / tourInfo.minGroupSize) + optionPrice) * travelers)
     }
 
     useEffect(() => {

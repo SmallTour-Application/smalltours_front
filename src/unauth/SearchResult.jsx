@@ -143,7 +143,7 @@ function SearchResult(props) {
             return;
         }
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/unauth/search/package?keyword=${keyword}&start=${dayjs(start).format('YYYY-MM-DD').toString()}&end=${dayjs(end).format('YYYY-MM-DD').toString()}&location=${loc}&people=${people}&sort=0&type=0&size=12`
+            `${process.env.REACT_APP_API_URL}/unauth/search/package?keyword=${keyword}&title=${keyword}&start=${dayjs(start).format('YYYY-MM-DD').toString()}&end=${dayjs(end).format('YYYY-MM-DD').toString()}&location=${loc}&people=${people}&sort=0&type=0&size=12`
         ).then((res) => {
             console.log(res.data);
             setResult(res.data);
@@ -189,9 +189,10 @@ function SearchResult(props) {
 
     useEffect(() => {
         console.log(`keyword : ${keyword}, people : ${people}, start : ${start}, end=${end}, location : ${loc}, people : ${people}, sort : ${sort}, type : ${type}`)
+        console.log(searchTrigger)
         // 컴포넌트 최초 로드 시 검색 api 호출
 
-        if(searchTrigger === true){ // 재로드 신호 들어왔을 때
+        if(searchTrigger === true || searchTrigger === "true"){ // 재로드 신호 들어왔을 때
             if(type === 0){
                 // 패키지 검색 시
                 search();

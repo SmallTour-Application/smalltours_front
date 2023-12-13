@@ -140,7 +140,7 @@ function GuideInfo(props) {
                                   display={"flex"}
                                   justifyContent={"center"}
                                   alignItems={"center"}
-                                  sx={{width:"100%", height:"100%", display: "flex", overflow:"hidden", p:0, m:0}}
+                                  sx={{width:"100%", aspectRatio:"8/5", display: "flex", overflow:"hidden", p:0, m:0}}
                                   onClick={() => navigate(`/tour/${item.tourId}`)}
                             >
                                 <img src={item.thumb} style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center center", margin:0}}/>
@@ -154,8 +154,8 @@ function GuideInfo(props) {
                                 <Grid xs={12} item>
                                     <Typography noWrap sx={{fontSize:"1.3rem", fontWeight:"700"}}>{item.title}</Typography>
                                 </Grid>
-                                <Grid xs={12} item sx={{my:"1rem"}}>
-                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>{item.subTitle} 가이드</Typography>
+                                <Grid xs={12} item sx={{mt:"1rem"}}>
+                                    <Typography sx={{fontSize:"1rem", fontWeight:"700", color:"#888888"}}>{item.subTitle}</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -170,7 +170,7 @@ function GuideInfo(props) {
                 </Grid>
                 {/* 가이드 리뷰 보기 **/}
                 <Grid item xs={12} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} sx={{my:"3rem"}}>
-                    <Typography sx={{fontSize:"1.5rem", fontWeight:"800", color:"#000000"}}>{guideReview ? guideReview.count : "0"} 개의 리뷰가 있어요!</Typography>
+                    <Typography sx={{fontSize:"1.5rem", fontWeight:"800", color:"#000000"}} noWrap >{guideReview ? guideReview.count : "0"} 개의 리뷰가 있어요!</Typography>
                 </Grid>
                 {/* items **/}
                 {guideReview && guideReview.reviews.map((item, idx) => {
@@ -197,7 +197,7 @@ function GuideInfo(props) {
                                     display="flex"
                                     justifyContent="flex-start"
                                     alignItems="center"
-                                    xs={1}
+                                    xs={11}
                                 >
                                     <Grid
                                         item

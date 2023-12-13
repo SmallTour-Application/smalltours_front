@@ -195,7 +195,6 @@ function Education(props) {
             }
         ).catch((err) => {
             console.log(err)
-            alert("실패")
         })
     }
 

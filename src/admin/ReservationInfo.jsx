@@ -73,7 +73,7 @@ function ReservationInfo(props) {
     return (
         <Grid container sx={{width:"100%", display:"flex", mt:"3rem", px:"3rem", mb:"3rem"}}>
             <Grid item xs={12} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center", mb:"3rem"}}>
-                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>여행정보</Typography>
+                <Typography sx={{fontSize:"2rem", fontWeight:"700"}}>예약정보</Typography>
             </Grid>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -85,7 +85,7 @@ function ReservationInfo(props) {
                         </TableRow>
                         <TableRow>
                             <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>예약회원</TableCell>
-                            <TableCell align="left">{result && result.memberName}</TableCell>
+                            <TableCell align="left" onClick={() => navigate(`/admin/customer/info/${result.memberId}`)}>{result && result.memberName}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>가이드</TableCell>
@@ -138,7 +138,7 @@ function ReservationInfo(props) {
                                         }
                                     }}
                                 >
-                                    <Typography>삭제</Typography>
+                                    <Typography>{result && result.state === "결제성공" ? "취소" : "취소불가"}</Typography>
                                 </Button>
                             </TableCell>
                         </TableRow>

@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import {useSelector} from "react-redux";
 import {Box} from "@mui/system";
+import {useNavigate} from "react-router-dom";
 
 function ReceivedGuideReview({memberId}) {
     const defaultSize = 10; // 한 페이지에 보여줄 아이템의 수
@@ -101,6 +102,8 @@ function ReceivedGuideReview({memberId}) {
             getApi(memberId, parseInt(sort), page ); // 재로드
         }).catch((err) => alert("해당 리뷰는 삭제된 상태입니다."))
     }
+
+    const navigate = useNavigate();
 
     const [rating, setRating] = useState(0); // 별점 상태
     const [reviewTitle, setReviewTitle] = useState(''); // 리뷰 제목 상태
@@ -200,7 +203,7 @@ function ReceivedGuideReview({memberId}) {
                         <TableBody>
                             {result && result.map((item, idx) => {
                                 return(
-                                    <TableRow>
+                                    <TableRow onClick={() => navigate(`/admin/customer/info/${item.memberId}`)}>
                                         {/*id**/}
                                         <TableCell>{idx}</TableCell>
                                         <TableCell>{item.packageName}</TableCell>

@@ -76,7 +76,7 @@ function PackageInfo(props) {
                         </TableRow>
                         <TableRow>
                             <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>가이드</TableCell>
-                            <TableCell align="left">{result && result.tourSeller}</TableCell>
+                            <TableCell onClick={() => navigate(`/admin/customer/info/:${result.guideId}`)} align="left">{result && result.tourSeller}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>평점</TableCell>

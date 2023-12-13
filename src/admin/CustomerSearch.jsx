@@ -618,13 +618,6 @@ function CustomerSearch(props) {
                             sx={{ml:"1rem"}}
                         />
                         가이드
-                        <Checkbox
-                            name={2}
-                            value={2}
-                            onChange={handleCheckboxChange}
-                            sx={{ml:"1rem"}}
-                        />
-                        관리자
                 </Typography>
                 <Button
                     sx={{

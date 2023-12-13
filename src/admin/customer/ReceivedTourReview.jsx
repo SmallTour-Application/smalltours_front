@@ -205,7 +205,7 @@ function ReceivedTourReview({memberId}) {
                         <TableBody>
                             {result && result.map((item, idx) => {
                                 return(
-                                    <TableRow key={idx}>
+                                    <TableRow key={idx} onClick={() => navigate(`/admin/customer/info/${item.memberId}`)}>
                                         {/*id**/}
                                         <TableCell>{idx}</TableCell>
                                         <TableCell>{item.packageName}</TableCell>

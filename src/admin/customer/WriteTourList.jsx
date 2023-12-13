@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 function WriteTourList({memberId}) {
     const defaultSize = 10; // 한 페이지에 보여줄 아이템의 수
@@ -23,6 +24,8 @@ function WriteTourList({memberId}) {
     const [myTourListResult, setMyTourListResult] = React.useState(null);
     const [myTourListTotalCnt, setMyTourListTotalCnt] = React.useState(0);
     const [page, setPage] = React.useState(0);
+
+    const navigate = useNavigate();
 
 
     // 생성한 패키지 목록 가져오기

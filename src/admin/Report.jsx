@@ -39,11 +39,22 @@ function Report(props) {
             console.log(res)
             if(res && res.data){
                 setMemberPerMonth((res.data)[res.data.length -1].totalCnt)
-                const chartData = res.data.map(item => ({
-                    month: item.month,
-                    totalCnt: item.totalCnt
-                }));
-                setResult1(chartData)
+                const rawData = res.data; // 서버에서 받은 원본 데이터
+
+                const aggregatedData = rawData.reduce((acc, item) => {
+                    const month = item.month;
+                    if (!acc[month]) {
+                        // 해당 월이 처음 나오면 새로운 객체를 생성
+                        acc[month] = { month, totalCnt: 0 };
+                    }
+                    // 해당 월의 totalCnt를 누적
+                    acc[month].totalCnt += item.totalCnt;
+                    return acc;
+                }, {});
+
+                const chartData = Object.values(aggregatedData); // 누적된 데이터를 배열로 변환
+                setResult1(chartData);
+                console.log(chartData)
             }
         }).catch((err) => console.log(err))
     }
